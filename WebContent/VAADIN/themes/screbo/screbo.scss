@@ -33,4 +33,18 @@
   @include valo;
 
   // Insert your own theme rules here
+  .loginUserName {
+    width: 200px;
+  }
+  .loginPassword {
+    width: 200px;
+  }
+  .loginButton {
+    margin-top:20px;
+  }
+  .topBar {
+    width: 100%;
+    height: 50px;
+    background: lightgray;
+  }
 }
