@@ -1,38 +1,112 @@
 package de.beuth.sp.screbo.views;
 
+import org.ektorp.DocumentNotFoundException;
+import org.vaadin.dialogs.ConfirmDialog;
+
 import com.ejt.vaadin.loginform.LoginForm.LoginEvent;
 import com.ejt.vaadin.loginform.LoginForm.LoginListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 
+import de.beuth.sp.screbo.EventBus.UserChangedEvent;
+import de.beuth.sp.screbo.SHA256;
 import de.beuth.sp.screbo.ScreboLoginForm;
+import de.beuth.sp.screbo.ScreboServlet;
+import de.beuth.sp.screbo.ScreboUI;
+import de.beuth.sp.screbo.database.User;
 
 @SuppressWarnings("serial")
-public class LoginView extends MainView {
+public class LoginView extends ScreboView implements LoginListener {
+	protected ScreboLoginForm loginForm;
 
-	{
+	public LoginView(ScreboUI screboUI) {
+		super(screboUI);
 		Panel loginPanel = new Panel("Login");
 		loginPanel.setSizeUndefined();
 
-		ScreboLoginForm loginForm = new ScreboLoginForm();
-		loginForm.addLoginListener(new LoginListener() {
-			@Override
-			public void onLogin(LoginEvent event) {
-				Notification.show("Hi", "Logged in with user name " + event.getUserName() + " and password of length " + event.getPassword().length(), Notification.Type.TRAY_NOTIFICATION);
-			}
-		});
+		loginForm = new ScreboLoginForm();
+		loginForm.addLoginListener(this);
+		//		new LoginListener() {
+		//			@Override
+		//			public void onLogin(LoginEvent event) {
+		//
+		//				Notification.show("Hi", "Logged in with user name " + event.getUserName() + " and password of length " + event.getPassword().length(), Notification.Type.TRAY_NOTIFICATION);
+		//			}
+		//		}
 		loginPanel.setContent(loginForm);
 
 		addComponent(loginPanel);
 		setExpandRatio(loginPanel, 1);
 		setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
+		setSizeFull();
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event) {
 
+	}
+
+	/**
+	 * Called when Login / Register button is pushed.
+	 */
+	@Override
+	public void onLogin(LoginEvent event) {
+		final String userName = event.getUserName();
+		try {
+			final String password = SHA256.getSHA256(event.getPassword());
+			User user = null;
+			try {
+				user = ((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().get(userName);
+			} catch (DocumentNotFoundException e) {
+				logger.warn("Did not find user with name:{}", userName, e);
+				askToCreateNewUser(userName, password);
+				return;
+			}
+
+			if (password.equals(user.getPassword())) {
+				doLogin(user);
+			} else {
+				showWrongPassword();
+			}
+
+		} catch (Exception e) {
+			logger.error("Error while logging in user with name:{}", userName, e);
+		}
+	}
+
+	protected void showWrongPassword() {
+		Notification.show("Sorry, wrong password.", Notification.Type.WARNING_MESSAGE);
+		loginForm.clearPasswordField();
+		loginForm.focusPasswordField();
+	}
+
+	protected void askToCreateNewUser(final String userName, final String password) {
+		ConfirmDialog.show(screboUI, "Not found", "A user with the name " + userName + " was not found.\nDo you want to create a new user?", "Sorry, my bad", "Create new user", new ConfirmDialog.Listener() {
+
+			@Override
+			public void onClose(ConfirmDialog dialog) {
+				if (!dialog.isConfirmed()) { //Create new user clicked, I ordered the buttons that the other one is the default
+					User user = new User();
+					user.setUserName(userName);
+					user.setPassword(password);
+					((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().add(user);
+					doLogin(user);
+				} else {
+					loginForm.clear();
+					loginForm.focusUserNameField();
+				}
+			}
+		});
+	}
+
+	protected void doLogin(User user) {
+		Notification.show("Hi", "Welcome " + user.getUserName(), Notification.Type.TRAY_NOTIFICATION);
+		user.setAsSessionUser();
+		screboUI.getEventBus().fireEvent(new UserChangedEvent());
+		screboUI.afterLogin();
 	}
 
 }

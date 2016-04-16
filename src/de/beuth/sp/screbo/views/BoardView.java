@@ -3,10 +3,13 @@ package de.beuth.sp.screbo.views;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Label;
 
-@SuppressWarnings("serial")
-public class BoardView extends MainView {
+import de.beuth.sp.screbo.ScreboUI;
 
-	{
+@SuppressWarnings("serial")
+public class BoardView extends ScreboView {
+
+	public BoardView(ScreboUI screboUI) {
+		super(screboUI);
 		addComponent(new Label("Hi"));
 	}
 

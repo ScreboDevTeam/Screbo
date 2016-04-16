@@ -10,9 +10,13 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class ScreboLoginForm extends LoginForm {
+	protected TextField userNameField;
+	protected PasswordField passwordField;
 
 	@Override
 	protected Component createContent(TextField userNameField, PasswordField passwordField, Button loginButton) {
+		this.userNameField = userNameField;
+		this.passwordField = passwordField;
 		loginButton.setCaption("Login / Register");
 
 		userNameField.setStyleName("loginUserName", true);
@@ -30,6 +34,18 @@ public class ScreboLoginForm extends LoginForm {
 		layout.setComponentAlignment(loginButton, Alignment.MIDDLE_RIGHT);
 
 		return layout;
+	}
+
+	public void clearPasswordField() {
+		passwordField.clear();
+	}
+
+	public void focusPasswordField() {
+		passwordField.focus();
+	}
+
+	public void focusUserNameField() {
+		userNameField.focus();
 	}
 
 }

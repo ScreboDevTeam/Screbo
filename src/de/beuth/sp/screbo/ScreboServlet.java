@@ -12,15 +12,25 @@ import javax.servlet.annotation.WebServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.CouchDbInstance;
+import org.ektorp.http.HttpClient;
+import org.ektorp.http.StdHttpClient;
+import org.ektorp.impl.StdCouchDbConnector;
+import org.ektorp.impl.StdCouchDbInstance;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
+
+import de.beuth.sp.screbo.database.UserRepository;
 
 @SuppressWarnings("serial")
 @WebServlet(value = "/*", asyncSupported = true)
 @VaadinServletConfiguration(productionMode = false, ui = ScreboUI.class, widgetset = "de.beuth.sp.screbo.widgetset.ScreboWidgetset")
 public class ScreboServlet extends VaadinServlet {
 	protected static Logger logger = null;
+
+	protected UserRepository userRepository;
 
 	public Path getWebInfPath() {
 		ServletContext servletContext = getServletContext();
@@ -49,5 +59,28 @@ public class ScreboServlet extends VaadinServlet {
 		}
 		logger = LogManager.getLogger();
 		logger.info("Started {}", getClass().getSimpleName());
+
+		try {
+			initDatabaseConnection();
+		} catch (Exception e) {
+			logger.error("Unable to init database connection", e);
+			throw new ServletException("Unable to init database connection", e);
+		}
 	}
+
+	protected void initDatabaseConnection() throws Exception {
+		HttpClient httpClient = new StdHttpClient.Builder().url("http://homeserver:5984").build();
+
+		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
+
+		CouchDbConnector userDatabase = new StdCouchDbConnector("screbo_users", dbInstance);
+		userDatabase.createDatabaseIfNotExists();
+		userRepository = new UserRepository(userDatabase);
+
+	}
+
+	public UserRepository getUserRepository() {
+		return userRepository;
+	}
+
 }
