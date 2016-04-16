@@ -17,6 +17,14 @@
 		<conf name="nodeploy" />
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
+		
+		<!-- Log4j 2 of course -->
+		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.5" />
+  		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.5" />
+		
+		<!-- Ektorp persistence API. -->
+		<dependency org="org.ektorp" name="org.ektorp" rev="1.4.2"/>
+				
 		<!-- The core server part of Vaadin -->
 		<dependency org="com.vaadin" name="vaadin-server" rev="&vaadin.version;" />
 
