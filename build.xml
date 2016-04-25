@@ -82,7 +82,6 @@
 			<arg value="INFO" />
 			<arg value="-strict" />
 			<jvmarg value="-Xmx1024M" />
-			<jvmarg value="-Xss512M" />
 			<jvmarg value="-Djava.awt.headless=true" />
 			<classpath>
 				<pathelement path="${sources}" />
