@@ -47,6 +47,6 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 
 	protected void setLabelText() {
 		User user = User.getUserFromSession();
-		screboLabel.setCaption("Welcome to Screbo" + (user == null ? "" : ", " + user.getUserName()) + ".");
+		screboLabel.setCaption("Welcome to Screbo" + (user == null ? "" : ", " + user.getDisplayName()) + ".");
 	}
 }

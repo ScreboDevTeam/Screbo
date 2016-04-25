@@ -29,13 +29,6 @@ public class LoginView extends ScreboView implements LoginListener {
 
 		loginForm = new ScreboLoginForm();
 		loginForm.addLoginListener(this);
-		//		new LoginListener() {
-		//			@Override
-		//			public void onLogin(LoginEvent event) {
-		//
-		//				Notification.show("Hi", "Logged in with user name " + event.getUserName() + " and password of length " + event.getPassword().length(), Notification.Type.TRAY_NOTIFICATION);
-		//			}
-		//		}
 		loginPanel.setContent(loginForm);
 
 		addComponent(loginPanel);
@@ -54,15 +47,15 @@ public class LoginView extends ScreboView implements LoginListener {
 	 */
 	@Override
 	public void onLogin(LoginEvent event) {
-		final String userName = event.getUserName();
+		final String mailAddress = event.getUserName();
 		try {
 			final String password = SHA256.getSHA256(event.getPassword());
 			User user = null;
 			try {
-				user = ((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().get(userName);
+				user = ((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().get(mailAddress);
 			} catch (DocumentNotFoundException e) {
-				logger.warn("Did not find user with name:{}", userName, e);
-				askToCreateNewUser(userName, password);
+				logger.warn("Did not find user with mailAddress:{}", mailAddress, e);
+				askToCreateNewUser(mailAddress, password);
 				return;
 			}
 
@@ -73,7 +66,7 @@ public class LoginView extends ScreboView implements LoginListener {
 			}
 
 		} catch (Exception e) {
-			logger.error("Error while logging in user with name:{}", userName, e);
+			logger.error("Error while logging in user with mailAddress:{}", mailAddress, e);
 		}
 	}
 
@@ -83,14 +76,14 @@ public class LoginView extends ScreboView implements LoginListener {
 		loginForm.focusPasswordField();
 	}
 
-	protected void askToCreateNewUser(final String userName, final String password) {
-		ConfirmDialog.show(screboUI, "Not found", "A user with the name " + userName + " was not found.\nDo you want to create a new user?", "Sorry, my bad", "Create new user", new ConfirmDialog.Listener() {
+	protected void askToCreateNewUser(final String mailAddress, final String password) {
+		ConfirmDialog.show(screboUI, "Not found", "A user with the mail address" + mailAddress + " was not found.\nDo you want to create a new user?", "Sorry, my bad", "Create new user", new ConfirmDialog.Listener() {
 
 			@Override
 			public void onClose(ConfirmDialog dialog) {
 				if (!dialog.isConfirmed()) { //Create new user clicked, I ordered the buttons that the other one is the default
 					User user = new User();
-					user.setUserName(userName);
+					user.setEmailAddress(mailAddress);
 					user.setPassword(password);
 					((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().add(user);
 					doLogin(user);
@@ -103,7 +96,7 @@ public class LoginView extends ScreboView implements LoginListener {
 	}
 
 	protected void doLogin(User user) {
-		Notification.show("Hi", "Welcome " + user.getUserName(), Notification.Type.TRAY_NOTIFICATION);
+		Notification.show("Hi", "Welcome " + user.getDisplayName(), Notification.Type.TRAY_NOTIFICATION);
 		user.setAsSessionUser();
 		screboUI.getEventBus().fireEvent(new UserChangedEvent());
 		screboUI.afterLogin();
