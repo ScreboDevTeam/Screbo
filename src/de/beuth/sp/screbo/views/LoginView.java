@@ -13,9 +13,9 @@ import com.vaadin.ui.Panel;
 
 import de.beuth.sp.screbo.EventBus.UserChangedEvent;
 import de.beuth.sp.screbo.SHA256;
-import de.beuth.sp.screbo.ScreboLoginForm;
 import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
+import de.beuth.sp.screbo.components.ScreboLoginForm;
 import de.beuth.sp.screbo.database.User;
 
 @SuppressWarnings("serial")

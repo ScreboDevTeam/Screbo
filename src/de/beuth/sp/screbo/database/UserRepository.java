@@ -6,7 +6,7 @@ import org.ektorp.support.CouchDbRepositorySupport;
 public class UserRepository extends CouchDbRepositorySupport<User> {
 
 	public UserRepository(CouchDbConnector db) {
-		super(User.class, db);
+		super(User.class, db, true);
 	}
 
 }

@@ -17,7 +17,10 @@
 		<conf name="nodeploy" />
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
-				
+
+		<dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-jsr310" rev="2.7.3" />
+
+
 		<!-- Log4j 2 of course -->
 		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.5" />
   		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.5" />

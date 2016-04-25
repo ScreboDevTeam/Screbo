@@ -25,6 +25,8 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
 
 import de.beuth.sp.screbo.configuration.Configuration;
+import de.beuth.sp.screbo.database.RetrospectiveRepository;
+import de.beuth.sp.screbo.database.ScreboObjectMapper;
 import de.beuth.sp.screbo.database.UserRepository;
 
 @SuppressWarnings("serial")
@@ -33,8 +35,9 @@ import de.beuth.sp.screbo.database.UserRepository;
 public class ScreboServlet extends VaadinServlet {
 	protected static Logger logger = null;
 
-	protected UserRepository userRepository;
 	protected Configuration configuration;
+	protected UserRepository userRepository;
+	protected RetrospectiveRepository retrospectiveRepository;
 
 	public Path getWebInfPath() {
 		ServletContext servletContext = getServletContext();
@@ -54,8 +57,8 @@ public class ScreboServlet extends VaadinServlet {
 
 		getServletConfig().getServletContext().setAttribute("unloadDelay", 5000);
 
+		// Init log4j
 		Path log4jSettings = getWebInfPath().resolve("log4j2.xml");
-
 		if (Files.isReadable(log4jSettings)) {
 			Configurator.initialize("config", null, log4jSettings.toUri());
 		} else {
@@ -64,33 +67,41 @@ public class ScreboServlet extends VaadinServlet {
 		logger = LogManager.getLogger();
 		logger.info("Started {}", getClass().getSimpleName());
 
+		// Read configuration
 		try (Reader reader = Files.newBufferedReader(getWebInfPath().resolve("configuration.json"));) {
 			configuration = new Gson().fromJson(reader, Configuration.class);
 		} catch (Exception e) {
+			logger.error("Could not load configuration file.", e);
 			throw new ServletException("Could not load configuration file.", e);
 		}
 
+		// Init database
 		try {
-			initDatabaseConnection();
+			initDatabase();
 		} catch (Exception e) {
-			logger.error("Unable to init database connection", e);
-			throw new ServletException("Unable to init database connection", e);
+			logger.error("Unable to init database", e);
+			throw new ServletException("Unable to init database", e);
 		}
 	}
 
-	protected void initDatabaseConnection() throws Exception {
+	protected void initDatabase() throws Exception {
 		HttpClient httpClient = new StdHttpClient.Builder().url(configuration.getCouchDB().getUrl()).build();
 
-		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
+		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient, ScreboObjectMapper.getInstance());
 
-		CouchDbConnector userDatabase = new StdCouchDbConnector("screbo_users", dbInstance);
-		userDatabase.createDatabaseIfNotExists();
+		CouchDbConnector userDatabase = new StdCouchDbConnector("screbo_users", dbInstance, ScreboObjectMapper.getInstance());
 		userRepository = new UserRepository(userDatabase);
 
+		CouchDbConnector retrospectiveDatabase = new StdCouchDbConnector("retrospectives", dbInstance, ScreboObjectMapper.getInstance());
+		retrospectiveRepository = new RetrospectiveRepository(retrospectiveDatabase);
 	}
 
 	public UserRepository getUserRepository() {
 		return userRepository;
+	}
+
+	public RetrospectiveRepository getRetrospectiveRepository() {
+		return retrospectiveRepository;
 	}
 
 }

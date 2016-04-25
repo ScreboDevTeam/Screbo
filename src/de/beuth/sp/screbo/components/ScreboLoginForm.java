@@ -1,4 +1,4 @@
-package de.beuth.sp.screbo;
+package de.beuth.sp.screbo.components;
 
 import com.ejt.vaadin.loginform.LoginForm;
 import com.vaadin.ui.Alignment;
