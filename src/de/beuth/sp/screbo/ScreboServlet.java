@@ -1,5 +1,6 @@
 package de.beuth.sp.screbo;
 
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,18 +20,21 @@ import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.impl.StdCouchDbInstance;
 
+import com.google.gson.Gson;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
 
+import de.beuth.sp.screbo.configuration.Configuration;
 import de.beuth.sp.screbo.database.UserRepository;
 
 @SuppressWarnings("serial")
-@WebServlet(value = "/*", asyncSupported = true)
+@WebServlet(value = "/*", asyncSupported = true, loadOnStartup = 1)
 @VaadinServletConfiguration(productionMode = false, ui = ScreboUI.class, widgetset = "de.beuth.sp.screbo.widgetset.ScreboWidgetset")
 public class ScreboServlet extends VaadinServlet {
 	protected static Logger logger = null;
 
 	protected UserRepository userRepository;
+	protected Configuration configuration;
 
 	public Path getWebInfPath() {
 		ServletContext servletContext = getServletContext();
@@ -60,6 +64,12 @@ public class ScreboServlet extends VaadinServlet {
 		logger = LogManager.getLogger();
 		logger.info("Started {}", getClass().getSimpleName());
 
+		try (Reader reader = Files.newBufferedReader(getWebInfPath().resolve("configuration.json"));) {
+			configuration = new Gson().fromJson(reader, Configuration.class);
+		} catch (Exception e) {
+			throw new ServletException("Could not load configuration file.", e);
+		}
+
 		try {
 			initDatabaseConnection();
 		} catch (Exception e) {
@@ -69,7 +79,7 @@ public class ScreboServlet extends VaadinServlet {
 	}
 
 	protected void initDatabaseConnection() throws Exception {
-		HttpClient httpClient = new StdHttpClient.Builder().url("http://homeserver:5984").build();
+		HttpClient httpClient = new StdHttpClient.Builder().url(configuration.getCouchDB().getUrl()).build();
 
 		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
 

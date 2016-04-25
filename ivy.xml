@@ -17,14 +17,17 @@
 		<conf name="nodeploy" />
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
-		
+				
 		<!-- Log4j 2 of course -->
 		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.5" />
   		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.5" />
-  		 <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.5" />
+  		<dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.5" />
   		 
   		<!-- Google Guava -->
   		<dependency org="com.google.guava" name="guava" rev="19.0" />
+  		
+  		<!-- Google GSON -->
+  		<dependency org="com.google.code.gson" name="gson" rev="2.6.2" />
   		 
 		<!-- Ektorp persistence API. -->
 		<dependency org="org.ektorp" name="org.ektorp" rev="1.4.2"/>
@@ -40,7 +43,7 @@
 
 		<!-- Servlet 3.0 API -->
 		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="nodeploy->default" />
-
+		
 		<!-- TestBench 4 -->
 		<dependency org="com.vaadin" name="vaadin-testbench-api" rev="latest.release" conf="nodeploy -> default" />
 

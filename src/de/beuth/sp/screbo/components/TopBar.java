@@ -20,18 +20,22 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 		super();
 		this.screboUI = screboUI;
 		screboLabel = new Label();
-
+		screboLabel.setSizeUndefined();
 		ComboBox boardComboBox = new ComboBox();
 		boardComboBox.setEnabled(false);
 
 		setStyleName("topBar", true);
 		addComponent(screboLabel);
 		addComponent(boardComboBox);
-		setComponentAlignment(screboLabel, Alignment.MIDDLE_RIGHT);
+		setComponentAlignment(screboLabel, Alignment.MIDDLE_LEFT);
 		setComponentAlignment(boardComboBox, Alignment.MIDDLE_RIGHT);
+		setExpandRatio(screboLabel, 1.f);
 
 		screboUI.getEventBus().addEventListener(this);
+
 		setLabelText();
+		setHeight("50px");
+		setWidth("100%");
 	}
 
 	@Override
@@ -43,7 +47,6 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 
 	protected void setLabelText() {
 		User user = User.getUserFromSession();
-		System.out.println("u:" + user);
 		screboLabel.setCaption("Welcome to Screbo" + (user == null ? "" : ", " + user.getUserName()) + ".");
 	}
 }

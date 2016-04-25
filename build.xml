@@ -1,0 +1,127 @@
+<project basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" default="build-and-package" name="Build script for Screbo">
+
+	<loadproperties srcfile="build.properties" />
+	<property name="workdir" value="${artifacts}/work" />
+	<property name="compiled-classes.dir" value="${workdir}/WEB-INF/classes" />
+	<property name="warfilename" value="webapp.war" />
+
+	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${libraries}/ivy-2.4.0.jar" />
+
+	<ivy:resolve file="ivy.xml" />
+	<ivy:cachepath pathid="ivy.deps.default" conf="default" />
+	<ivy:cachepath pathid="ivy.deps.widgetset" conf="widgetset-compile" />
+	<ivy:cachepath pathid="ivy.deps.nodeploy" conf="nodeploy" />
+	<ivy:cachefileset setid="ivy.deps.default.fileset" conf="default" />
+
+	<path id="classpath">
+		<fileset dir="${webroot}/WEB-INF/lib" erroronmissingdir="no">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${libraries}" erroronmissingdir="no">
+			<include name="**/*.jar" />
+		</fileset>
+		<path refid="ivy.deps.default" />
+		<path refid="ivy.deps.nodeploy" />
+	</path>
+
+	<path id="classpath.widgetset">
+		<fileset dir="${webroot}/WEB-INF/lib" erroronmissingdir="no">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${libraries}" erroronmissingdir="no">
+			<include name="*.jar" />
+		</fileset>
+		<path refid="ivy.deps.default" />
+		<path refid="ivy.deps.widgetset" />
+		<path refid="ivy.deps.nodeploy" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${workdir}" />
+		<delete dir="${artifacts}" />
+	</target>
+
+	<target name="-init">
+		<delete dir="${artifacts}" failonerror="false"/>
+		<mkdir dir="${artifacts}" />
+		<mkdir dir="${workdir}" />
+	</target>
+
+	<target name="compile-theme" depends="-init, -compile-theme-1">
+		<!-- the dependencies do all the work here -->
+	</target>
+
+	<target name="-compile-theme-1" if="theme.name">
+		<mkdir dir="${workdir}/VAADIN/themes/${theme.name}" />
+		<java classname="com.vaadin.sass.SassCompiler" failonerror="yes" fork="yes">
+			<classpath refid="classpath" />
+			<jvmarg value="-Djava.awt.headless=true" />
+			<arg value="${theme.dir}/${theme.name}/styles.scss" />
+			<arg value="${workdir}/VAADIN/themes/${theme.name}/styles.css" />
+		</java>
+	</target>
+
+	<target name="compile-project" depends="-init">
+		<mkdir dir="${compiled-classes.dir}" />
+		<javac destdir="${compiled-classes.dir}" debug="${compile.debug}" includeantruntime="no">
+			<src path="${sources}" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="compile-widgetset" depends="compile-project, -build-widgetset-1">
+		<!-- the dependencies do all the work here -->
+	</target>
+
+	<target name="-build-widgetset-1" if="widgetset">
+		<java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes">
+			<arg value="-war" />
+			<arg value="${workdir}/VAADIN/widgetsets" />
+			<arg value="${widgetset}" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />
+			<arg value="-strict" />
+			<jvmarg value="-Xmx1024M" />
+			<jvmarg value="-Xss512M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+			<classpath>
+				<pathelement path="${sources}" />
+				<pathelement path="${compiled-classes.dir}" />
+				<path refid="classpath.widgetset" />
+			</classpath>
+			<sysproperty key="vFailIfNotSerializable" value="${failifnotserializable}" />
+		</java>
+
+		<!-- cleanup -->
+		<delete dir="${workdir}/VAADIN/gwt-unitCache" />
+		<delete dir="${workdir}/VAADIN/widgetsets/WEB-INF" />
+	</target>
+
+	<target name="package-war" depends="-init" description="Packages everything in a WAR that has been deployed in ${workdir}">
+		<mkdir dir="${workdir}/WEB-INF/lib" />
+		<copy todir="${workdir}/WEB-INF/lib" flatten="true">
+			<fileset refid="ivy.deps.default.fileset" />
+		</copy>
+
+		<!-- Source in the web-app? No thanks. Maybe conf files? -->
+		<!--<copy todir="${workdir}">-->
+		<!--<fileset dir="${sources}"/>-->
+		<!--</copy>-->
+
+		<delete>
+			<fileset dir="${workdir}/WEB-INF/lib">
+				<include name="**/*-sources.jar" />
+				<include name="**/*-javadoc.jar" />
+			</fileset>
+		</delete>
+
+		<war destfile="${artifacts}/${warfilename}" basedir="${workdir}" needxmlfile="false"> <!--webxml="${webroot}/WEB-INF/web.xml">-->
+			<lib dir="${webroot}/WEB-INF/lib" erroronmissingdir="no">
+				<include name="*.jar" />
+			</lib>
+		</war>
+	</target>
+
+	<target name="build-and-package" depends="compile-theme, compile-project, compile-widgetset, package-war">
+	</target>
+</project>

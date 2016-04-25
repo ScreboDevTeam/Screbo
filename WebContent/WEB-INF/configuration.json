@@ -1,0 +1,5 @@
+{
+	"couchDB": {
+		"url": "http://homeserver:5984"
+	}
+}
