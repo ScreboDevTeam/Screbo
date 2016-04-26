@@ -81,7 +81,7 @@
 			<arg value="-logLevel" />
 			<arg value="INFO" />
 			<arg value="-strict" />
-			<jvmarg value="-Xmx1024M" />
+			<jvmarg value="-Xmx700M" />
 			<jvmarg value="-Djava.awt.headless=true" />
 			<classpath>
 				<pathelement path="${sources}" />
@@ -122,5 +122,9 @@
 	</target>
 
 	<target name="build-and-package" depends="compile-theme, compile-project, compile-widgetset, package-war">
+	</target>
+	
+	<target name="jenkins" depends="build-and-package">
+	 <copy file="build/Screbo.war" tofile="/usr/share/tomcat8/vhosts/screbo/ROOT.war" overwrite="true"/>
 	</target>
 </project>
