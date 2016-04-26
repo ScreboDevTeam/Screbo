@@ -42,7 +42,7 @@
 	</target>
 
 	<target name="-init">
-		<delete dir="${artifacts}" failonerror="false"/>
+		<delete dir="${artifacts}" failonerror="false" />
 		<mkdir dir="${artifacts}" />
 		<mkdir dir="${workdir}" />
 	</target>
@@ -101,6 +101,9 @@
 		<copy todir="${workdir}/WEB-INF/lib" flatten="true">
 			<fileset refid="ivy.deps.default.fileset" />
 		</copy>
+		<copy todir="${workdir}/WEB-INF" flatten="true">
+			<fileset dir="WebContent/WEB-INF" />
+		</copy>
 
 		<!-- Source in the web-app? No thanks. Maybe conf files? -->
 		<!--<copy todir="${workdir}">-->
@@ -114,7 +117,8 @@
 			</fileset>
 		</delete>
 
-		<war destfile="${artifacts}/${warfilename}" basedir="${workdir}" needxmlfile="false"> <!--webxml="${webroot}/WEB-INF/web.xml">-->
+		<war destfile="${artifacts}/${warfilename}" basedir="${workdir}" needxmlfile="false">
+			<!--webxml="${webroot}/WEB-INF/web.xml">-->
 			<lib dir="${webroot}/WEB-INF/lib" erroronmissingdir="no">
 				<include name="*.jar" />
 			</lib>
