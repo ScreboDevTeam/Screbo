@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
+import com.google.common.base.Joiner;
+
 import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.RetrospectiveRepository;
 import de.beuth.sp.screbo.database.User;
@@ -17,28 +19,28 @@ public class TestRetrospectiveDatabase {
 
 	@Test
 	public void testRetrospective() {
-		TestDatabase testDatabase = new TestDatabase();
-		RetrospectiveRepository retrospectiveRepository = testDatabase.getRetrospectiveRepository();
+		DatabaseForTestcases database = new DatabaseForTestcases();
+		RetrospectiveRepository retrospectiveRepository = database.getRetrospectiveRepository();
 
 		User myUser = new User();
-		testDatabase.getUserRepository().add(myUser);
-
-		ZonedDateTime dateOfRetrospective = ZonedDateTime.now().plusDays(5);
+		database.getUserRepository().add(myUser);
 
 		// save it
-		Retrospective retrospective = new Retrospective(myUser);
-		retrospective.setDateOfRetrospective(dateOfRetrospective);
+		Retrospective oldRetrospective = new Retrospective(myUser);
+		oldRetrospective.setDateOfRetrospective(ZonedDateTime.now().plusDays(5));
 
-		retrospectiveRepository.add(retrospective);
+		retrospectiveRepository.add(oldRetrospective);
 
-		String id = retrospective.getId();
+		String id = oldRetrospective.getId();
 
 		// load
-		retrospective = retrospectiveRepository.get(id);
+		Retrospective loadedRetrospective = retrospectiveRepository.get(id);
 
-		assertEquals(retrospective.getDateOfRetrospective().toInstant(), dateOfRetrospective.toInstant());
+		assertEquals(loadedRetrospective.getDateOfRetrospective().toInstant(), oldRetrospective.getDateOfRetrospective().toInstant());
 
-		//testDatabase.tearDown();
+		assertEquals(Joiner.on(',').join(loadedRetrospective.getCategories()), Joiner.on(',').join(oldRetrospective.getCategories()));
+
+		//database.tearDown();
 	}
 
 }

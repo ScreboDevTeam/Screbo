@@ -20,7 +20,7 @@ import de.beuth.sp.screbo.database.RetrospectiveRepository;
 import de.beuth.sp.screbo.database.ScreboObjectMapper;
 import de.beuth.sp.screbo.database.UserRepository;
 
-public class TestDatabase {
+public class DatabaseForTestcases {
 	protected static final Logger logger = LogManager.getLogger();
 
 	protected CouchDbInstance dbInstance;

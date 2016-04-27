@@ -14,15 +14,15 @@ import com.vaadin.server.VaadinSession;
 public class User extends CouchDbDocument {
 	protected final static String SESSION_USER_PROPERTY = "currentUser";
 
-	public static enum UserRole {
-		TeamMember, ScrumMaster, ProductOwner, StakeHolder
-	}
+	//	public static enum UserRole {
+	//		TeamMember, ScrumMaster, ProductOwner, StakeHolder
+	//	}
 
 	protected String password;
 	protected String lastName;
 	protected String firstName;
 	//protected String emailAddress; saved in ID
-	protected UserRole userRole;
+	//	protected UserRole userRole;
 
 	public static User getUserFromSession() {
 		return (User) VaadinSession.getCurrent().getAttribute(SESSION_USER_PROPERTY);
@@ -62,14 +62,6 @@ public class User extends CouchDbDocument {
 
 	public void setEmailAddress(String emailAddress) {
 		this.setId(emailAddress);
-	}
-
-	public UserRole getUserRole() {
-		return userRole;
-	}
-
-	public void setUserRole(UserRole userRole) {
-		this.userRole = userRole;
 	}
 
 	@Override
