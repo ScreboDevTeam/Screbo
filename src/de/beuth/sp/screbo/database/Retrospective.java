@@ -15,12 +15,24 @@ public class Retrospective extends CouchDbDocument {
 	protected List<String> editableByUserIds = Lists.newArrayList();
 
 	protected ZonedDateTime dateOfRetrospective;
-	protected List<RetroItem> retroItems = Lists.newArrayList();
+	protected List<Category> categories = Lists.newArrayList();
 	protected List<Activity> activities = Lists.newArrayList();
 
+	/**
+	 * Constructor if retrospective is created by User.
+	 * We init the board as we see fit.
+	 * 
+	 * @param createdByUser
+	 */
 	public Retrospective(User createdByUser) {
 		super();
 		this.createdByUserId = createdByUser.getId();
+
+		// add default categories
+		categories.add(new Category("Liked"));
+		categories.add(new Category("Learned"));
+		categories.add(new Category("Lacked"));
+		categories.add(new Category("Longed for"));
 	}
 	protected Retrospective() {
 		super();
@@ -49,8 +61,8 @@ public class Retrospective extends CouchDbDocument {
 	public List<String> getEditableByUserIds() {
 		return editableByUserIds;
 	}
-	public List<RetroItem> getRetroItems() {
-		return retroItems;
+	public List<Category> getCategories() {
+		return categories;
 	}
 	public List<Activity> getActivities() {
 		return activities;
