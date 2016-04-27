@@ -2,8 +2,6 @@ package de.beuth.sp.screbo.database;
 
 import java.util.List;
 
-import org.apache.catalina.Cluster;
-
 import com.google.common.collect.Lists;
 
 public class Category {
