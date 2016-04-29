@@ -49,9 +49,9 @@ public class BoardsView extends ScreboView {
 		boardMainLayout.addComponent(activityArea);
 
 		// Board 
-		Label boardLblBez = new Label("Bezeichnung");
-		Label boardLblDate = new Label("Datum (TT.MM.JJJJ)");
-		Label boardLblProject = new Label("durchgeführte Projekte");
+		Label boardLblBez = new Label("title");
+		Label boardLblDate = new Label("date (DD.MM.YYYY)");
+		Label boardLblProject = new Label("related projects");
 
 		TextField boardTxtBez = new TextField();
 		boardTxtBez.setStyleName("boardInput");
@@ -60,7 +60,8 @@ public class BoardsView extends ScreboView {
 		TextArea boardTxtProject = new TextArea();
 		boardTxtProject.setStyleName("boardInput");
 
-		Button boardBtnNew = new Button("add / save");
+		Button boardBtnNew = new Button("");
+		boardBtnNew.setDescription("add / save your retro");
 		boardBtnNew.setStyleName("addSaveBtn");
 
 		Button boardBtnExisting6 = new Button("Retro Sprint 6");
@@ -91,10 +92,11 @@ public class BoardsView extends ScreboView {
 		boardArea.addComponent(boardBtnExisting2);
 
 		// Category 1
-		Label cat1Lbl = new Label("Liked");
-		cat1Lbl.setStyleName("catLabel");
+		Label cat1Lbl = new Label("");
+		cat1Lbl.setStyleName("catLabel cat1Label");
 		cat1Lbl.setSizeUndefined();
-		Button cat1Btn = new Button("+");
+		Button cat1Btn = new Button("");
+		cat1Btn.setDescription("add a posting to Liked");
 		cat1Btn.addStyleName("addRetroItemBtn");
 		cat1Area.addComponent(cat1Lbl);
 		cat1Area.addComponent(cat1Btn);
@@ -102,21 +104,23 @@ public class BoardsView extends ScreboView {
 		cat1Area.setComponentAlignment(cat1Btn, Alignment.MIDDLE_CENTER);
 
 		// Category 2
-		Label cat2Lbl = new Label("Learned");
-		cat2Lbl.setStyleName("catLabel");
+		Label cat2Lbl = new Label("");
+		cat2Lbl.setStyleName("catLabel cat2Label");
 		cat2Lbl.setSizeUndefined();
-		Button cat2Btn = new Button("+");
+		Button cat2Btn = new Button("");
 		cat2Btn.addStyleName("addRetroItemBtn");
+		cat2Btn.setDescription("add a posting to Learned");
 		cat2Area.addComponent(cat2Lbl);
 		cat2Area.addComponent(cat2Btn);
 		cat2Area.setComponentAlignment(cat2Lbl, Alignment.MIDDLE_CENTER);
 		cat2Area.setComponentAlignment(cat2Btn, Alignment.MIDDLE_CENTER);
 
 		// Category 3
-		Label cat3Lbl = new Label("Lacked");
-		cat3Lbl.setStyleName("catLabel");
+		Label cat3Lbl = new Label("");
+		cat3Lbl.setStyleName("catLabel cat3Label");
 		cat3Lbl.setSizeUndefined();
-		Button cat3Btn = new Button("+");
+		Button cat3Btn = new Button("");
+		cat3Btn.setDescription("add a posting to Lacked");
 		cat3Btn.addStyleName("addRetroItemBtn");
 		cat3Area.addComponent(cat3Lbl);
 		cat3Area.addComponent(cat3Btn);
@@ -124,20 +128,21 @@ public class BoardsView extends ScreboView {
 		cat3Area.setComponentAlignment(cat3Btn, Alignment.MIDDLE_CENTER);
 
 		// Category 4
-		Label cat4Lbl = new Label("Longed for");
-		cat4Lbl.setStyleName("catLabel");
+		Label cat4Lbl = new Label("");
+		cat4Lbl.setStyleName("catLabel cat4Label");
 		cat4Lbl.setSizeUndefined();
-		Button cat4Btn = new Button("+");
+		Button cat4Btn = new Button("");
 		cat4Btn.addStyleName("addRetroItemBtn");
+		cat4Btn.setDescription("add a posting to Longed for");
 		cat4Area.addComponent(cat4Lbl);
 		cat4Area.addComponent(cat4Btn);
 		cat4Area.setComponentAlignment(cat4Lbl, Alignment.MIDDLE_CENTER);
 		cat4Area.setComponentAlignment(cat4Btn, Alignment.MIDDLE_CENTER);
 
 		// Activity 
-		Label actLblAct = new Label("Maßnahme");
-		Label actLblDate = new Label("Termin (TT.MM.JJJJ)");
-		Label actLblPrio = new Label("Priorität");
+		Label actLblAct = new Label("activity");
+		Label actLblDate = new Label("target date (DD.MM.YYYY)");
+		Label actLblPrio = new Label("priority");
 
 		TextField actTxtAct = new TextField();
 		actTxtAct.setStyleName("boardInput");
@@ -149,7 +154,8 @@ public class BoardsView extends ScreboView {
 		actDropPrio.addItem("Normal");
 		actDropPrio.addItem("Unwichtig");
 
-		Button actBtnNew = new Button("add / save");
+		Button actBtnNew = new Button("");
+		actBtnNew.setDescription("add / save your activity");
 		actBtnNew.setStyleName("addSaveBtn");
 
 		Button actBtnExisting6 = new Button("kürzere Meetings");

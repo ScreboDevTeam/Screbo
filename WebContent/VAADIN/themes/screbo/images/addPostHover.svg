@@ -1,0 +1,25 @@
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 101" xml:space="preserve">
+	<g>
+		<svg viewBox="0 0 100 101" height="100" width="101" xmlns:svg="http://www.w3.org/2000/svg">
+
+			<filter id="lightMe1">
+				<feDiffuseLighting lighting-color="white" result="light" in="SourceGraphic">
+					<fePointLight z="80" y="50" x="50"/>
+				</feDiffuseLighting>
+				<feComposite k4="0" k3="0" k2="0" k1="1" operator="arithmetic" in2="light" in="SourceGraphic"/>
+			</filter>
+
+			<filter id="lightMe2">
+				<feDiffuseLighting lighting-color="white" diffuseConstant="1.2" result="diffOut" in="SourceGraphic">
+					<fePointLight z="50" y="80" x="40"/>
+				</feDiffuseLighting>
+				<feComposite k4="0" k3="0" k2="0" k1="1" operator="arithmetic" in2="diffOut" in="SourceGraphic"/>
+			</filter>
+
+			<circle style="fill: #7a1a26; stroke-width: 0; filter: url(#lightMe1)" r="50" cy="51" cx="50"/>
+
+			<text filter="url(#lightMe2)" fill="#EEE" font-weight="bold" font-size="90" font-family="Helvetica" y="82" x="25">+</text>
+
+		</svg>
+	</g>
+</svg>

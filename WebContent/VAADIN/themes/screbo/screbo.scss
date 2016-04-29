@@ -56,8 +56,12 @@
   
   .topBar {
     width: 100%;
-    height: 55px;
-    background: #7a1a26 url("./images/banner.JPG") no-repeat scroll 0 0 / 500px auto;
+    height: 65px;
+    background: #b75461;
+	background: url("./images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("./images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -moz-linear-gradient(45deg,  #b75461 1%, #7a1a26 32%, #44010b 100%);
+	background: -webkit-linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
+	background: linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b75461', endColorstr='#44010b',GradientType=1 );
   }
   
   .v-slot-boardArea {
@@ -78,20 +82,45 @@
   }
   
   .addRetroItemBtn {
-  	background: $secondaryColor;
-  	border-radius: 20px;
-  	color: $btnFontColor;
-  	padding: 7px 15px;
-  	border: none;
-  	box-shadow: none;
-  	margin-top: 15px;
-  	font-weight: 900;
+  	background: transparent url("./images/addPost.svg") no-repeat scroll 0 0 / 40px auto;
+    border: medium none;
+    border-radius: 20px;
+    box-shadow: none;
+    font-weight: 900;
+    height: 40px;
+    margin-top: 15px;
+    padding: 7px 15px;
+    width: 40px;
   }
   
   .catLabel {
   	color: #7a1a26;
     font: italic bold 30px "Alien Encounters",serif;
     margin-top: 20px;
+  }
+  
+  .cat1Label {
+  	background: transparent url("./images/liked.gif") no-repeat scroll 0 5px / 96px auto;
+    height: 40px;
+    width: 96px;
+  }
+  
+  .cat2Label {
+  	background: transparent url("./images/learned.gif") no-repeat scroll 0 5px / 160px auto;
+    height: 40px;
+    width: 160px;
+  }
+  
+  .cat3Label {
+  	background: transparent url("./images/lacked.gif") no-repeat scroll 0 5px / 135px auto;
+    height: 40px;
+    width: 135px;
+  }
+  
+  .cat4Label {
+  	background: transparent url("./images/longedfor.gif") no-repeat scroll 0 5px / 220px auto;
+    height: 40px;
+    width: 220px;
   }
   
   .boardArea {
@@ -115,15 +144,20 @@
   }
   
   .addSaveBtn {
-  	width: 100%;
-  	border: none;
-  	background: $secondaryColor;
-  	color: $btnFontColor;
-  	margin-bottom: 20px;
+  	background: transparent url("./images/disk.svg") no-repeat scroll 0 0 / 32px auto;
+    border: medium none;
+    float: right;
+    height: 32px;
+    margin-bottom: 20px;
+    width: 32px;
   }
   
-  .addRetroItemBtn:hover, .addSaveBtn:hover {
-  	background: $secondaryColorDark;
+  .addSaveBtn:hover {
+  	background: transparent url("./images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
+  }
+  
+  .addRetroItemBtn:hover {
+  	background: transparent url("./images/addPostHover.svg") no-repeat scroll 0 0 / 40px auto;
   }
   
   .BoardBtn:hover {
