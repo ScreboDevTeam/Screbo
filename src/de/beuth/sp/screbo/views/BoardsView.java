@@ -1,12 +1,10 @@
 package de.beuth.sp.screbo.views;
 
-import com.sun.javafx.css.SizeUnits;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.server.Sizeable;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -19,7 +17,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.ScreboUI;
-import java_cup.version;
 
 /**
  * Allows creation of new boards and selection of a board.
@@ -113,29 +110,29 @@ public class BoardsView extends ScreboView {
 		cat1Area.addComponent(cat1Btn);
 		cat1Area.setComponentAlignment(cat1Lbl, Alignment.MIDDLE_CENTER);
 		cat1Area.setComponentAlignment(cat1Btn, Alignment.MIDDLE_CENTER);
-		
+
 		// Drag&Drop wrapper
 		VerticalLayout cat1PostsArea = new VerticalLayout();
 		cat1PostsArea.setStyleName("PostArea");
 		DragAndDropWrapper ddWrappercat1 = new DragAndDropWrapper(cat1PostsArea);
 		cat1Area.addComponent(ddWrappercat1);
 		cat1Area.setComponentAlignment(ddWrappercat1, Alignment.MIDDLE_CENTER);
-		
+
 		ddWrappercat1.setDropHandler(new DropHandler() {
 
-            @Override
-            public void drop(DragAndDropEvent event) {
-            	cat1PostsArea.addComponent(event.getTransferable().getSourceComponent());
+			@Override
+			public void drop(DragAndDropEvent event) {
+				cat1PostsArea.addComponent(event.getTransferable().getSourceComponent());
 
-            }
+			}
 
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
-            }
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
 
-        });
-		
+		});
+
 		//Posts
 		Label cat1Post = new Label("Good Teamwork");
 		cat1Post.setStyleName("posting");
@@ -152,23 +149,21 @@ public class BoardsView extends ScreboView {
 		ddWrapperCat1Post.setSizeUndefined();
 		cat1PostsArea.addComponent(ddWrapperCat1Post);
 		ddWrapperCat1Post.setStyleName("ddWrapperCat1Post");
-		
+
 		ddWrapperCat1Post.setDropHandler(new DropHandler() {
 
-            @Override
-            public void drop(DragAndDropEvent event) {
-            	clustercat1Post1.addComponent(event.getTransferable().getSourceComponent());
+			@Override
+			public void drop(DragAndDropEvent event) {
+				clustercat1Post1.addComponent(event.getTransferable().getSourceComponent());
 
-            }
+			}
 
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
-            }
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
 
-        });
-		
-		
+		});
 
 		// Category 2
 		Label cat2Lbl = new Label("");
@@ -181,30 +176,30 @@ public class BoardsView extends ScreboView {
 		cat2Area.addComponent(cat2Btn);
 		cat2Area.setComponentAlignment(cat2Lbl, Alignment.MIDDLE_CENTER);
 		cat2Area.setComponentAlignment(cat2Btn, Alignment.MIDDLE_CENTER);
-		
+
 		// Drag&Drop wrapper
 		VerticalLayout cat2PostsArea = new VerticalLayout();
 		cat2PostsArea.setStyleName("PostArea");
 		DragAndDropWrapper ddWrappercat2 = new DragAndDropWrapper(cat2PostsArea);
 		cat2Area.addComponent(ddWrappercat2);
-		
+
 		ddWrappercat2.setDropHandler(new DropHandler() {
 
-            @Override
-            public void drop(DragAndDropEvent event) {
-            	cat2PostsArea.addComponent(event.getTransferable().getSourceComponent());
+			@Override
+			public void drop(DragAndDropEvent event) {
+				cat2PostsArea.addComponent(event.getTransferable().getSourceComponent());
 
-            }
+			}
 
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
-            }
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
 
-        });
-		
+		});
+
 		//Posts
-		
+
 		// Item to be dragged and dropped
 		Label cat2Post = new Label("Funny Meetings");
 		cat2Post.setStyleName("posting");
@@ -221,21 +216,21 @@ public class BoardsView extends ScreboView {
 		// Set the wrapper to wrap tightly around the component
 		ddWrapperCat2Post.setSizeUndefined();
 		cat2PostsArea.addComponent(ddWrapperCat2Post);
-		
+
 		ddWrapperCat2Post.setDropHandler(new DropHandler() {
 
-            @Override
-            public void drop(DragAndDropEvent event) {
-            	clustercat2Post2.addComponent(event.getTransferable().getSourceComponent());
+			@Override
+			public void drop(DragAndDropEvent event) {
+				clustercat2Post2.addComponent(event.getTransferable().getSourceComponent());
 
-            }
+			}
 
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
-            }
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
 
-        });
+		});
 
 		// Category 3
 		Label cat3Lbl = new Label("");
