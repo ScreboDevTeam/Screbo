@@ -59,8 +59,8 @@
     height: 65px;
     background: #b75461;
 	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -moz-linear-gradient(45deg,  #b75461 1%, #7a1a26 32%, #44010b 100%);
-	background: -webkit-linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
-	background: linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
+	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -webkit-linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
+	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b75461', endColorstr='#44010b',GradientType=1 );
   }
   
@@ -162,6 +162,32 @@
   
   .BoardBtn:hover {
   	background: $primaryColor;
+  }
+  
+  .ddWrapperCat1Post, .ddWrapperCat2Post {
+  	z-index: 99;
+  }
+  
+  .ddWrapperCat1PostAlone, .ddWrapperCat2PostAlone {
+  	z-index: 999;
+  }
+  
+  .posting {
+  	width: 240px;
+  	text-align: center;
+  	margin-top: 5px;
+  	color: #fff;
+  	background: #b75461;
+	background: -moz-linear-gradient(45deg,  #b75461 1%, #7a1a26 32%, #44010b 100%);
+	background: -webkit-linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
+	background: linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b75461', endColorstr='#44010b',GradientType=1 );
+  }
+  
+  .PostArea {
+  	min-height: 400px;
+  	text-align: center;
+  	margin-top: 20px;
   }
   
 }
