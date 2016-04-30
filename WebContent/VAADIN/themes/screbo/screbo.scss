@@ -58,7 +58,7 @@
     width: 100%;
     height: 65px;
     background: #b75461;
-	background: url("./images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("./images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -moz-linear-gradient(45deg,  #b75461 1%, #7a1a26 32%, #44010b 100%);
+	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -moz-linear-gradient(45deg,  #b75461 1%, #7a1a26 32%, #44010b 100%);
 	background: -webkit-linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
 	background: linear-gradient(45deg,  #b75461 1%,#7a1a26 32%,#44010b 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b75461', endColorstr='#44010b',GradientType=1 );
@@ -82,7 +82,7 @@
   }
   
   .addRetroItemBtn {
-  	background: transparent url("./images/addPost.svg") no-repeat scroll 0 0 / 40px auto;
+  	background: transparent url("images/addPost.svg") no-repeat scroll 0 0 / 40px auto;
     border: medium none;
     border-radius: 20px;
     box-shadow: none;
@@ -100,25 +100,25 @@
   }
   
   .cat1Label {
-  	background: transparent url("./images/liked.gif") no-repeat scroll 0 5px / 96px auto;
+  	background: transparent url("images/liked.gif") no-repeat scroll 0 5px / 96px auto;
     height: 40px;
     width: 96px;
   }
   
   .cat2Label {
-  	background: transparent url("./images/learned.gif") no-repeat scroll 0 5px / 160px auto;
+  	background: transparent url("images/learned.gif") no-repeat scroll 0 5px / 160px auto;
     height: 40px;
     width: 160px;
   }
   
   .cat3Label {
-  	background: transparent url("./images/lacked.gif") no-repeat scroll 0 5px / 135px auto;
+  	background: transparent url("images/lacked.gif") no-repeat scroll 0 5px / 135px auto;
     height: 40px;
     width: 135px;
   }
   
   .cat4Label {
-  	background: transparent url("./images/longedfor.gif") no-repeat scroll 0 5px / 220px auto;
+  	background: transparent url("images/longedfor.gif") no-repeat scroll 0 5px / 220px auto;
     height: 40px;
     width: 220px;
   }
@@ -144,7 +144,7 @@
   }
   
   .addSaveBtn {
-  	background: transparent url("./images/disk.svg") no-repeat scroll 0 0 / 32px auto;
+  	background: transparent url("images/disk.svg") no-repeat scroll 0 0 / 32px auto;
     border: medium none;
     float: right;
     height: 32px;
@@ -153,11 +153,11 @@
   }
   
   .addSaveBtn:hover {
-  	background: transparent url("./images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
+  	background: transparent url("images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
   }
   
   .addRetroItemBtn:hover {
-  	background: transparent url("./images/addPostHover.svg") no-repeat scroll 0 0 / 40px auto;
+  	background: transparent url("images/addPostHover.svg") no-repeat scroll 0 0 / 40px auto;
   }
   
   .BoardBtn:hover {

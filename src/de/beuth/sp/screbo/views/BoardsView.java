@@ -1,5 +1,6 @@
 package de.beuth.sp.screbo.views;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -18,6 +19,7 @@ import de.beuth.sp.screbo.ScreboUI;
  *
  */
 @SuppressWarnings("serial")
+@Theme("screbo")
 public class BoardsView extends ScreboView {
 
 	public BoardsView(ScreboUI screboUI) {
