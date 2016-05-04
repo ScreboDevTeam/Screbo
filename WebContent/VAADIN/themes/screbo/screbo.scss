@@ -163,7 +163,7 @@
   	background: $primaryColor;
   }
   
-  .ddWrapperCat1Post, .ddWrapperCat2Post {
+  .ddWrapperCat1Post, .ddWrapperCat2Post, ddWrapperCat3Post, ddWrapperCat4Post {
   	z-index: 99;
   }
   
@@ -221,6 +221,18 @@
   
   .v-datefield-popup {
   	width: auto !important;
+  }
+  
+  .catLabel {
+   margin-top: 20px;
+  }
+  
+  .display_on {
+  
+  }
+  
+  .display_off {
+  
   }
     
 }
