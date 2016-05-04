@@ -8,6 +8,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
@@ -58,12 +59,15 @@ public class BoardsView extends ScreboView {
 
 		// Board 
 		Label boardLblBez = new Label("title");
+		boardLblBez.setStyleName("boardLbl");
 		Label boardLblDate = new Label("date (DD.MM.YYYY)");
+		boardLblDate.setStyleName("boardLbl");
 		Label boardLblProject = new Label("related projects");
+		boardLblProject.setStyleName("boardLbl");
 
 		TextField boardTxtBez = new TextField();
 		boardTxtBez.setStyleName("boardInput");
-		TextField boardTxtDate = new TextField();
+		DateField boardTxtDate = new DateField();
 		boardTxtDate.setStyleName("boardInput");
 		TextArea boardTxtProject = new TextArea();
 		boardTxtProject.setStyleName("boardInput");
@@ -155,6 +159,7 @@ public class BoardsView extends ScreboView {
 			@Override
 			public void drop(DragAndDropEvent event) {
 				clustercat1Post1.addComponent(event.getTransferable().getSourceComponent());
+				clustercat1Post1.setStyleName("cluster_marker");
 
 			}
 
@@ -222,6 +227,7 @@ public class BoardsView extends ScreboView {
 			@Override
 			public void drop(DragAndDropEvent event) {
 				clustercat2Post2.addComponent(event.getTransferable().getSourceComponent());
+				clustercat2Post2.setStyleName("cluster_marker");
 
 			}
 
@@ -258,12 +264,15 @@ public class BoardsView extends ScreboView {
 
 		// Activity 
 		Label actLblAct = new Label("activity");
+		actLblAct.setStyleName("boardLbl");
 		Label actLblDate = new Label("target date (DD.MM.YYYY)");
+		actLblDate.setStyleName("boardLbl");
 		Label actLblPrio = new Label("priority");
+		actLblPrio.setStyleName("boardLbl");
 
 		TextField actTxtAct = new TextField();
 		actTxtAct.setStyleName("boardInput");
-		TextField actTxtDate = new TextField();
+		DateField actTxtDate = new DateField();
 		actTxtDate.setStyleName("boardInput");
 		ComboBox actDropPrio = new ComboBox();
 		actDropPrio.setStyleName("boardInput");
