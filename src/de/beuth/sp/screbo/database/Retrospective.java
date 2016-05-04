@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 @SuppressWarnings("serial")
 public class Retrospective extends CouchDbDocument {
-	protected String description;
+	protected String title;
 	protected String createdByUserId;
 	protected List<String> visibleByUserIds = Lists.newArrayList();
 	protected List<String> editableByUserIds = Lists.newArrayList();
@@ -24,9 +24,12 @@ public class Retrospective extends CouchDbDocument {
 	 * 
 	 * @param createdByUser
 	 */
-	public Retrospective(User createdByUser) {
+	public Retrospective(String title, User createdByUser) {
 		super();
+		this.title = title;
 		this.createdByUserId = createdByUser.getId();
+		visibleByUserIds.add(createdByUserId);
+		editableByUserIds.add(createdByUserId);
 
 		// add default categories
 		categories.add(new Category("Liked"));
@@ -37,11 +40,11 @@ public class Retrospective extends CouchDbDocument {
 	protected Retrospective() {
 		super();
 	}
-	public String getDescription() {
-		return description;
+	public String getTitle() {
+		return title;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public String getCreatedByUserId() {
 		return createdByUserId;
@@ -66,5 +69,9 @@ public class Retrospective extends CouchDbDocument {
 	}
 	public List<Activity> getActivities() {
 		return activities;
+	}
+	public boolean isVisibleByUser(User user) {
+		String userId = user.getId();
+		return visibleByUserIds.contains(userId) || editableByUserIds.contains(userId);
 	}
 }

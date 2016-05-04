@@ -11,7 +11,7 @@ import de.beuth.sp.screbo.ScreboUI;
 
 @SuppressWarnings("serial")
 public abstract class ScreboView extends VerticalLayout implements View {
-	protected final Logger logger = LogManager.getLogger();
+	protected static final Logger logger = LogManager.getLogger();
 	protected final ScreboUI screboUI;
 
 	public ScreboView(ScreboUI screboUI) {

@@ -56,12 +56,40 @@
   
   .topBar {
     width: 100%;
-    height: 65px;
     background: #b75461;
-	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -moz-linear-gradient(45deg,  #b75461 1%, $primaryColor 32%, #44010b 100%);
-	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -webkit-linear-gradient(45deg,  #b75461 1%,$primaryColor 32%,#44010b 100%);
-	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, linear-gradient(45deg,  #b75461 1%,$primaryColor 32%,#44010b 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b75461', endColorstr='#44010b',GradientType=1 );
+//	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -moz-linear-gradient(45deg,  #b75461 1%, $primaryColor 32%, #44010b 100%);
+//	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, -webkit-linear-gradient(45deg,  #b75461 1%,$primaryColor 32%,#44010b 100%);
+//	background: url("images/logo.gif") no-repeat scroll 20px 8px / 220px auto, url("images/slogan.gif") no-repeat scroll 300px 20px / 730px auto, linear-gradient(45deg,  #b75461 1%,$primaryColor 32%,#44010b 100%);
+//	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b75461', endColorstr='#44010b',GradientType=1 );
+  }
+  
+  .topBar .v-button {
+    margin-left: 4px;
+    margin-right: 4px;
+  	height: 30px;
+  	background: #B37266;
+  	border-color: #B37266;
+  	color: white;
+  	box-shadow: none;
+  }
+  
+  .topBar .v-button:hover {
+  	background: #B37266;
+  }
+
+  .topBar .v-button:active {
+  	background: #C49188;
+  }
+  
+  .topBar .v-button:focus:after {
+  	content: none;
+    border-color: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  
+  .topBar .logo {
+  	color: white;
   }
   
   .v-slot-boardArea {
@@ -192,6 +220,10 @@
   .cluster_marker {
   	background-color: #aaa;
     padding: 5px;
+  }
+  
+  .boardSelectionWindow {
+  	padding: 5px;
   }
   
 }

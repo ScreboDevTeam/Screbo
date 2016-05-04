@@ -13,9 +13,11 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.components.TopBar;
 import de.beuth.sp.screbo.database.User;
-import de.beuth.sp.screbo.views.BoardView;
-import de.beuth.sp.screbo.views.BoardsView;
+import de.beuth.sp.screbo.database.UserRepository;
+import de.beuth.sp.screbo.eventBus.EventBus;
 import de.beuth.sp.screbo.views.LoginView;
+import de.beuth.sp.screbo.views.RetrospectiveView;
+import de.beuth.sp.screbo.views.RetrospectivesView;
 
 @SuppressWarnings("serial")
 @Theme("screbo")
@@ -23,7 +25,7 @@ public class ScreboUI extends UI {
 	protected static final String SESSION_KEY_LOAD_PAGE_AFTER_LOGIN = "requestedPage";
 	protected static final Logger logger = LogManager.getLogger();
 
-	protected EventBus eventBus = new EventBus();
+	protected EventBus eventBus = new EventBus(ScreboServlet.getGlobalEventBus()); // Events for a client
 	protected Navigator navigator;
 
 	public String getPageToLoadAfterLogin() {
@@ -43,7 +45,11 @@ public class ScreboUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-		User user = User.getUserFromSession();
+
+		// For now we can live with polling to fetch updates from the server, TODO: Switch to push mechanism https://vaadin.com/directory#!addon/icepush
+		setPollInterval(1000);
+
+		User user = UserRepository.getUserFromSession();
 		logger.info("Page (re)loaded for sessionID: {}, user: {}", getSessionId(), user);
 
 		getPage().setTitle("Screbo");
@@ -73,8 +79,8 @@ public class ScreboUI extends UI {
 
 		// Create and register the views
 		navigator.addView("login", new LoginView(this));
-		navigator.addView("board", new BoardView(this));
-		navigator.addView("", new BoardsView(this));
+		navigator.addView("board", new RetrospectiveView(this));
+		navigator.addView("", new RetrospectivesView(this));
 	}
 
 	@Override

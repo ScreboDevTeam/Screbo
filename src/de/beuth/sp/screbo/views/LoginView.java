@@ -6,17 +6,16 @@ import org.vaadin.dialogs.ConfirmDialog;
 import com.ejt.vaadin.loginform.LoginForm.LoginEvent;
 import com.ejt.vaadin.loginform.LoginForm.LoginListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 
-import de.beuth.sp.screbo.EventBus.UserChangedEvent;
 import de.beuth.sp.screbo.SHA256;
 import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.components.ScreboLoginForm;
 import de.beuth.sp.screbo.database.User;
+import de.beuth.sp.screbo.eventBus.EventBus.UserChangedEvent;
 
 @SuppressWarnings("serial")
 public class LoginView extends ScreboView implements LoginListener {
@@ -52,7 +51,7 @@ public class LoginView extends ScreboView implements LoginListener {
 			final String password = SHA256.getSHA256(event.getPassword());
 			User user = null;
 			try {
-				user = ((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().get(mailAddress);
+				user = ScreboServlet.getUserRepository().get(mailAddress);
 			} catch (DocumentNotFoundException e) {
 				logger.warn("Did not find user with mailAddress:{}", mailAddress, e);
 				askToCreateNewUser(mailAddress, password);
@@ -85,7 +84,7 @@ public class LoginView extends ScreboView implements LoginListener {
 					User user = new User();
 					user.setEmailAddress(mailAddress);
 					user.setPassword(password);
-					((ScreboServlet) VaadinServlet.getCurrent()).getUserRepository().add(user);
+					ScreboServlet.getUserRepository().add(user);
 					doLogin(user);
 				} else {
 					loginForm.clear();

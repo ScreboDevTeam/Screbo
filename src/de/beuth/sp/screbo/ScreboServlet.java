@@ -25,10 +25,19 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
 
 import de.beuth.sp.screbo.configuration.Configuration;
+import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.RetrospectiveRepository;
 import de.beuth.sp.screbo.database.ScreboObjectMapper;
+import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
+import de.beuth.sp.screbo.eventBus.EventBus;
 
+/**
+ * Represents the server side. Singleton.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 @WebServlet(value = "/*", asyncSupported = true, loadOnStartup = 1)
 @VaadinServletConfiguration(productionMode = false, ui = ScreboUI.class, widgetset = "de.beuth.sp.screbo.widgetset.ScreboWidgetset")
@@ -38,6 +47,7 @@ public class ScreboServlet extends VaadinServlet {
 	protected Configuration configuration;
 	protected UserRepository userRepository;
 	protected RetrospectiveRepository retrospectiveRepository;
+	protected EventBus globalEventBus = new EventBus(); // for events, which are distributed to all clients
 
 	public Path getWebInfPath() {
 		ServletContext servletContext = getServletContext();
@@ -55,6 +65,7 @@ public class ScreboServlet extends VaadinServlet {
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 
+		System.setProperty("org.ektorp.support.AutoUpdateViewOnChange", "true"); // Allows Ektorp to automatically replace views in CouchDB, that differ from our definition
 		getServletConfig().getServletContext().setAttribute("unloadDelay", 5000);
 
 		// Init log4j
@@ -91,17 +102,29 @@ public class ScreboServlet extends VaadinServlet {
 
 		CouchDbConnector userDatabase = new StdCouchDbConnector("screbo_users", dbInstance, ScreboObjectMapper.getInstance());
 		userRepository = new UserRepository(userDatabase);
+		ChangesListenerThread changesListenerThread = new ChangesListenerThread(globalEventBus, User.class, userDatabase);
+		changesListenerThread.setDaemon(true);
+		changesListenerThread.start();
 
 		CouchDbConnector retrospectiveDatabase = new StdCouchDbConnector("retrospectives", dbInstance, ScreboObjectMapper.getInstance());
 		retrospectiveRepository = new RetrospectiveRepository(retrospectiveDatabase);
+		changesListenerThread = new ChangesListenerThread(globalEventBus, Retrospective.class, retrospectiveDatabase);
+		changesListenerThread.setDaemon(true);
+		changesListenerThread.start();
+
 	}
 
-	public UserRepository getUserRepository() {
-		return userRepository;
+	public static UserRepository getUserRepository() {
+		return ((ScreboServlet) VaadinServlet.getCurrent()).userRepository;
 	}
 
-	public RetrospectiveRepository getRetrospectiveRepository() {
-		return retrospectiveRepository;
+	public static RetrospectiveRepository getRetrospectiveRepository() {
+		return ((ScreboServlet) VaadinServlet.getCurrent()).retrospectiveRepository;
+	}
+
+	public static EventBus getGlobalEventBus() {
+		return ((ScreboServlet) VaadinServlet.getCurrent()).globalEventBus;
+
 	}
 
 }

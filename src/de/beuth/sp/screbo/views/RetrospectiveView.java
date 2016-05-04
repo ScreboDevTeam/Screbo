@@ -1,10 +1,10 @@
 package de.beuth.sp.screbo.views;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -20,18 +20,16 @@ import com.vaadin.ui.VerticalLayout;
 import de.beuth.sp.screbo.ScreboUI;
 
 /**
- * Allows creation of new boards and selection of a board.
+ * Displays a board.
  * 
- * @author geoffrey.teuber
+ * @author volker.gronau
  *
  */
 @SuppressWarnings("serial")
-@Theme("screbo")
-public class BoardsView extends ScreboView {
+public class RetrospectiveView extends ScreboView {
 
-	public BoardsView(ScreboUI screboUI) {
+	public RetrospectiveView(ScreboUI screboUI) {
 		super(screboUI);
-
 		HorizontalLayout boardMainLayout = new HorizontalLayout();
 		boardMainLayout.setSizeFull();
 		addComponent(boardMainLayout);
@@ -304,6 +302,11 @@ public class BoardsView extends ScreboView {
 		activityArea.addComponent(actBtnExisting6);
 		activityArea.addComponent(actBtnExisting5);
 		activityArea.addComponent(actBtnExisting4);
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		addComponent(new Label(event.getParameters()));
 	}
 
 }

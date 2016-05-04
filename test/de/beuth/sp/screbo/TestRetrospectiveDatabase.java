@@ -26,7 +26,7 @@ public class TestRetrospectiveDatabase {
 		database.getUserRepository().add(myUser);
 
 		// save it
-		Retrospective oldRetrospective = new Retrospective(myUser);
+		Retrospective oldRetrospective = new Retrospective("hihohiha", myUser);
 		oldRetrospective.setDateOfRetrospective(ZonedDateTime.now().plusDays(5));
 
 		retrospectiveRepository.add(oldRetrospective);

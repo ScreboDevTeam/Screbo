@@ -12,25 +12,14 @@ import com.vaadin.server.VaadinSession;
 @SuppressWarnings("serial")
 @JsonIgnoreProperties({"displayName", "emailAddress"})
 public class User extends CouchDbDocument {
-	protected final static String SESSION_USER_PROPERTY = "currentUser";
 
-	//	public static enum UserRole {
-	//		TeamMember, ScrumMaster, ProductOwner, StakeHolder
-	//	}
+	public void setAsSessionUser() {
+		VaadinSession.getCurrent().setAttribute(UserRepository.SESSION_USER_PROPERTY, this);
+	}
 
 	protected String password;
 	protected String lastName;
 	protected String firstName;
-	//protected String emailAddress; saved in ID
-	//	protected UserRole userRole;
-
-	public static User getUserFromSession() {
-		return (User) VaadinSession.getCurrent().getAttribute(SESSION_USER_PROPERTY);
-	}
-
-	public void setAsSessionUser() {
-		VaadinSession.getCurrent().setAttribute(SESSION_USER_PROPERTY, this);
-	}
 
 	public String getPassword() {
 		return password;
