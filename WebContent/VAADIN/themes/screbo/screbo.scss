@@ -218,5 +218,9 @@
   	border-color: $primaryColor;
     box-shadow: 0 0 0 2px $primaryColorLight;
   }
+  
+  .v-datefield-popup {
+  	width: auto !important;
+  }
     
 }
