@@ -194,4 +194,29 @@
     padding: 5px;
   }
   
+  .v-button:focus::after {
+    border-color: #fff;
+    box-shadow: 0 0 0 0px rgba(25, 125, 225, 0.5);
+  }
+  
+  .v-textfield:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-datefield [class*="textfield"]:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-textarea:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-filterselect [class*="input"]:focus {
+  	border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+    
 }

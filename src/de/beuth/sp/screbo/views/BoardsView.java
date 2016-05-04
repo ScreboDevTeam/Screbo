@@ -276,9 +276,9 @@ public class BoardsView extends ScreboView {
 		actTxtDate.setStyleName("boardInput");
 		ComboBox actDropPrio = new ComboBox();
 		actDropPrio.setStyleName("boardInput");
-		actDropPrio.addItem("Wichtig");
-		actDropPrio.addItem("Normal");
-		actDropPrio.addItem("Unwichtig");
+		actDropPrio.addItem("high");
+		actDropPrio.addItem("middle");
+		actDropPrio.addItem("low");
 
 		Button actBtnNew = new Button("");
 		actBtnNew.setDescription("add / save your activity");
