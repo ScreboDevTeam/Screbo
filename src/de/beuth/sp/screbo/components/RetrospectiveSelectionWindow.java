@@ -39,7 +39,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		screboUI.getEventBus().addEventListener(this, true);
 	}
 
-	protected synchronized void fillVerticalLayout() {
+	protected void fillVerticalLayout() {
 
 		verticalLayout.removeAllComponents();
 		Label myBoards = new Label("My Retrospectives");
@@ -76,7 +76,14 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 	public void onScreboEvent(ScreboEvent screboEvent) {
 		if (screboEvent instanceof DatabaseObjectChangedEvent) {
 			if (((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(Retrospective.class)) { // a retrospective object was changed, we update the view
-				fillVerticalLayout();
+
+				screboUI.access(new Runnable() {
+
+					@Override
+					public void run() {
+						fillVerticalLayout();
+					}
+				});
 			}
 		}
 	}

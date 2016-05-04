@@ -3,6 +3,7 @@ package de.beuth.sp.screbo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
@@ -21,6 +22,7 @@ import de.beuth.sp.screbo.views.RetrospectivesView;
 
 @SuppressWarnings("serial")
 @Theme("screbo")
+@Push
 public class ScreboUI extends UI {
 	protected static final String SESSION_KEY_LOAD_PAGE_AFTER_LOGIN = "requestedPage";
 	protected static final Logger logger = LogManager.getLogger();
@@ -47,7 +49,7 @@ public class ScreboUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		// For now we can live with polling to fetch updates from the server, TODO: Switch to push mechanism https://vaadin.com/directory#!addon/icepush
-		setPollInterval(1000);
+		//setPollInterval(1000);
 
 		User user = UserRepository.getUserFromSession();
 		logger.info("Page (re)loaded for sessionID: {}, user: {}", getSessionId(), user);
