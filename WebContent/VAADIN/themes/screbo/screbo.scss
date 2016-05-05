@@ -40,7 +40,47 @@
   $secondaryColor : #73878a;
   $secondaryColorDark: #343C3D;
   $btnFontColor: #fff;
+
+  .v-button:focus::after {
+    border-color: #fff;
+    box-shadow: 0 0 0 0px rgba(25, 125, 225, 0.5);
+  }
   
+  .v-textfield:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-datefield [class*="textfield"]:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-textarea:focus {
+    border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-filterselect [class*="input"]:focus {
+  	border-color: $primaryColor;
+    box-shadow: 0 0 0 2px $primaryColorLight;
+  }
+  
+  .v-datefield-popup {
+  	width: auto !important;
+  }
+  
+  .catLabel {
+   margin-top: 20px;
+  }
+  
+  .display_on {
+  
+  }
+  
+  .display_off {
+  
+  }  
   
   .loginUserName {
     width: 200px;
@@ -191,7 +231,7 @@
   	background: $primaryColor;
   }
   
-  .ddWrapperCat1Post, .ddWrapperCat2Post {
+  .ddWrapperCat1Post, .ddWrapperCat2Post, ddWrapperCat3Post, ddWrapperCat4Post {
   	z-index: 99;
   }
   
@@ -253,5 +293,4 @@
     -webkit-box-shadow: none;
     box-shadow: none;
   }
-  
 }

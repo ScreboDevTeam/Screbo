@@ -322,6 +322,61 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		cat3Area.setComponentAlignment(cat3Lbl, Alignment.MIDDLE_CENTER);
 		cat3Area.setComponentAlignment(cat3Btn, Alignment.MIDDLE_CENTER);
 
+		// Drag&Drop wrapper
+		VerticalLayout cat3PostsArea = new VerticalLayout();
+		cat3PostsArea.setStyleName("PostArea");
+		DragAndDropWrapper ddWrappercat3 = new DragAndDropWrapper(cat3PostsArea);
+		cat3Area.addComponent(ddWrappercat3);
+		cat3Area.setComponentAlignment(ddWrappercat3, Alignment.MIDDLE_CENTER);
+
+		ddWrappercat3.setDropHandler(new DropHandler() {
+
+			@Override
+			public void drop(DragAndDropEvent event) {
+				cat3PostsArea.addComponent(event.getTransferable().getSourceComponent());
+
+			}
+
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
+
+		});
+
+		//Posts
+		Label cat3Post = new Label("Whatever");
+		cat3Post.setStyleName("posting");
+		DragAndDropWrapper ddWrapperCat3PostAlone = new DragAndDropWrapper(cat3Post);
+		ddWrapperCat3PostAlone.setSizeUndefined();
+		ddWrapperCat3PostAlone.setStyleName("ddWrapperCat3PostAlone");
+		ddWrapperCat3PostAlone.setDragStartMode(DragStartMode.COMPONENT);
+		VerticalLayout clustercat3Post3 = new VerticalLayout();
+		clustercat3Post3.addComponent(ddWrapperCat3PostAlone);
+		DragAndDropWrapper ddWrapperCat3Post = new DragAndDropWrapper(clustercat3Post3);
+		ddWrapperCat3Post.setDragStartMode(DragStartMode.COMPONENT);
+
+		// Set the wrapper to wrap tightly around the component
+		ddWrapperCat3Post.setSizeUndefined();
+		cat3PostsArea.addComponent(ddWrapperCat3Post);
+		ddWrapperCat3Post.setStyleName("ddWrapperCat3Post");
+
+		ddWrapperCat3Post.setDropHandler(new DropHandler() {
+
+			@Override
+			public void drop(DragAndDropEvent event) {
+				clustercat3Post3.addComponent(event.getTransferable().getSourceComponent());
+				clustercat3Post3.setStyleName("cluster_marker");
+
+			}
+
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
+
+		});
+
 		// Category 4
 		Label cat4Lbl = new Label("");
 		cat4Lbl.setStyleName("catLabel cat4Label");
@@ -333,6 +388,61 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		cat4Area.addComponent(cat4Btn);
 		cat4Area.setComponentAlignment(cat4Lbl, Alignment.MIDDLE_CENTER);
 		cat4Area.setComponentAlignment(cat4Btn, Alignment.MIDDLE_CENTER);
+
+		// Drag&Drop wrapper
+		VerticalLayout cat4PostsArea = new VerticalLayout();
+		cat4PostsArea.setStyleName("PostArea");
+		DragAndDropWrapper ddWrappercat4 = new DragAndDropWrapper(cat4PostsArea);
+		cat4Area.addComponent(ddWrappercat4);
+		cat4Area.setComponentAlignment(ddWrappercat4, Alignment.MIDDLE_CENTER);
+
+		ddWrappercat4.setDropHandler(new DropHandler() {
+
+			@Override
+			public void drop(DragAndDropEvent event) {
+				cat4PostsArea.addComponent(event.getTransferable().getSourceComponent());
+
+			}
+
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
+
+		});
+
+		//Posts
+		Label cat4Post = new Label("Whatever");
+		cat4Post.setStyleName("posting");
+		DragAndDropWrapper ddWrapperCat4PostAlone = new DragAndDropWrapper(cat4Post);
+		ddWrapperCat4PostAlone.setSizeUndefined();
+		ddWrapperCat4PostAlone.setStyleName("ddWrapperCat4PostAlone");
+		ddWrapperCat4PostAlone.setDragStartMode(DragStartMode.COMPONENT);
+		VerticalLayout clustercat4Post4 = new VerticalLayout();
+		clustercat4Post4.addComponent(ddWrapperCat4PostAlone);
+		DragAndDropWrapper ddWrapperCat4Post = new DragAndDropWrapper(clustercat4Post4);
+		ddWrapperCat4Post.setDragStartMode(DragStartMode.COMPONENT);
+
+		// Set the wrapper to wrap tightly around the component
+		ddWrapperCat4Post.setSizeUndefined();
+		cat4PostsArea.addComponent(ddWrapperCat4Post);
+		ddWrapperCat4Post.setStyleName("ddWrapperCat4Post");
+
+		ddWrapperCat4Post.setDropHandler(new DropHandler() {
+
+			@Override
+			public void drop(DragAndDropEvent event) {
+				clustercat4Post4.addComponent(event.getTransferable().getSourceComponent());
+				clustercat4Post4.setStyleName("cluster_marker");
+
+			}
+
+			@Override
+			public AcceptCriterion getAcceptCriterion() {
+				return AcceptAll.get();
+			}
+
+		});
 
 		// Activity 
 		Label actLblAct = new Label("activity");
