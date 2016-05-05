@@ -1,6 +1,9 @@
 package de.beuth.sp.screbo.database;
 
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.ektorp.support.CouchDbDocument;
 
@@ -20,6 +23,24 @@ public class User extends CouchDbDocument {
 	protected String password;
 	protected String lastName;
 	protected String firstName;
+	protected ZoneId timeZoneId = TimeZone.getDefault().toZoneId();
+	protected String locale = Locale.getDefault().toLanguageTag();
+
+	public ZoneId getTimeZoneId() {
+		return timeZoneId;
+	}
+
+	public void setTimeZoneId(ZoneId timeZoneId) {
+		this.timeZoneId = timeZoneId;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
 
 	public String getPassword() {
 		return password;

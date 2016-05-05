@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
-import com.vaadin.ui.UI;
 
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
@@ -23,7 +22,17 @@ import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 public class EventBus implements Serializable, ScreboEventListener {
 	protected static final Logger logger = LogManager.getLogger();
 
-	protected UI synchronizeOnUi;
+	/**
+	 * Used to synchronize events between parent EventBus and this EventBus.
+	 * 
+	 * @author volker.gronau
+	 *
+	 */
+	public static interface Synchronizer {
+		public void synchronize(Runnable runnable);
+	}
+
+	protected Synchronizer synchronizer;
 	protected List<Object> eventListeners = Lists.newArrayList();
 
 	public EventBus() {
@@ -34,9 +43,9 @@ public class EventBus implements Serializable, ScreboEventListener {
 	 * @param parentEventBus
 	 *            Every message from parentBus is received by this bus too.
 	 */
-	public EventBus(UI synchronizeOnUi, EventBus parentEventBus) {
+	public EventBus(EventBus parentEventBus, Synchronizer synchronizer) {
 		super();
-		this.synchronizeOnUi = synchronizeOnUi;
+		this.synchronizer = synchronizer;
 		parentEventBus.addEventListener(this, true);
 	}
 
@@ -115,12 +124,16 @@ public class EventBus implements Serializable, ScreboEventListener {
 	 */
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
-		synchronizeOnUi.access(new Runnable() {
+		if (synchronizer != null) {
+			synchronizer.synchronize(new Runnable() {
 
-			@Override
-			public void run() {
-				fireEvent(screboEvent);
-			}
-		});
+				@Override
+				public void run() {
+					fireEvent(screboEvent);
+				}
+			});
+		} else {
+			fireEvent(screboEvent);
+		}
 	}
 }

@@ -6,4 +6,8 @@ import com.google.common.collect.Lists;
 
 public class Cluster {
 	protected List<RetroItem> retroItems = Lists.newArrayList();
+
+	public List<RetroItem> getRetroItems() {
+		return retroItems;
+	}
 }

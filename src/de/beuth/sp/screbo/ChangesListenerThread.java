@@ -22,7 +22,7 @@ public class ChangesListenerThread extends Thread {
 	protected Class<?> changedClass;
 
 	protected ChangesListenerThread(EventBus eventBusToPostChangedTo, Class<?> changedClass, CouchDbConnector couchDbConnector) {
-		super();
+		super("DatabaseChangesListenerThread");
 		this.eventBusToPostChangedTo = eventBusToPostChangedTo;
 		this.changedClass = changedClass;
 		this.couchDbConnector = couchDbConnector;

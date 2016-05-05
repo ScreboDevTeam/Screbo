@@ -34,7 +34,14 @@ public class ScreboUI extends UI implements ScreboEventListener {
 	protected static final String SESSION_KEY_LOAD_PAGE_AFTER_LOGIN = "requestedPage";
 	protected static final Logger logger = LogManager.getLogger();
 
-	protected EventBus eventBus = new EventBus(this, ScreboServlet.getGlobalEventBus()); // Events for a client
+	protected EventBus eventBus = new EventBus(ScreboServlet.getGlobalEventBus(), new EventBus.Synchronizer() {
+
+		@Override
+		public void synchronize(Runnable runnable) {
+			access(runnable);
+		}
+	}); // Events in the scope of a client
+
 	protected Navigator navigator;
 	protected Retrospective currentlyOpenedRetrospective;
 
@@ -101,7 +108,12 @@ public class ScreboUI extends UI implements ScreboEventListener {
 		if ("login".equals(pageToLoadAfterLogin)) {
 			pageToLoadAfterLogin = "";
 		}
-		navigator.navigateTo(pageToLoadAfterLogin);
+		try {
+			navigator.navigateTo(pageToLoadAfterLogin);
+		} catch (IllegalArgumentException e) {
+			logger.error("Tried to navigate to {}", pageToLoadAfterLogin);
+			navigator.navigateTo("/");
+		}
 	}
 
 	public EventBus getEventBus() {

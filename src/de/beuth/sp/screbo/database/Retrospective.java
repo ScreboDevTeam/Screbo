@@ -24,8 +24,7 @@ public class Retrospective extends CouchDbDocument {
 	 * 
 	 * @param createdByUser
 	 */
-	public Retrospective(String title, User createdByUser) {
-		super();
+	public Retrospective(String title, User createdByUser, ZonedDateTime dateOfRetrospective) {
 		this.title = title;
 		this.createdByUserId = createdByUser.getId();
 		visibleByUserIds.add(createdByUserId);
@@ -36,10 +35,14 @@ public class Retrospective extends CouchDbDocument {
 		categories.add(new Category("Learned"));
 		categories.add(new Category("Lacked"));
 		categories.add(new Category("Longed for"));
+
+		this.dateOfRetrospective = dateOfRetrospective;
 	}
-	protected Retrospective() {
+
+	public Retrospective() {
 		super();
 	}
+
 	public String getTitle() {
 		return title;
 	}

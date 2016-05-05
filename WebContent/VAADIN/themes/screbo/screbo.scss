@@ -252,22 +252,23 @@
   }
   
   .PostArea {
-  	min-height: 400px;
   	text-align: center;
   	margin-top: 20px;
+  	margin-bottom: 20px;
   }
   
-  .cluster_marker {
+  .ClusterArea {
   	background-color: #aaa;
     padding: 5px;
   }
   
   .retrospectiveSelectionWindow {
-  	padding: 5px;
+  	padding: 8px;
   }
   
   .retrospectiveSelectionWindow .v-button {
-	margin: 4px;
+	margin-top: 4px;
+	margin-bottom: 4px;
 	width: 260px;
   	height: 30px;
   }
@@ -292,5 +293,25 @@
     border-color: none;
     -webkit-box-shadow: none;
     box-shadow: none;
+  }
+  
+  .retrospectiveSelectionWindow .currentRetrospectiveLine {
+  	margin: 4px;
+  }
+  
+  .retrospectiveSelectionWindow .currentRetrospectiveLabel {
+  	width: 60px;
+  	margin-left: 4px;
+  }
+  
+  .retrospectiveSelectionWindow .v-button-currentRetrospectiveButton {
+  	margin-left: 70px;
+  	width: 184px;
+  	padding: 0;
+  }
+  
+  .retrospectiveSelectionWindow .sectionLabel {
+  	margin-top: 4px;
+  	margin-bottom: 4px;
   }
 }

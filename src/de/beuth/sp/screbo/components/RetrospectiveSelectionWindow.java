@@ -1,7 +1,18 @@
 package de.beuth.sp.screbo.components;
 
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.Locale;
+
+import org.ektorp.DocumentNotFoundException;
+
+import com.google.common.base.Strings;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.ScreboServlet;
@@ -18,10 +29,14 @@ import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
 @SuppressWarnings({"serial"})
 public class RetrospectiveSelectionWindow extends ScreboWindow implements ScreboEventListener {
-	protected final VerticalLayout verticalLayout = new VerticalLayout();
+	protected final VerticalLayout currentRetrospectiveLayout = new VerticalLayout();
+	protected final VerticalLayout myRetrospectivesLayout = new VerticalLayout();
 	protected CreateRetrospectiveWindow createRetrospectiveWindow;
 	protected User user = UserRepository.getUserFromSession();
 	protected RetrospectiveRepository retrospectiveRepository = ScreboServlet.getRetrospectiveRepository();
+	protected Retrospective currentRetrospective;
+	protected TextField currentRetrospectiveTitleTextField = new TextField();
+	protected DateField currentRetrospectiveDateField = new DateField();
 
 	protected class OpenRetrospectiveButton extends Button implements Button.ClickListener {
 		Retrospective retrospective;
@@ -46,37 +61,88 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		setResizable(false);
 		setDraggable(false);
 		setPositionY(40);
-		setWidth("280px");
+		myRetrospectivesLayout.setWidth("280px");
 		setHeight("380px");
 		setStyleName("retrospectiveSelectionWindow");
 
-		setContent(verticalLayout);
-		fillVerticalLayout();
+		currentRetrospectiveTitleTextField.addTextChangeListener((event) -> {
+			String text = event.getText();
+			if (!Strings.isNullOrEmpty(text) && currentRetrospective != null) {
+				Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
+				retrospective.setTitle(text);
+				ScreboServlet.getRetrospectiveRepository().update(retrospective);
+			}
+		});
+
+		currentRetrospectiveDateField.addValueChangeListener((event) -> {
+			Date date = currentRetrospectiveDateField.getValue();
+			if (date != null) {
+				ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), user.getTimeZoneId());
+				if (currentRetrospective != null) {
+					Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
+					retrospective.setDateOfRetrospective(zonedDateTime);
+					ScreboServlet.getRetrospectiveRepository().update(retrospective);
+				}
+			}
+		});
+		currentRetrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).toInstant()));
+		currentRetrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
+
+		setContent(new VerticalLayout(currentRetrospectiveLayout, myRetrospectivesLayout));
+		fillCurrentRetrospectiveLayout();
+		fillMyRetrospectivesLayout();
 		setVisible(true);
 
 		screboUI.getEventBus().addEventListener(this, true);
 	}
 
-	protected void fillVerticalLayout() {
+	protected void fillCurrentRetrospectiveLayout() {
+		currentRetrospectiveLayout.removeAllComponents();
 
-		verticalLayout.removeAllComponents();
+		currentRetrospective = screboUI.getCurrentlyOpenedRetrospective();
+		if (currentRetrospective != null) {
+			Label currentRetrospectiveLabel = new Label("Current Retrospective");
+			currentRetrospectiveLabel.setStyleName("sectionLabel");
+			currentRetrospectiveLayout.addComponent(currentRetrospectiveLabel);
 
-		if (screboUI.getCurrentlyOpenedRetrospective() != null) {
-			Label currentRetrospective = new Label("Current Retrospective");
-			verticalLayout.addComponent(currentRetrospective);
+			currentRetrospectiveTitleTextField.setValue(currentRetrospective.getTitle());
+
+			Label titleLabel = new Label("Title:");
+			titleLabel.setStyleName("currentRetrospectiveLabel");
+			HorizontalLayout editTitleLine = new HorizontalLayout(titleLabel, currentRetrospectiveTitleTextField);
+			editTitleLine.setStyleName("currentRetrospectiveLine");
+			editTitleLine.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
+			currentRetrospectiveLayout.addComponent(editTitleLine);
+
+			currentRetrospectiveDateField.setValue(Date.from(currentRetrospective.getDateOfRetrospective().toInstant()));
+
+			Label dateOfRetrospectiveLabel = new Label("Date:");
+			dateOfRetrospectiveLabel.setStyleName("currentRetrospectiveLabel");
+			HorizontalLayout dateOfRetrospectiveLine = new HorizontalLayout(dateOfRetrospectiveLabel, currentRetrospectiveDateField);
+			dateOfRetrospectiveLine.setStyleName("currentRetrospectiveLine");
+			dateOfRetrospectiveLine.setComponentAlignment(dateOfRetrospectiveLabel, Alignment.MIDDLE_LEFT);
+			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
 			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Invite or remove users");
-			verticalLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
+			addRemoveUsersFromCurrentRetrospectiveButton.setStyleName("currentRetrospectiveButton");
+			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
 
-			Button closeRetrospective = new Button("Close retrospective");
-			closeRetrospective.addClickListener(event -> {
-				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(screboUI.getCurrentlyOpenedRetrospective()));
+			Button closeRetrospectiveButton = new Button("Close retrospective");
+			closeRetrospectiveButton.setStyleName("currentRetrospectiveButton");
+			closeRetrospectiveButton.addClickListener(event -> {
+				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
 				close();
 			});
-			verticalLayout.addComponent(closeRetrospective);
+			currentRetrospectiveLayout.addComponent(closeRetrospectiveButton);
 		}
+	}
 
-		verticalLayout.addComponent(new Label("-"));
+	protected void fillMyRetrospectivesLayout() {
+		myRetrospectivesLayout.removeAllComponents();
+
+		Label myRetrospectivesLabel = new Label("My Retrospectives");
+		myRetrospectivesLabel.setStyleName("sectionLabel");
+		myRetrospectivesLayout.addComponent(myRetrospectivesLabel);
 
 		Button createNewRetrospectiveButton = new Button("Create new retrospective");
 		createNewRetrospectiveButton.addClickListener(event -> {
@@ -92,11 +158,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 				createRetrospectiveWindow.close();
 			}
 		});
-
-		verticalLayout.addComponent(createNewRetrospectiveButton);
-
-		Label myRetrospectives = new Label("My Retrospectives");
-		verticalLayout.addComponent(myRetrospectives);
+		myRetrospectivesLayout.addComponent(createNewRetrospectiveButton);
 
 		for (Retrospective retrospective : retrospectiveRepository.getVisibleByUser(user.getId())) {
 			OpenRetrospectiveButton openRetrospectiveButton = new OpenRetrospectiveButton(retrospective);
@@ -104,7 +166,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			openRetrospectiveButton.addClickListener(event -> {
 				close();
 			});
-			verticalLayout.addComponent(openRetrospectiveButton);
+			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
 		}
 	}
 
@@ -112,7 +174,19 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 	public void onScreboEvent(ScreboEvent screboEvent) {
 		if (screboEvent instanceof DatabaseObjectChangedEvent) {
 			if (((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(Retrospective.class)) { // a retrospective object was changed, we update the view
-				fillVerticalLayout();
+				if (currentRetrospective != null && currentRetrospective.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
+					try {
+						currentRetrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
+						if (currentRetrospective == null) {
+							fillCurrentRetrospectiveLayout();
+						} else {
+							currentRetrospectiveTitleTextField.setValue(currentRetrospective.getTitle());
+							currentRetrospectiveDateField.setValue(Date.from(currentRetrospective.getDateOfRetrospective().toInstant()));
+						}
+					} catch (DocumentNotFoundException e) {
+					}
+				}
+				fillMyRetrospectivesLayout();
 			}
 		}
 	}
