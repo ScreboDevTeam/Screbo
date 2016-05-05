@@ -85,7 +85,7 @@
 			<arg value="-logLevel" />
 			<arg value="INFO" />
 			<arg value="-strict" />
-			<jvmarg value="-Xmx700M" />
+			<jvmarg value="-Xmx600M" />
 			<jvmarg value="-Djava.awt.headless=true" />
 			<jvmarg value="-Dfile.encoding=UTF-8" />
 			<classpath>
