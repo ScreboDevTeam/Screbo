@@ -1,5 +1,7 @@
 package de.beuth.sp.screbo.database;
 
+import java.io.Serializable;
+
 import org.ektorp.CouchDbConnector;
 import org.ektorp.impl.ObjectMapperFactory;
 import org.ektorp.impl.jackson.EktorpJacksonModule;
@@ -15,7 +17,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * @author volker.gronau
  *
  */
-public class ScreboObjectMapper implements ObjectMapperFactory {
+@SuppressWarnings("serial")
+public class ScreboObjectMapper implements ObjectMapperFactory, Serializable {
 	public static ScreboObjectMapper instance = new ScreboObjectMapper();
 
 	/**

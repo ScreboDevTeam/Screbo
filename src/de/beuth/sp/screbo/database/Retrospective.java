@@ -4,13 +4,17 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.ektorp.support.CouchDbDocument;
+import org.ektorp.support.View;
 
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("serial")
+@View(name = "all", map = "function(doc) { if (!doc._id.startsWith('_design') ) emit( null, doc._id )}")
 public class Retrospective extends CouchDbDocument {
+
 	protected String title;
 	protected String createdByUserId;
+
 	protected List<String> visibleByUserIds = Lists.newArrayList();
 	protected List<String> editableByUserIds = Lists.newArrayList();
 

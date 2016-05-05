@@ -96,7 +96,7 @@ public class ScreboServlet extends VaadinServlet {
 	}
 
 	protected void initDatabase() throws Exception {
-		HttpClient httpClient = new StdHttpClient.Builder().url(configuration.getCouchDB().getUrl()).build();
+		HttpClient httpClient = new StdHttpClient.Builder().url(configuration.getCouchDB().getUrl()).caching(true).build();
 
 		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient, ScreboObjectMapper.getInstance());
 

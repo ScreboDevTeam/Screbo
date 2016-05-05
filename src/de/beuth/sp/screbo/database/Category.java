@@ -1,10 +1,12 @@
 package de.beuth.sp.screbo.database;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
-public class Category {
+@SuppressWarnings("serial")
+public class Category implements Serializable {
 	protected String name;
 	protected List<Cluster> cluster = Lists.newArrayList();
 

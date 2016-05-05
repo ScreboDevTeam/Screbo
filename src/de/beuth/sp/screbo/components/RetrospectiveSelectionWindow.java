@@ -7,6 +7,10 @@ import java.util.Locale;
 import org.ektorp.DocumentNotFoundException;
 
 import com.google.common.base.Strings;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -37,6 +41,34 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 	protected Retrospective currentRetrospective;
 	protected TextField currentRetrospectiveTitleTextField = new TextField();
 	protected DateField currentRetrospectiveDateField = new DateField();
+	protected ValueChangeListener currentRetrospectiveDateValueChangedListener = new ValueChangeListener() {
+
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			Date date = currentRetrospectiveDateField.getValue();
+			if (date != null) {
+				ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), user.getTimeZoneId());
+				if (currentRetrospective != null) {
+					Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
+					retrospective.setDateOfRetrospective(zonedDateTime);
+					ScreboServlet.getRetrospectiveRepository().update(retrospective);
+				}
+			}
+		}
+	};
+	protected TextChangeListener currentRetrospectiveTitleTextChangedListener = new TextChangeListener() {
+
+		@Override
+		public void textChange(TextChangeEvent event) {
+			String text = event.getText();
+			if (!Strings.isNullOrEmpty(text) && currentRetrospective != null) {
+				Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
+				retrospective.setTitle(text);
+				ScreboServlet.getRetrospectiveRepository().update(retrospective);
+			}
+
+		}
+	};
 
 	protected class OpenRetrospectiveButton extends Button implements Button.ClickListener {
 		Retrospective retrospective;
@@ -65,26 +97,6 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		setHeight("380px");
 		setStyleName("retrospectiveSelectionWindow");
 
-		currentRetrospectiveTitleTextField.addTextChangeListener((event) -> {
-			String text = event.getText();
-			if (!Strings.isNullOrEmpty(text) && currentRetrospective != null) {
-				Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
-				retrospective.setTitle(text);
-				ScreboServlet.getRetrospectiveRepository().update(retrospective);
-			}
-		});
-
-		currentRetrospectiveDateField.addValueChangeListener((event) -> {
-			Date date = currentRetrospectiveDateField.getValue();
-			if (date != null) {
-				ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), user.getTimeZoneId());
-				if (currentRetrospective != null) {
-					Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
-					retrospective.setDateOfRetrospective(zonedDateTime);
-					ScreboServlet.getRetrospectiveRepository().update(retrospective);
-				}
-			}
-		});
 		currentRetrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).toInstant()));
 		currentRetrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
 
@@ -105,7 +117,8 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			currentRetrospectiveLabel.setStyleName("sectionLabel");
 			currentRetrospectiveLayout.addComponent(currentRetrospectiveLabel);
 
-			currentRetrospectiveTitleTextField.setValue(currentRetrospective.getTitle());
+			setTitle();
+			setDate();
 
 			Label titleLabel = new Label("Title:");
 			titleLabel.setStyleName("currentRetrospectiveLabel");
@@ -113,8 +126,6 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			editTitleLine.setStyleName("currentRetrospectiveLine");
 			editTitleLine.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
 			currentRetrospectiveLayout.addComponent(editTitleLine);
-
-			currentRetrospectiveDateField.setValue(Date.from(currentRetrospective.getDateOfRetrospective().toInstant()));
 
 			Label dateOfRetrospectiveLabel = new Label("Date:");
 			dateOfRetrospectiveLabel.setStyleName("currentRetrospectiveLabel");
@@ -135,6 +146,18 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			});
 			currentRetrospectiveLayout.addComponent(closeRetrospectiveButton);
 		}
+	}
+
+	private void setTitle() {
+		currentRetrospectiveTitleTextField.removeTextChangeListener(currentRetrospectiveTitleTextChangedListener);
+		currentRetrospectiveTitleTextField.setValue(currentRetrospective.getTitle());
+		currentRetrospectiveTitleTextField.addTextChangeListener(currentRetrospectiveTitleTextChangedListener);
+	}
+
+	private void setDate() {
+		currentRetrospectiveDateField.removeValueChangeListener(currentRetrospectiveDateValueChangedListener);
+		currentRetrospectiveDateField.setValue(Date.from(currentRetrospective.getDateOfRetrospective().toInstant()));
+		currentRetrospectiveDateField.addValueChangeListener(currentRetrospectiveDateValueChangedListener);
 	}
 
 	protected void fillMyRetrospectivesLayout() {
@@ -180,8 +203,8 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 						if (currentRetrospective == null) {
 							fillCurrentRetrospectiveLayout();
 						} else {
-							currentRetrospectiveTitleTextField.setValue(currentRetrospective.getTitle());
-							currentRetrospectiveDateField.setValue(Date.from(currentRetrospective.getDateOfRetrospective().toInstant()));
+							setTitle();
+							setDate();
 						}
 					} catch (DocumentNotFoundException e) {
 					}

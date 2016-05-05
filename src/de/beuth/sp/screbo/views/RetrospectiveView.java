@@ -3,6 +3,7 @@ package de.beuth.sp.screbo.views;
 import java.util.Objects;
 
 import org.ektorp.DocumentNotFoundException;
+import org.ektorp.UpdateConflictException;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -30,6 +31,7 @@ import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
+import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
@@ -209,11 +211,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			final Button catAddButton = new Button("Add posting");
 			catAddButton.setDescription("Add a posting to category.");
 			catAddButton.addClickListener(e -> {
-				Cluster cluster = new Cluster();
-				cluster.getRetroItems().add(new RetroItem("Neu neu"));
-				category.getCluster().add(cluster);
-				ScreboServlet.getRetrospectiveRepository().update(retrospective);
-				//screboUI.getEventBus().fireEvent(new DatabaseObjectChangedEvent(Retrospective.class, retrospective.getId(), false));
+				createPosting(category, "Neu");
 			});
 
 			VerticalLayout catArea = new VerticalLayout(catTitleLabel, postsArea.getWrapper(), catAddButton);
@@ -276,6 +274,26 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		horizontalLayout.setExpandRatio(boardMainPanel, 1);
 		horizontalLayout.setSizeFull();
 		addComponent(horizontalLayout);
+	}
+
+	protected void createPosting(Category category, String title) {
+		createPosting(category, title, System.currentTimeMillis() + 10_000);
+	}
+
+	protected void createPosting(Category category, String title, long retryUntil) {
+		Cluster cluster = new Cluster();
+		cluster.getRetroItems().add(new RetroItem(title));
+		category.getCluster().add(cluster);
+		try {
+			ScreboServlet.getRetrospectiveRepository().update(retrospective);
+		} catch (UpdateConflictException e) { // Somebody else was faster
+			logger.warn("Got UpdateConflictException", e);
+			if (retryUntil < System.currentTimeMillis()) {
+				createPosting(category, title, retryUntil);
+			} else {
+				screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Could not write to database", e));
+			}
+		}
 	}
 
 }

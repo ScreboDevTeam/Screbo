@@ -1,6 +1,9 @@
 package de.beuth.sp.screbo.database;
 
-public class RetroItem {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class RetroItem implements Serializable {
 	protected String title;
 
 	public RetroItem(String title) {

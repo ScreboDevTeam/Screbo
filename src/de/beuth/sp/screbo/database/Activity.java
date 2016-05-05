@@ -1,8 +1,10 @@
 package de.beuth.sp.screbo.database;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class Activity {
+@SuppressWarnings("serial")
+public class Activity implements Serializable {
 	public static enum ActivityPriority {
 		IMPORTANT, NORMAL, UNIMPORTANT
 	}

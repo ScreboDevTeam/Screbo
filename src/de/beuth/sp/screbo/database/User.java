@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.ektorp.support.CouchDbDocument;
+import org.ektorp.support.View;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
@@ -14,6 +15,7 @@ import com.vaadin.server.VaadinSession;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties({"displayName", "emailAddress"})
+@View(name = "all", map = "function(doc) { if (!doc._id.startsWith('_design') ) emit( null, doc._id )}")
 public class User extends CouchDbDocument {
 
 	public void setAsSessionUser() {
