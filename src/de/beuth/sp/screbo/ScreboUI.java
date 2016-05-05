@@ -13,9 +13,16 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.components.TopBar;
+import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.EventBus;
+import de.beuth.sp.screbo.eventBus.ScreboEventListener;
+import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
+import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.views.LoginView;
 import de.beuth.sp.screbo.views.RetrospectiveView;
 import de.beuth.sp.screbo.views.RetrospectivesView;
@@ -23,12 +30,13 @@ import de.beuth.sp.screbo.views.RetrospectivesView;
 @SuppressWarnings("serial")
 @Theme("screbo")
 @Push
-public class ScreboUI extends UI {
+public class ScreboUI extends UI implements ScreboEventListener {
 	protected static final String SESSION_KEY_LOAD_PAGE_AFTER_LOGIN = "requestedPage";
 	protected static final Logger logger = LogManager.getLogger();
 
-	protected EventBus eventBus = new EventBus(ScreboServlet.getGlobalEventBus()); // Events for a client
+	protected EventBus eventBus = new EventBus(this, ScreboServlet.getGlobalEventBus()); // Events for a client
 	protected Navigator navigator;
+	protected Retrospective currentlyOpenedRetrospective;
 
 	public String getPageToLoadAfterLogin() {
 		String result = (String) VaadinSession.getCurrent().getSession().getAttribute(SESSION_KEY_LOAD_PAGE_AFTER_LOGIN);
@@ -47,9 +55,7 @@ public class ScreboUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-
-		// For now we can live with polling to fetch updates from the server, TODO: Switch to push mechanism https://vaadin.com/directory#!addon/icepush
-		//setPollInterval(1000);
+		eventBus.addEventListener(this, true);
 
 		User user = UserRepository.getUserFromSession();
 		logger.info("Page (re)loaded for sessionID: {}, user: {}", getSessionId(), user);
@@ -81,7 +87,7 @@ public class ScreboUI extends UI {
 
 		// Create and register the views
 		navigator.addView("login", new LoginView(this));
-		navigator.addView("board", new RetrospectiveView(this));
+		navigator.addView("retrospective", new RetrospectiveView(this));
 		navigator.addView("", new RetrospectivesView(this));
 	}
 
@@ -100,6 +106,23 @@ public class ScreboUI extends UI {
 
 	public EventBus getEventBus() {
 		return eventBus;
+	}
+
+	@Override
+	public void onScreboEvent(ScreboEvent screboEvent) {
+		if (screboEvent instanceof RequestOpenRetrospectiveEvent) {
+			navigator.navigateTo("retrospective/" + ((RequestOpenRetrospectiveEvent) screboEvent).getRetrospective().getId());
+		} else if (screboEvent instanceof RequestNavigateToRetrospectivesViewEvent) {
+			navigator.navigateTo("/");
+		} else if (screboEvent instanceof RetrospectiveOpenedEvent) {
+			currentlyOpenedRetrospective = ((RetrospectiveOpenedEvent) screboEvent).getRetrospective();
+		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
+			currentlyOpenedRetrospective = null;
+		}
+	}
+
+	public Retrospective getCurrentlyOpenedRetrospective() {
+		return currentlyOpenedRetrospective;
 	}
 
 }

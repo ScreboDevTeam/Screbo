@@ -5,8 +5,8 @@ import org.ektorp.changes.ChangesCommand;
 import org.ektorp.changes.ChangesFeed;
 import org.ektorp.changes.DocumentChange;
 
-import de.beuth.sp.screbo.eventBus.DatabaseObjectChangedEvent;
 import de.beuth.sp.screbo.eventBus.EventBus;
+import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
 
 /**
  * We not only synchronize in our own instance but on the database itself.

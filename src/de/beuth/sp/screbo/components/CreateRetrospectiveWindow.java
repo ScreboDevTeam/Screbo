@@ -19,6 +19,7 @@ public class CreateRetrospectiveWindow extends ScreboWindow {
 	protected CreateRetrospectiveWindow(ScreboUI screboUI) {
 		super(screboUI);
 		setCaption("Create Retrospective");
+		setResizable(false);
 
 		titleField.addTextChangeListener(e -> {
 			setCreateButtonStatus(e.getText());
@@ -30,6 +31,7 @@ public class CreateRetrospectiveWindow extends ScreboWindow {
 		setCreateButtonStatus(titleField.getValue());
 		VerticalLayout verticalLayout = new VerticalLayout(new Label("title"), titleField, new Label("Members"), createButton);
 		setContent(verticalLayout);
+		titleField.focus();
 	}
 
 	protected void setCreateButtonStatus(String title) {

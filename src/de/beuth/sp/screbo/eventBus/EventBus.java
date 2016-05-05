@@ -9,14 +9,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.vaadin.ui.UI;
 
+import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+
+/**
+ * Used to populate messages between the components.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class EventBus implements Serializable, ScreboEventListener {
 	protected static final Logger logger = LogManager.getLogger();
 
-	public static class UserChangedEvent extends ScreboEvent {
-	}
-
+	protected UI synchronizeOnUi;
 	protected List<Object> eventListeners = Lists.newArrayList();
 
 	public EventBus() {
@@ -27,8 +34,9 @@ public class EventBus implements Serializable, ScreboEventListener {
 	 * @param parentEventBus
 	 *            Every message from parentBus is received by this bus too.
 	 */
-	public EventBus(EventBus parentEventBus) {
+	public EventBus(UI synchronizeOnUi, EventBus parentEventBus) {
 		super();
+		this.synchronizeOnUi = synchronizeOnUi;
 		parentEventBus.addEventListener(this, true);
 	}
 
@@ -100,10 +108,19 @@ public class EventBus implements Serializable, ScreboEventListener {
 	}
 
 	/**
-	 * Called by parent EventBus.
+	 * Called by parent EventBus. We do the proper synchronization between server and client here.
+	 * It is not the perfect place as the event bus forwards every message so a lot of synchronization is done.
+	 * As the server event bus is only used for database changed events so far, it is okay I guess.
+	 * Better would be to reimplement the bus on a subscriber basis. I have that finished in another project but it is closed source.
 	 */
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
-		fireEvent(screboEvent);
+		synchronizeOnUi.access(new Runnable() {
+
+			@Override
+			public void run() {
+				fireEvent(screboEvent);
+			}
+		});
 	}
 }

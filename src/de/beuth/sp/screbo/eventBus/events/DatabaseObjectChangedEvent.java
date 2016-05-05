@@ -1,5 +1,6 @@
-package de.beuth.sp.screbo.eventBus;
+package de.beuth.sp.screbo.eventBus.events;
 
+@SuppressWarnings("serial")
 public class DatabaseObjectChangedEvent extends ScreboEvent {
 	protected Class<?> objectClass;
 	protected String documentId;

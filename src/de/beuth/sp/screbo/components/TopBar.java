@@ -1,5 +1,7 @@
 package de.beuth.sp.screbo.components;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,19 +12,23 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 
 import de.beuth.sp.screbo.ScreboUI;
+import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
-import de.beuth.sp.screbo.eventBus.EventBus.UserChangedEvent;
-import de.beuth.sp.screbo.eventBus.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
+import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 
 @SuppressWarnings("serial")
 public class TopBar extends HorizontalLayout implements ScreboEventListener {
 	protected static final Logger logger = LogManager.getLogger();
 	protected final ScreboUI screboUI;
-	protected final Button boardsButton = new Button("Boards");
+	protected final Button boardsButton = new Button("Retrospectives");
 	protected final Button userButton = new Button("User");
 	protected RetrospectiveSelectionWindow boardSelectionWindow;
+	protected String boardsButtonShowsRetrospectiveId;
 
 	public TopBar(final ScreboUI screboUI) {
 		super();
@@ -66,6 +72,16 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 	public void onScreboEvent(ScreboEvent screboEvent) {
 		if (screboEvent instanceof UserChangedEvent) {
 			setUserButtonText();
+		} else if (screboEvent instanceof RetrospectiveOpenedEvent) {
+			Retrospective retrospective = ((RetrospectiveOpenedEvent) screboEvent).getRetrospective();
+			boardsButtonShowsRetrospectiveId = retrospective.getId();
+			boardsButton.setCaption("Retrospective: " + retrospective.getTitle());
+		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
+			Retrospective retrospective = ((RetrospectiveClosedEvent) screboEvent).getRetrospective();
+			if (Objects.equals(boardsButtonShowsRetrospectiveId, retrospective.getId())) {
+				boardsButtonShowsRetrospectiveId = null;
+				boardsButton.setCaption("Retrospectives");
+			}
 		}
 	}
 

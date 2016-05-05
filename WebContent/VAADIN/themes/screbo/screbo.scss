@@ -222,8 +222,36 @@
     padding: 5px;
   }
   
-  .boardSelectionWindow {
+  .retrospectiveSelectionWindow {
   	padding: 5px;
+  }
+  
+  .retrospectiveSelectionWindow .v-button {
+	margin: 4px;
+	width: 260px;
+  	height: 30px;
+  }
+  
+  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton {
+    background: #B37266;
+  	border-color: #B37266;
+  	color: white;
+  	box-shadow: none;
+  }
+    
+  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:hover {
+  	background: #B37266;
+  }
+
+  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:active {
+  	background: #C49188;
+  }
+  
+  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:focus:after {
+  	content: none;
+    border-color: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
   }
   
 }

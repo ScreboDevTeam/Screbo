@@ -1,5 +1,9 @@
 package de.beuth.sp.screbo.views;
 
+import java.util.Objects;
+
+import org.ektorp.DocumentNotFoundException;
+
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
@@ -13,23 +17,93 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
+import de.beuth.sp.screbo.database.Retrospective;
+import de.beuth.sp.screbo.database.UserRepository;
+import de.beuth.sp.screbo.eventBus.ScreboEventListener;
+import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
+import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
 /**
- * Displays a board.
+ * Displays a retrospective board.
  * 
  * @author volker.gronau
  *
  */
 @SuppressWarnings("serial")
-public class RetrospectiveView extends ScreboView {
+public class RetrospectiveView extends ScreboView implements ScreboEventListener {
+	protected Retrospective retrospective;
 
 	public RetrospectiveView(ScreboUI screboUI) {
 		super(screboUI);
+		screboUI.getEventBus().addEventListener(this, true);
+	}
+
+	@Override
+	public void onScreboEvent(ScreboEvent screboEvent) {
+		if (retrospective != null) { // If opened
+			if (screboEvent instanceof DatabaseObjectChangedEvent) {
+				DatabaseObjectChangedEvent databaseObjectChangedEvent = ((DatabaseObjectChangedEvent) screboEvent);
+				if (Retrospective.class.equals(databaseObjectChangedEvent.getObjectClass())) {
+					if (Objects.equals(retrospective.getId(), databaseObjectChangedEvent.getDocumentId())) {
+						// The currently opened retrospective was changed
+						if (databaseObjectChangedEvent.isDeleted()) {
+							screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
+							screboUI.getEventBus().fireEvent(new RequestNavigateToRetrospectivesViewEvent());
+							Notification.show("Sorry, your retrospective was deleted.");
+						} else {
+							screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
+							openRetrospective(databaseObjectChangedEvent.getDocumentId(), true);
+						}
+					}
+				}
+			} else if (screboEvent instanceof RequestCloseRetrospectiveEvent) {
+				if (Objects.equals(retrospective.getId(), ((RequestCloseRetrospectiveEvent) screboEvent).getRetrospective().getId())) {
+					screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
+					screboUI.getEventBus().fireEvent(new RequestNavigateToRetrospectivesViewEvent());
+				}
+			}
+		}
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		openRetrospective(event.getParameters(), false);
+	}
+
+	protected void openRetrospective(String retrospectiveId, boolean alreadyOpen) {
+		try {
+			retrospective = ScreboServlet.getRetrospectiveRepository().get(retrospectiveId);
+
+			if (retrospective.getVisibleByUserIds().contains(UserRepository.getUserFromSession().getId())) {
+				openRetrospective();
+				screboUI.getEventBus().fireEvent(new RetrospectiveOpenedEvent(retrospective));
+			} else {
+				showError(alreadyOpen ? "Sorry, you lost the right to view the retrospective." : "Retrospective not found or you have no rights to view it.");
+			}
+		} catch (DocumentNotFoundException e) {
+			showError("Retrospective not found or you have no rights to view it.");
+		}
+	}
+
+	protected void showError(String message) {
+		removeAllComponents();
+		addComponent(new Label(message));
+	}
+
+	protected void openRetrospective() {
+		removeAllComponents();
+
 		HorizontalLayout boardMainLayout = new HorizontalLayout();
 		boardMainLayout.setSizeFull();
 		addComponent(boardMainLayout);
@@ -302,11 +376,6 @@ public class RetrospectiveView extends ScreboView {
 		activityArea.addComponent(actBtnExisting6);
 		activityArea.addComponent(actBtnExisting5);
 		activityArea.addComponent(actBtnExisting4);
-	}
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-		addComponent(new Label(event.getParameters()));
 	}
 
 }
