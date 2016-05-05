@@ -36,12 +36,12 @@ public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, me
 			setCreateButtonStatus();
 		});
 
-		dateOfRetrospective = ZonedDateTime.now(user.getTimeZoneId()).plusMonths(1);
+		dateOfRetrospective = ZonedDateTime.now(user.getTimeZoneId()).plusMonths(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
 		retrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).toInstant()));
 		retrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
 		retrospectiveDateField.setValue(Date.from(dateOfRetrospective.toInstant())); // we have to convert to date, because the component uses the old date api
 		retrospectiveDateField.addValueChangeListener(e -> {
-			dateOfRetrospective = ZonedDateTime.ofInstant(retrospectiveDateField.getValue().toInstant(), user.getTimeZoneId());
+			dateOfRetrospective = ZonedDateTime.ofInstant(retrospectiveDateField.getValue().toInstant(), user.getTimeZoneId()).withHour(0).withMinute(0).withSecond(0).withNano(0);
 		});
 
 		createButton.addClickListener(e -> {
