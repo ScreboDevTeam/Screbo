@@ -25,4 +25,6 @@
 
 
     <inherits name="com.ejt.vaadin.loginform.WidgetSet" />
+
+    <inherits name="org.vaadin.peter.contextmenu.ContextmenuWidgetset" />
 </module>

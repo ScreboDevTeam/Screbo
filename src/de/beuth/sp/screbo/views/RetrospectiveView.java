@@ -3,6 +3,7 @@ package de.beuth.sp.screbo.views;
 import java.util.Objects;
 
 import org.ektorp.DocumentNotFoundException;
+import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -48,6 +49,19 @@ import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
  */
 @SuppressWarnings("serial")
 public class RetrospectiveView extends ScreboView implements ScreboEventListener {
+	protected static ServerSideCriterion acceptClusterGuiElementsCriterion = new ServerSideCriterion() {
+
+		@Override
+		public boolean accept(DragAndDropEvent dragEvent) {
+			// Only allow our own ClusterArea items
+			Component sourceComponent = dragEvent.getTransferable().getSourceComponent();
+			if (sourceComponent instanceof DragAndDropWrapper) {
+				return ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterGuiElement;
+			}
+			return false;
+		}
+	};
+
 	protected class PostsArea extends VerticalLayout {
 		final protected DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
 		final protected Category category;
@@ -65,8 +79,8 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					Component sourceComponent = event.getTransferable().getSourceComponent();
 					logger.info("Got dropped component {}", sourceComponent);
 
-					if (!components.contains(sourceComponent) && sourceComponent instanceof DragAndDropWrapper && ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterArea) {
-						String clusterId = ((ClusterArea) ((DragAndDropWrapper) sourceComponent).getData()).getCluster().getId();
+					if (!components.contains(sourceComponent) && sourceComponent instanceof DragAndDropWrapper && ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterGuiElement) {
+						String clusterId = ((ClusterGuiElement) ((DragAndDropWrapper) sourceComponent).getData()).getCluster().getId();
 
 						modifyRetrospective(new TransformationRunnable<Retrospective>() {
 
@@ -96,18 +110,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 				@Override
 				public AcceptCriterion getAcceptCriterion() {
-					return new ServerSideCriterion() {
-
-						@Override
-						public boolean accept(DragAndDropEvent dragEvent) {
-							// Only allow our own ClusterArea items
-							Component sourceComponent = dragEvent.getTransferable().getSourceComponent();
-							if (sourceComponent instanceof DragAndDropWrapper) {
-								return ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterArea;
-							}
-							return false;
-						}
-					};
+					return acceptClusterGuiElementsCriterion;
 				}
 
 			});
@@ -118,17 +121,65 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		}
 	}
 
-	protected static class ClusterArea extends VerticalLayout {
+	protected class ClusterGuiElement extends VerticalLayout {
 		protected final DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
+		final protected Category category;
 		protected final Cluster cluster;
 
-		public ClusterArea(Cluster cluster) {
+		public ClusterGuiElement(Category category, Cluster cluster) {
 			super();
+			this.category = category;
 			this.cluster = cluster;
 			setStyleName("ClusterArea");
-			wrapper.setDragStartMode(DragStartMode.COMPONENT);
+
+			wrapper.setDragStartMode(DragStartMode.WRAPPER);
 			wrapper.setWidth("100%");
 			wrapper.setData(this);
+
+			wrapper.setDropHandler(new DropHandler() {
+
+				@Override
+				public void drop(DragAndDropEvent event) {
+					Component sourceComponent = event.getTransferable().getSourceComponent();
+					logger.info("Got dropped component {}", sourceComponent);
+
+					if (!components.contains(sourceComponent) && sourceComponent instanceof DragAndDropWrapper && ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterGuiElement) {
+						String otherCategoryId = ((ClusterGuiElement) ((DragAndDropWrapper) sourceComponent).getData()).getCategory().getId();
+						String otherClusterId = ((ClusterGuiElement) ((DragAndDropWrapper) sourceComponent).getData()).getCluster().getId();
+
+						modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+							@Override
+							public void applyChanges(Retrospective retrospectiveToWrite) {
+								Cluster clusterToModify = retrospectiveToWrite.getClusterFromId(cluster.getId()); // Get new object
+								if (clusterToModify == null) {
+									screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+								} else {
+									Category categoryToRemoveFrom = retrospectiveToWrite.getCategories().getFromID(otherCategoryId); // Get new object
+									if (categoryToRemoveFrom == null) {
+										screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+									} else {
+										Cluster clusterToRemove = retrospectiveToWrite.getClusterFromId(otherClusterId); // Get new object
+										if (clusterToRemove == null) {
+											screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+										} else {
+											categoryToRemoveFrom.getCluster().remove(clusterToRemove);
+											clusterToModify.getRetroItems().addAll(clusterToRemove.getRetroItems());
+										}
+									}
+								}
+							}
+						});
+					}
+
+				}
+
+				@Override
+				public AcceptCriterion getAcceptCriterion() {
+					return acceptClusterGuiElementsCriterion;
+				}
+
+			});
 		}
 
 		public DragAndDropWrapper getWrapper() {
@@ -137,6 +188,10 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 		public Cluster getCluster() {
 			return cluster;
+		}
+
+		public Category getCategory() {
+			return category;
 		}
 
 	}
@@ -227,17 +282,30 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 			//Posts
 			for (Cluster cluster : category.getCluster()) {
-				ClusterArea clusterArea = new ClusterArea(cluster);
+				ClusterGuiElement clusterArea = new ClusterGuiElement(category, cluster);
 				postsArea.addComponent(clusterArea.getWrapper());
 				for (RetroItem retroItem : cluster.getRetroItems()) {
-					clusterArea.addComponent(new Label(retroItem.getTitle()));
+					Label retroItemGuiElement = new Label(retroItem.getTitle());
+					clusterArea.addComponent(retroItemGuiElement);
+
+					ContextMenu retroItemContextMenu = new ContextMenu();
+					retroItemContextMenu.setAsContextMenuOf(retroItemGuiElement);
+
+					retroItemContextMenu.addItem("Edit text").addItemClickListener(e -> {
+					});
+					if (cluster.getRetroItems().size() > 1) {
+						retroItemContextMenu.addItem("Remove from cluster").addItemClickListener(e -> {
+							removeRetroItemFromCluster(category.getId(), cluster.getId(), retroItem.getId());
+						});
+					}
+
 				}
 			}
 
 			final Button catAddButton = new Button("Add posting");
 			catAddButton.setDescription("Adds a posting to the category.");
 			catAddButton.addClickListener(e -> {
-				createPosting(category, "Neu");
+				createPosting(category.getId(), "New");
 			});
 
 			VerticalLayout catArea = new VerticalLayout(catTitleLabel, postsArea.getWrapper(), catAddButton);
@@ -296,18 +364,46 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 	}
 
-	protected void createPosting(Category category, String title) {
+	protected void removeRetroItemFromCluster(String categoryId, String clusterId, String retroItemId) {
 		modifyRetrospective(new TransformationRunnable<Retrospective>() {
 
 			@Override
 			public void applyChanges(Retrospective retrospectiveToWrite) {
-				Category categoryToWrite = retrospectiveToWrite.getCategories().getFromID(category.getId());
-				if (categoryToWrite == null) {
+				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
+				if (categoryToModify == null) {
 					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
 				} else {
-					Cluster cluster = new Cluster();
-					cluster.getRetroItems().add(new RetroItem(title));
-					categoryToWrite.getCluster().add(cluster);
+					Cluster clusterToModify = categoryToModify.getCluster().getFromID(clusterId);
+					if (clusterToModify == null) {
+						screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+					} else {
+						RetroItem retroItemToModify = clusterToModify.getRetroItems().getFromID(retroItemId);
+						if (retroItemToModify == null) {
+							screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The item was deleted."));
+						} else {
+							clusterToModify.getRetroItems().remove(retroItemToModify);
+							Cluster newCluster = new Cluster();
+							newCluster.getRetroItems().add(retroItemToModify);
+							categoryToModify.getCluster().add(newCluster);
+						}
+					}
+				}
+			}
+		});
+	}
+
+	protected void createPosting(String categoryId, String title) {
+		modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+			@Override
+			public void applyChanges(Retrospective retrospectiveToWrite) {
+				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
+				if (categoryToModify == null) {
+					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+				} else {
+					Cluster newCluster = new Cluster();
+					newCluster.getRetroItems().add(new RetroItem(title));
+					categoryToModify.getCluster().add(newCluster);
 				}
 			}
 		});

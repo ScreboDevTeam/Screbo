@@ -314,4 +314,14 @@
   	margin-top: 4px;
   	margin-bottom: 4px;
   }
+  
+  .v-context-menu-container {
+  	background: white;
+  	border: 1px solid $primaryColor;
+  	padding: 2px;
+  }
+  
+  .v-context-menu-container .popupContent{
+  margin:2px;
+  }
 }

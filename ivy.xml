@@ -18,6 +18,9 @@
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
 		
+		<!-- Context menus -->
+		<dependency org="org.vaadin.addons" name="contextmenu" rev="4.5" />
+		
 		<!-- Push support -->
 		<dependency org="com.vaadin" name="vaadin-push" rev="&vaadin.version;" conf="default->default" />
 		
