@@ -5,9 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.UpdateConflictException;
 import org.ektorp.ViewQuery;
+import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.CouchDbRepositorySupport;
 
-public class MyCouchDbRepositorySupport<T> extends CouchDbRepositorySupport<T> {
+public class MyCouchDbRepositorySupport<T extends CouchDbDocument> extends CouchDbRepositorySupport<T> {
+	protected static final int WRITE_TIMEOUT = 10_000;
 	protected static final Logger logger = LogManager.getLogger();
 	public static interface TransformationRunnable<T> {
 		public void applyChanges(T entity) throws Exception;
@@ -38,19 +40,24 @@ public class MyCouchDbRepositorySupport<T> extends CouchDbRepositorySupport<T> {
 	 * this write attempt. Gladly couchDB notifies us about this, this way we can reload the object from the database and
 	 * apply the transformation on the new object.
 	 * 
+	 * Returns true if the object was updated without reloading it or in other words if the passed entity still matches
+	 * the database copy.
 	 */
-	public void update(T entity, TransformationRunnable<T> changeRunnable) throws Exception {
-		update(entity, changeRunnable, System.currentTimeMillis() + 10_000);
+	public boolean update(T entity, TransformationRunnable<T> changeRunnable) throws Exception {
+		return update(entity, changeRunnable, System.currentTimeMillis() + WRITE_TIMEOUT);
 	}
 
-	private void update(T entity, TransformationRunnable<T> changeRunnable, long retryUntil) throws Exception {
-		changeRunnable.applyChanges(entity);
+	private boolean update(T entity, TransformationRunnable<T> changeRunnable, long retryUntil) throws Exception {
+		changeRunnable.applyChanges(entity); // modify the entity
 		try {
-			update(entity); // the actual update
+			update(entity); // write to database
+			return true;
 		} catch (UpdateConflictException e) { // somebody was faster
 			logger.warn("Got UpdateConflictException", e);
 			if (retryUntil < System.currentTimeMillis()) {
-				update(entity, changeRunnable, retryUntil);
+				entity = get(entity.getId()); // reload from database
+				update(entity, changeRunnable, retryUntil); // and try again
+				return false;
 			} else {
 				throw e;
 			}

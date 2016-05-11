@@ -66,9 +66,6 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					logger.info("Got dropped component {}", sourceComponent);
 
 					if (!components.contains(sourceComponent) && sourceComponent instanceof DragAndDropWrapper && ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterArea) {
-
-						addComponent(sourceComponent);
-
 						String clusterId = ((ClusterArea) ((DragAndDropWrapper) sourceComponent).getData()).getCluster().getId();
 
 						modifyRetrospective(new TransformationRunnable<Retrospective>() {
@@ -93,7 +90,6 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 								}
 							}
 						});
-
 					}
 
 				}
@@ -146,9 +142,21 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	}
 
 	protected Retrospective retrospective;
+	protected HorizontalLayout boardLayout;
+	protected VerticalLayout activityArea;
 
 	public RetrospectiveView(ScreboUI screboUI) {
 		super(screboUI);
+		boardLayout = new HorizontalLayout();
+		Panel boardMainPanel = new Panel(boardLayout);
+		boardMainPanel.setSizeFull();
+		activityArea = new VerticalLayout();
+		activityArea.setStyleName("activityArea");
+		HorizontalLayout horizontalLayout = new HorizontalLayout(boardMainPanel, activityArea);
+		horizontalLayout.setComponentAlignment(activityArea, Alignment.TOP_RIGHT);
+		horizontalLayout.setExpandRatio(boardMainPanel, 1);
+		horizontalLayout.setSizeFull();
+		addComponent(horizontalLayout);
 		screboUI.getEventBus().addEventListener(this, true);
 	}
 
@@ -205,14 +213,9 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	}
 
 	protected void openRetrospective() {
-		removeAllComponents();
-
-		HorizontalLayout boardLayout = new HorizontalLayout();
-		Panel boardMainPanel = new Panel();
-		boardMainPanel.setSizeFull();
-		boardMainPanel.setContent(boardLayout);
 
 		// Categories
+		boardLayout.removeAllComponents();
 		for (Category category : retrospective.getCategories()) {
 
 			final Label catTitleLabel = new Label(category.getName());
@@ -231,41 +234,8 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				}
 			}
 
-			//TODO I did not understand this, you can reimplement this maybe
-			//			Label cat1Post = new Label("Good Teamwork");
-			//			cat1Post.setStyleName("posting");
-			//			DragAndDropWrapper ddWrapperCat1PostAlone = new DragAndDropWrapper(cat1Post);
-			//			ddWrapperCat1PostAlone.setSizeUndefined();
-			//			ddWrapperCat1PostAlone.setStyleName("ddWrapperCat1PostAlone");
-			//			ddWrapperCat1PostAlone.setDragStartMode(DragStartMode.COMPONENT);
-			//			VerticalLayout clustercat1Post1 = new VerticalLayout();
-			//			clustercat1Post1.addComponent(ddWrapperCat1PostAlone);
-			//			DragAndDropWrapper ddWrapperCat1Post = new DragAndDropWrapper(clustercat1Post1);
-			//			ddWrapperCat1Post.setDragStartMode(DragStartMode.COMPONENT);
-			//
-			//			// Set the wrapper to wrap tightly around the component
-			//			ddWrapperCat1Post.setSizeUndefined();
-			//			postsArea.addComponent(ddWrapperCat1Post);
-			//			ddWrapperCat1Post.setStyleName("ddWrapperCat1Post");
-			//
-			//			ddWrapperCat1Post.setDropHandler(new DropHandler() {
-			//
-			//				@Override
-			//				public void drop(DragAndDropEvent event) {
-			//					clustercat1Post1.addComponent(event.getTransferable().getSourceComponent());
-			//					clustercat1Post1.setStyleName("cluster_marker");
-			//
-			//				}
-			//
-			//				@Override
-			//				public AcceptCriterion getAcceptCriterion() {
-			//					return AcceptAll.get();
-			//				}
-			//
-			//			});
-
 			final Button catAddButton = new Button("Add posting");
-			catAddButton.setDescription("Add a posting to category.");
+			catAddButton.setDescription("Adds a posting to the category.");
 			catAddButton.addClickListener(e -> {
 				createPosting(category, "Neu");
 			});
@@ -278,8 +248,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		}
 
 		// Activityarea
-		VerticalLayout activityArea = new VerticalLayout();
-		activityArea.setStyleName("activityArea");
+		activityArea.removeAllComponents();
 
 		Label actLblAct = new Label("activity");
 		actLblAct.setStyleName("boardLbl");
@@ -325,11 +294,6 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 		activityArea.setWidth("250px");
 
-		HorizontalLayout horizontalLayout = new HorizontalLayout(boardMainPanel, activityArea);
-		horizontalLayout.setComponentAlignment(activityArea, Alignment.TOP_RIGHT);
-		horizontalLayout.setExpandRatio(boardMainPanel, 1);
-		horizontalLayout.setSizeFull();
-		addComponent(horizontalLayout);
 	}
 
 	protected void createPosting(Category category, String title) {
@@ -349,13 +313,14 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		});
 	}
 
-	protected void modifyRetrospective(TransformationRunnable<Retrospective> transformationRunnable) {
+	protected boolean modifyRetrospective(TransformationRunnable<Retrospective> transformationRunnable) {
 		try {
-			ScreboServlet.getRetrospectiveRepository().update(retrospective, transformationRunnable);
+			return ScreboServlet.getRetrospectiveRepository().update(retrospective, transformationRunnable);
 		} catch (Exception e) {
 			logger.error("Could not write to database.", e);
 			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
 		}
+		return false;
 	}
 
 }

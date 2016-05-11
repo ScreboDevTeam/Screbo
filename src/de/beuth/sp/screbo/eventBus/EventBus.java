@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
+import de.beuth.sp.screbo.eventBus.events.EventSupressor;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
 /**
@@ -34,6 +35,7 @@ public class EventBus implements Serializable, ScreboEventListener {
 
 	protected Synchronizer synchronizer;
 	protected List<Object> eventListeners = Lists.newArrayList();
+	protected List<EventSupressor> eventSupressors = Lists.newArrayList();
 
 	public EventBus() {
 		super();
@@ -84,6 +86,11 @@ public class EventBus implements Serializable, ScreboEventListener {
 	}
 
 	public void fireEvent(ScreboEvent screboEvent) {
+		if (screboEvent instanceof EventSupressor) {
+			addEventSuppressor((EventSupressor) screboEvent);
+			return;
+		}
+
 		// TODO: It's not very nice to copy everything for every event but even with multiplereadersinglewritemutex one has to take care of concurrent modification exception
 		// TODO: let a worker thread pool call the event handlers
 		List<ScreboEventListener> toFire;
@@ -124,16 +131,43 @@ public class EventBus implements Serializable, ScreboEventListener {
 	 */
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
-		if (synchronizer != null) {
-			synchronizer.synchronize(new Runnable() {
+		if (!isSupressed(screboEvent)) {
+			if (synchronizer != null) {
+				synchronizer.synchronize(new Runnable() {
 
-				@Override
-				public void run() {
-					fireEvent(screboEvent);
-				}
-			});
-		} else {
-			fireEvent(screboEvent);
+					@Override
+					public void run() {
+						fireEvent(screboEvent);
+					}
+				});
+			} else {
+				fireEvent(screboEvent);
+			}
 		}
+	}
+
+	private void addEventSuppressor(EventSupressor eventSupressor) {
+		synchronized (eventSupressors) {
+			long currentTimeMillis = System.currentTimeMillis();
+			for (int index = eventSupressors.size() - 1; index >= 0; index--) {
+				if (eventSupressors.get(index).getTimeout() < currentTimeMillis) {
+					eventSupressors.remove(index);
+				}
+			}
+			eventSupressors.add(eventSupressor);
+		}
+	}
+
+	private boolean isSupressed(ScreboEvent screboEvent) {
+		synchronized (eventSupressors) {
+			for (int index = eventSupressors.size() - 1; index >= 0; index--) {
+				EventSupressor eventSupressor = eventSupressors.get(index);
+				if (eventSupressor.suppresses(screboEvent)) {
+					eventSupressors.remove(index);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

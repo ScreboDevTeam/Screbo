@@ -37,7 +37,7 @@ public class ChangesListenerThread extends Thread {
 		try {
 			while (feed.isAlive()) {
 				DocumentChange change = feed.next();
-				eventBusToPostChangedTo.fireEvent(new DatabaseObjectChangedEvent(changedClass, change.getId(), change.isDeleted()));
+				eventBusToPostChangedTo.fireEvent(new DatabaseObjectChangedEvent(changedClass, change.getId(), change.getRevision(), change.isDeleted()));
 
 			}
 		} catch (InterruptedException e) {

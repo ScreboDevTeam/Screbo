@@ -4,11 +4,13 @@ package de.beuth.sp.screbo.eventBus.events;
 public class DatabaseObjectChangedEvent extends ScreboEvent {
 	protected Class<?> objectClass;
 	protected String documentId;
+	protected String revision;
 	protected boolean deleted;
-	public DatabaseObjectChangedEvent(Class<?> objectClass, String documentId, boolean deleted) {
+	public DatabaseObjectChangedEvent(Class<?> objectClass, String documentId, String revision, boolean deleted) {
 		super();
 		this.objectClass = objectClass;
 		this.documentId = documentId;
+		this.revision = revision;
 		this.deleted = deleted;
 	}
 	public Class<?> getObjectClass() {
@@ -16,6 +18,9 @@ public class DatabaseObjectChangedEvent extends ScreboEvent {
 	}
 	public String getDocumentId() {
 		return documentId;
+	}
+	public String getRevision() {
+		return revision;
 	}
 	public boolean isDeleted() {
 		return deleted;
