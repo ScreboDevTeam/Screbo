@@ -1,15 +1,22 @@
 package de.beuth.sp.screbo.database;
 
 import java.io.Serializable;
-import java.util.List;
-
-import com.google.common.collect.Lists;
 
 @SuppressWarnings("serial")
-public class Cluster implements Serializable {
-	protected List<RetroItem> retroItems = Lists.newArrayList();
+public class Cluster implements Serializable, IDInterface {
 
-	public List<RetroItem> getRetroItems() {
+	protected String id;
+	protected IDList<RetroItem> retroItems = new IDList<>();
+
+	public IDList<RetroItem> getRetroItems() {
 		return retroItems;
+	}
+	@Override
+	public String getId() {
+		return id;
+	}
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 }

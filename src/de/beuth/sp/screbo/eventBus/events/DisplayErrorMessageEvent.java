@@ -9,9 +9,16 @@ public class DisplayErrorMessageEvent extends ScreboEvent {
 	 * Beware, you have to i18n yourself.
 	 */
 	public DisplayErrorMessageEvent(String textToShowToUser, Exception exception) {
+		this(textToShowToUser);
+		this.exception = exception;
+	}
+
+	/**
+	 * Beware, you have to i18n yourself.
+	 */
+	public DisplayErrorMessageEvent(String textToShowToUser) {
 		super();
 		this.textToShowToUser = textToShowToUser;
-		this.exception = exception;
 	}
 
 	public Exception getException() {
@@ -20,7 +27,7 @@ public class DisplayErrorMessageEvent extends ScreboEvent {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [textToShowToUser=" + textToShowToUser + ", exception=" + exception + "]";
+		return getClass().getSimpleName() + " [textToShowToUser=" + textToShowToUser + (exception == null ? "" : (", exception=" + exception)) + "]";
 	}
 
 }

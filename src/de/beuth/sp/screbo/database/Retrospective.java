@@ -19,7 +19,7 @@ public class Retrospective extends CouchDbDocument {
 	protected List<String> editableByUserIds = Lists.newArrayList();
 
 	protected ZonedDateTime dateOfRetrospective;
-	protected List<Category> categories = Lists.newArrayList();
+	protected IDList<Category> categories = new IDList<>();
 	protected List<Activity> activities = Lists.newArrayList();
 
 	/**
@@ -71,7 +71,7 @@ public class Retrospective extends CouchDbDocument {
 	public List<String> getEditableByUserIds() {
 		return editableByUserIds;
 	}
-	public List<Category> getCategories() {
+	public IDList<Category> getCategories() {
 		return categories;
 	}
 	public List<Activity> getActivities() {
@@ -80,5 +80,15 @@ public class Retrospective extends CouchDbDocument {
 	public boolean isVisibleByUser(User user) {
 		String userId = user.getId();
 		return visibleByUserIds.contains(userId) || editableByUserIds.contains(userId);
+	}
+	public Cluster getClusterFromId(String id) {
+		for (Category category : categories) {
+			for (Cluster cluster : category.getCluster()) {
+				if (id.equals(cluster.getId())) {
+					return cluster;
+				}
+			}
+		}
+		return null;
 	}
 }

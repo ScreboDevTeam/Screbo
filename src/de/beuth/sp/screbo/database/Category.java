@@ -1,14 +1,12 @@
 package de.beuth.sp.screbo.database;
 
 import java.io.Serializable;
-import java.util.List;
-
-import com.google.common.collect.Lists;
 
 @SuppressWarnings("serial")
-public class Category implements Serializable {
+public class Category implements Serializable, IDInterface {
 	protected String name;
-	protected List<Cluster> cluster = Lists.newArrayList();
+	protected String id;
+	protected IDList<Cluster> cluster = new IDList<>();
 
 	protected Category(String name) {
 		super();
@@ -23,11 +21,19 @@ public class Category implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<Cluster> getCluster() {
+	public IDList<Cluster> getCluster() {
 		return cluster;
 	}
 	@Override
 	public String toString() {
 		return "Category [name=" + name + "]";
+	}
+	@Override
+	public String getId() {
+		return id;
+	}
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 }

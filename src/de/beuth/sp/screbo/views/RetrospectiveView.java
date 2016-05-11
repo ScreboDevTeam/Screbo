@@ -3,18 +3,19 @@ package de.beuth.sp.screbo.views;
 import java.util.Objects;
 
 import org.ektorp.DocumentNotFoundException;
-import org.ektorp.UpdateConflictException;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -26,6 +27,7 @@ import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.database.Category;
 import de.beuth.sp.screbo.database.Cluster;
+import de.beuth.sp.screbo.database.MyCouchDbRepositorySupport.TransformationRunnable;
 import de.beuth.sp.screbo.database.RetroItem;
 import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.UserRepository;
@@ -46,11 +48,13 @@ import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
  */
 @SuppressWarnings("serial")
 public class RetrospectiveView extends ScreboView implements ScreboEventListener {
-	protected static class PostsArea extends VerticalLayout {
-		final DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
+	protected class PostsArea extends VerticalLayout {
+		final protected DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
+		final protected Category category;
 
-		public PostsArea() {
+		public PostsArea(Category category) {
 			super();
+			this.category = category;
 			setWidth("300px");
 			setStyleName("PostArea");
 
@@ -58,12 +62,56 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 				@Override
 				public void drop(DragAndDropEvent event) {
-					addComponent(event.getTransferable().getSourceComponent());
+					Component sourceComponent = event.getTransferable().getSourceComponent();
+					logger.info("Got dropped component {}", sourceComponent);
+
+					if (!components.contains(sourceComponent) && sourceComponent instanceof DragAndDropWrapper && ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterArea) {
+
+						addComponent(sourceComponent);
+
+						String clusterId = ((ClusterArea) ((DragAndDropWrapper) sourceComponent).getData()).getCluster().getId();
+
+						modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+							@Override
+							public void applyChanges(Retrospective retrospectiveToWrite) {
+								Cluster clusterToModify = retrospectiveToWrite.getClusterFromId(clusterId); // Get new object
+								if (clusterToModify == null) {
+									screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+								} else {
+									Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(category.getId()); // Get new object
+									if (categoryToModify == null) {
+										screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+									} else {
+										// Remove from all categories
+										for (Category category : retrospectiveToWrite.getCategories()) {
+											category.getCluster().removeItemWithId(clusterToModify.getId());
+										}
+										// add to our category
+										categoryToModify.getCluster().add(clusterToModify);
+									}
+								}
+							}
+						});
+
+					}
+
 				}
 
 				@Override
 				public AcceptCriterion getAcceptCriterion() {
-					return AcceptAll.get();
+					return new ServerSideCriterion() {
+
+						@Override
+						public boolean accept(DragAndDropEvent dragEvent) {
+							// Only allow our own ClusterArea items
+							Component sourceComponent = dragEvent.getTransferable().getSourceComponent();
+							if (sourceComponent instanceof DragAndDropWrapper) {
+								return ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterArea;
+							}
+							return false;
+						}
+					};
 				}
 
 			});
@@ -72,19 +120,27 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		public DragAndDropWrapper getWrapper() {
 			return wrapper;
 		}
-
 	}
 
 	protected static class ClusterArea extends VerticalLayout {
-		final DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
+		protected final DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
+		protected final Cluster cluster;
 
 		public ClusterArea(Cluster cluster) {
 			super();
+			this.cluster = cluster;
 			setStyleName("ClusterArea");
+			wrapper.setDragStartMode(DragStartMode.COMPONENT);
+			wrapper.setWidth("100%");
+			wrapper.setData(this);
 		}
 
 		public DragAndDropWrapper getWrapper() {
 			return wrapper;
+		}
+
+		public Cluster getCluster() {
+			return cluster;
 		}
 
 	}
@@ -136,7 +192,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				openRetrospective();
 				screboUI.getEventBus().fireEvent(new RetrospectiveOpenedEvent(retrospective));
 			} else {
-				showError(alreadyOpen ? "Sorry, you lost the right to view the retrospective." : "Retrospective not found or you have no rights to view it.");
+				showError(alreadyOpen ? "Sorry, you lost the right to view this retrospective." : "Retrospective not found or you have no rights to view it.");
 			}
 		} catch (DocumentNotFoundException e) {
 			showError("Retrospective not found or you have no rights to view it.");
@@ -164,7 +220,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			catTitleLabel.setSizeUndefined();
 
 			// Drag&Drop wrapper
-			final PostsArea postsArea = new PostsArea();
+			final PostsArea postsArea = new PostsArea(category);
 
 			//Posts
 			for (Cluster cluster : category.getCluster()) {
@@ -277,22 +333,28 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	}
 
 	protected void createPosting(Category category, String title) {
-		createPosting(category, title, System.currentTimeMillis() + 10_000);
+		modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+			@Override
+			public void applyChanges(Retrospective retrospectiveToWrite) {
+				Category categoryToWrite = retrospectiveToWrite.getCategories().getFromID(category.getId());
+				if (categoryToWrite == null) {
+					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+				} else {
+					Cluster cluster = new Cluster();
+					cluster.getRetroItems().add(new RetroItem(title));
+					categoryToWrite.getCluster().add(cluster);
+				}
+			}
+		});
 	}
 
-	protected void createPosting(Category category, String title, long retryUntil) {
-		Cluster cluster = new Cluster();
-		cluster.getRetroItems().add(new RetroItem(title));
-		category.getCluster().add(cluster);
+	protected void modifyRetrospective(TransformationRunnable<Retrospective> transformationRunnable) {
 		try {
-			ScreboServlet.getRetrospectiveRepository().update(retrospective);
-		} catch (UpdateConflictException e) { // Somebody else was faster
-			logger.warn("Got UpdateConflictException", e);
-			if (retryUntil < System.currentTimeMillis()) {
-				createPosting(category, title, retryUntil);
-			} else {
-				screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Could not write to database", e));
-			}
+			ScreboServlet.getRetrospectiveRepository().update(retrospective, transformationRunnable);
+		} catch (Exception e) {
+			logger.error("Could not write to database.", e);
+			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
 		}
 	}
 
