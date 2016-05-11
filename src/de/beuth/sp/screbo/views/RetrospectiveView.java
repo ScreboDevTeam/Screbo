@@ -55,7 +55,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		public boolean accept(DragAndDropEvent dragEvent) {
 			// Only allow our own ClusterArea items
 			Component sourceComponent = dragEvent.getTransferable().getSourceComponent();
-			if (sourceComponent instanceof DragAndDropWrapper) {
+			if (sourceComponent instanceof DragAndDropWrapper && sourceComponent != dragEvent.getTargetDetails().getTarget()) {
 				return ((DragAndDropWrapper) sourceComponent).getData() instanceof ClusterGuiElement;
 			}
 			return false;
@@ -130,7 +130,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			super();
 			this.category = category;
 			this.cluster = cluster;
-			setStyleName("ClusterArea");
+			setStyleName("ClusterGuiElement");
 
 			wrapper.setDragStartMode(DragStartMode.WRAPPER);
 			wrapper.setWidth("100%");
@@ -274,7 +274,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		for (Category category : retrospective.getCategories()) {
 
 			final Label catTitleLabel = new Label(category.getName());
-			catTitleLabel.setStyleName("catLabel");
+			catTitleLabel.setStyleName("catTitleLabel");
 			catTitleLabel.setSizeUndefined();
 
 			// Drag&Drop wrapper
@@ -286,6 +286,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				postsArea.addComponent(clusterArea.getWrapper());
 				for (RetroItem retroItem : cluster.getRetroItems()) {
 					Label retroItemGuiElement = new Label(retroItem.getTitle());
+					retroItemGuiElement.setStyleName("retroItemGuiElement");
 					clusterArea.addComponent(retroItemGuiElement);
 
 					ContextMenu retroItemContextMenu = new ContextMenu();
@@ -302,16 +303,17 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				}
 			}
 
-			final Button catAddButton = new Button("Add posting");
-			catAddButton.setDescription("Adds a posting to the category.");
-			catAddButton.addClickListener(e -> {
+			final Button addRetroItemButton = new Button("Add a posting");
+			addRetroItemButton.setStyleName("linklikeButton");
+			addRetroItemButton.setDescription("Adds a posting to the category.");
+			addRetroItemButton.addClickListener(e -> {
 				createPosting(category.getId(), "New");
 			});
 
-			VerticalLayout catArea = new VerticalLayout(catTitleLabel, postsArea.getWrapper(), catAddButton);
+			VerticalLayout catArea = new VerticalLayout(catTitleLabel, postsArea.getWrapper(), addRetroItemButton);
 			catArea.setStyleName("catArea");
 			catArea.setComponentAlignment(catTitleLabel, Alignment.MIDDLE_CENTER);
-			catArea.setComponentAlignment(catAddButton, Alignment.MIDDLE_CENTER);
+			catArea.setComponentAlignment(addRetroItemButton, Alignment.MIDDLE_CENTER);
 			boardLayout.addComponent(catArea);
 		}
 

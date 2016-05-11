@@ -63,6 +63,10 @@
 		<copy todir="${workdir}/VAADIN/themes/${theme.name}/images">
 			<fileset dir="${theme.dir}/${theme.name}/images" />
 		</copy>
+		<mkdir dir="${workdir}/VAADIN/themes/${theme.name}/fonts" />
+		<copy todir="${workdir}/VAADIN/themes/${theme.name}/fonts">
+					<fileset dir="${theme.dir}/${theme.name}/fonts" />
+				</copy>
 	</target>
 
 	<target name="compile-project" depends="-init">

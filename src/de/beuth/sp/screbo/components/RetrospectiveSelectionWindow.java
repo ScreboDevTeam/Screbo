@@ -96,8 +96,10 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		setDraggable(false);
 		setPositionY(40);
 		myRetrospectivesLayout.setWidth("280px");
-		setHeight("380px");
+
 		setStyleName("retrospectiveSelectionWindow");
+		currentRetrospectiveLayout.setStyleName("currentRetrospectiveLayout");
+		myRetrospectivesLayout.setStyleName("myRetrospectivesLayout");
 
 		currentRetrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant()));
 		currentRetrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
@@ -137,11 +139,11 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
 			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Invite or remove users");
-			addRemoveUsersFromCurrentRetrospectiveButton.setStyleName("currentRetrospectiveButton");
+			addRemoveUsersFromCurrentRetrospectiveButton.setStyleName("linklikeButton");
 			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
 
 			Button closeRetrospectiveButton = new Button("Close retrospective");
-			closeRetrospectiveButton.setStyleName("currentRetrospectiveButton");
+			closeRetrospectiveButton.setStyleName("linklikeButton");
 			closeRetrospectiveButton.addClickListener(event -> {
 				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
 				close();
@@ -169,7 +171,17 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		myRetrospectivesLabel.setStyleName("sectionLabel");
 		myRetrospectivesLayout.addComponent(myRetrospectivesLabel);
 
+		for (Retrospective retrospective : retrospectiveRepository.getVisibleByUser(user.getId())) {
+			OpenRetrospectiveButton openRetrospectiveButton = new OpenRetrospectiveButton(retrospective);
+			openRetrospectiveButton.setStyleName("openRetrospectiveButton");
+			openRetrospectiveButton.addClickListener(event -> {
+				close();
+			});
+			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
+		}
+
 		Button createNewRetrospectiveButton = new Button("Create new retrospective");
+		createNewRetrospectiveButton.setStyleName("linklikeButton");
 		createNewRetrospectiveButton.addClickListener(event -> {
 			if (createRetrospectiveWindow == null) {
 				createRetrospectiveWindow = new CreateRetrospectiveWindow(screboUI);
@@ -184,15 +196,6 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			}
 		});
 		myRetrospectivesLayout.addComponent(createNewRetrospectiveButton);
-
-		for (Retrospective retrospective : retrospectiveRepository.getVisibleByUser(user.getId())) {
-			OpenRetrospectiveButton openRetrospectiveButton = new OpenRetrospectiveButton(retrospective);
-			openRetrospectiveButton.setStyleName("openRetrospectiveButton");
-			openRetrospectiveButton.addClickListener(event -> {
-				close();
-			});
-			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
-		}
 	}
 
 	@Override
