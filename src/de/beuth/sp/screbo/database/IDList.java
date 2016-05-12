@@ -41,6 +41,17 @@ public class IDList<E extends IDInterface> extends ArrayList<E> {
 		}
 	}
 
+	protected void setIdIfNotSetOrChangeItIfAlreadyInList(E e) {
+		if (e.getId() == null) {
+			e.setId(getNextID());
+		} else {
+			E e2 = getFromID(e.getId());
+			if (e2 != null && e2 != e) {
+				e.setId(getNextID());
+			}
+		}
+	}
+
 	public E getFromID(String id) {
 		for (E e : this) {
 			if (e.getId().equals(id)) {
@@ -58,20 +69,20 @@ public class IDList<E extends IDInterface> extends ArrayList<E> {
 
 	@Override
 	public boolean add(E e) {
-		setIdIfNotSet(e);
+		setIdIfNotSetOrChangeItIfAlreadyInList(e);
 		return super.add(e);
 	}
 
 	@Override
 	public void add(int index, E element) {
-		setIdIfNotSet(element);
+		setIdIfNotSetOrChangeItIfAlreadyInList(element);
 		super.add(index, element);
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
 		for (E e : c) {
-			setIdIfNotSet(e);
+			setIdIfNotSetOrChangeItIfAlreadyInList(e);
 		}
 		return super.addAll(c);
 	}
@@ -79,7 +90,7 @@ public class IDList<E extends IDInterface> extends ArrayList<E> {
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
 		for (E e : c) {
-			setIdIfNotSet(e);
+			setIdIfNotSetOrChangeItIfAlreadyInList(e);
 		}
 		return super.addAll(index, c);
 	}
@@ -92,5 +103,17 @@ public class IDList<E extends IDInterface> extends ArrayList<E> {
 			}
 		}
 		return -1;
+	}
+
+	public void replace(E e) {
+		if (e.getId() == null) {
+			throw new IllegalArgumentException("id is null");
+		}
+		for (int index = size() - 1; index >= 0; index--) {
+			if (e.getId().equals(get(index).getId())) {
+				set(index, e);
+				return;
+			}
+		}
 	}
 }
