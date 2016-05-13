@@ -106,11 +106,12 @@ public class IDList<E extends IDInterface> extends ArrayList<E> {
 	}
 
 	public void replace(E e) {
-		if (e.getId() == null) {
+		String id = e.getId();
+		if (id == null) {
 			throw new IllegalArgumentException("id is null");
 		}
 		for (int index = size() - 1; index >= 0; index--) {
-			if (e.getId().equals(get(index).getId())) {
+			if (id.equals(get(index).getId())) {
 				set(index, e);
 				return;
 			}
