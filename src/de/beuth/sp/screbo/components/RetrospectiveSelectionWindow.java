@@ -139,11 +139,9 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
 			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Invite or remove users");
-			addRemoveUsersFromCurrentRetrospectiveButton.setStyleName("linklikeButton");
 			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
 
 			Button closeRetrospectiveButton = new Button("Close retrospective");
-			closeRetrospectiveButton.setStyleName("linklikeButton");
 			closeRetrospectiveButton.addClickListener(event -> {
 				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
 				close();
@@ -181,7 +179,6 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		}
 
 		Button createNewRetrospectiveButton = new Button("Create new retrospective");
-		createNewRetrospectiveButton.setStyleName("linklikeButton");
 		createNewRetrospectiveButton.addClickListener(event -> {
 			if (createRetrospectiveWindow == null) {
 				createRetrospectiveWindow = new CreateRetrospectiveWindow(screboUI);

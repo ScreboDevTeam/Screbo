@@ -40,7 +40,7 @@
   // Insert your own theme rules here
   
   $primaryColor : #7a1a26;
-  $primaryColorLight : rgba(122, 26, 38, 0.7);
+  $primaryColorLight : #A3666E;
   $primaryColorDark : #783647;
   $secondaryColor : #73878a;
   $secondaryColorDark: #343C3D;
@@ -75,6 +75,17 @@
   	width: auto !important;
   }
   
+  .v-label, .v-captiontext {
+  	color: $primaryColor;
+  	font: 15px cursive,serif;
+  }
+  
+  .retrospectiveSelectionWindow .v-button {
+    width: 90%;
+    height: 32px;
+    margin: 4px 0;
+  }
+  
   .login_bg {
   	background: transparent url("images/screbo_bg.png") no-repeat scroll 0 0 / 100% 100%;
   }
@@ -98,13 +109,9 @@
   .display_off {
   
   }  
-  
-  .loginUserName {
-    width: 200px;
-  }
-  
-  .loginPassword {
-    width: 200px;
+
+  .login_panel .v-textfield {
+    width: 250px;
   }
   
   .loginButton {
@@ -124,15 +131,16 @@
     margin-left: 4px;
     margin-right: 4px;
   	height: 30px;
-  	background: $primaryColorLight;
+  	background: $primaryColor;
   	color: $btnFontColor;
-  	border-color: $primaryColorLight;
+  	border-color: $primaryColor;
   	box-shadow: none;
   	border-radius: 5px;
   }
   
   .topBar .v-button:hover {
-  	background: #B37266;
+  	background: $primaryColorLight;
+  	border-color: $primaryColorLight;
   }
 
   .topBar .v-button:active {
@@ -161,11 +169,6 @@
   .activityArea .v-textarea {
     resize: vertical !important;
     margin-bottom: 20px !important;
-  }
-  
-  .activityArea .boardLbl {
-  	color: $primaryColor;
-  	font: 15px cursive,serif;
   }
   
    .v-button-linklikeButton{
@@ -202,6 +205,10 @@
   	color: $btnFontColor;
   }
   
+  .BoardBtn:hover {
+  	background: $primaryColor;
+  }
+  
   .boardInput {
   	width: 100%;
   	margin-bottom: 20px !important;
@@ -220,10 +227,7 @@
   	background: transparent url("images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
   }
 
-  
-  .BoardBtn:hover {
-  	background: $primaryColor;
-  }
+
   
   .retroItemGuiElement {
   	background:#fefabc; 
@@ -250,10 +254,7 @@
   }
   
   .retrospectiveSelectionWindow {
-  	padding-right: 8px;
-  	padding-left: 24px;
-  	padding-top: 16px;
-  	padding-bottom: 24px;
+  	padding: 8px 8px 24px 24px;
   	max-height: calc(100% - 80px);
   	overflow: auto !important;
   }
@@ -272,23 +273,19 @@
   	width: 205px;
   }
   
-  .retrospectiveSelectionWindow .myRetrospectivesLayout .v-button {
-  	width: 260px;
-  }
-  
-  .retrospectiveSelectionWindow .myRetrospectivesLayout .v-button-openRetrospectiveButton {
-    height: 30px;
-    background: #B37266;
-  	border-color: #B37266;
+  .openRetrospectiveButton {
+    height: 32px;
+    background: $primaryColorLight;
+  	border-color: $primaryColorLight;
   	color: white;
   	box-shadow: none;
-  	margin-top: 4px;
-	margin-bottom: 4px;
+  	margin: 4px 0;
   	border-radius: 5px;
   }
-    
-  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:hover {
-  	background: #B37266;
+  
+  .openRetrospectiveButton:hover {
+  	background: $primaryColor;
+  	border-color: $primaryColor;
   }
 
   .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:active {
@@ -318,8 +315,10 @@
   }
   
   .retrospectiveSelectionWindow .sectionLabel {
-  	margin-top: 4px;
+  	margin-top: 12px;
   	margin-bottom: 4px;
+  	font-size: 17px;
+  	width: 90%;
   }
 
 }
