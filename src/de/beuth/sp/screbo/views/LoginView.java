@@ -6,7 +6,6 @@ import org.vaadin.dialogs.ConfirmDialog;
 import com.ejt.vaadin.loginform.LoginForm.LoginEvent;
 import com.ejt.vaadin.loginform.LoginForm.LoginListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 
@@ -25,14 +24,16 @@ public class LoginView extends ScreboView implements LoginListener {
 		super(screboUI);
 		Panel loginPanel = new Panel("Login");
 		loginPanel.setSizeUndefined();
+		loginPanel.setStyleName("login_panel");
 
 		loginForm = new ScreboLoginForm();
 		loginForm.addLoginListener(this);
+		setStyleName("login_bg");
 		loginPanel.setContent(loginForm);
 
 		addComponent(loginPanel);
 		setExpandRatio(loginPanel, 1);
-		setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
+		//setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 		setSizeFull();
 	}
 

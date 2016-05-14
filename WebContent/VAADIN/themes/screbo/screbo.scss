@@ -75,6 +75,16 @@
   	width: auto !important;
   }
   
+  .login_bg {
+  	background: transparent url("images/screbo_bg.png") no-repeat scroll 0 0 / 100% 100%;
+  }
+  
+  .login_panel {
+  	position: absolute;
+  	top: 25%;
+  	left:14%;
+  }
+  
   .catTitleLabel {
    margin-top: 40px;
    color: $primaryColor;
