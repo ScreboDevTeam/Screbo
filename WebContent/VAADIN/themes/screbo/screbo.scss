@@ -96,6 +96,55 @@
   	left:14%;
   }
   
+  .welcomeLbl {
+  	position: absolute;
+  	top: 35%;
+  	left:5%;
+  	text-align: center;
+    white-space: pre;
+    font: 20px cursive,serif;
+  }
+  
+  .userInfo, .boardInfo {
+    background: #eaeaea none repeat scroll 0 0;
+    border: 1pt solid #aaaaaa;
+    border-radius: 5px;
+    height: auto;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    top: 50px;
+    white-space: normal;
+    width: 170px;
+  }
+  
+  .layerPointerInfo, .layerPointerBoard {
+    background: #eaeaea none repeat scroll 0 0;
+    border-left: 1pt solid #aaaaaa;
+    border-top: 1pt solid #aaaaaa;
+    height: 20px;
+    position: absolute;
+    top: 40px;
+    transform: rotateZ(45deg);
+    width: 20px;
+  }
+  
+  .layerPointerInfo {
+    left: 70px;
+  }
+  
+  .layerPointerBoard {
+    right: 70px;
+  }
+  
+  .boardInfo {
+  	left: 5px;
+  }
+  
+  .userInfo {
+  	right: 5px;
+  }
+  
   .catTitleLabel {
    margin-top: 40px;
    color: $primaryColor;
@@ -103,12 +152,12 @@
   }
   
   .display_on {
-  
+  	display: block;
   }
   
   .display_off {
-  
-  }  
+  	display: none;
+  }
 
   .login_panel .v-textfield {
     width: 250px;
@@ -227,8 +276,6 @@
   	background: transparent url("images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
   }
 
-
-  
   .retroItemGuiElement {
   	background:#fefabc; 
 	padding:15px; 

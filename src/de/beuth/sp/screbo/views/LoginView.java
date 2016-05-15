@@ -33,7 +33,6 @@ public class LoginView extends ScreboView implements LoginListener {
 
 		addComponent(loginPanel);
 		setExpandRatio(loginPanel, 1);
-		//setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 		setSizeFull();
 	}
 

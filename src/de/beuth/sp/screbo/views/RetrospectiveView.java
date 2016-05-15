@@ -390,6 +390,11 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		activityArea.addComponent(actBtnExisting4);
 
 		activityArea.setWidth("250px");
+		if (retrospective.getIsInTeamRetroStatus()) {
+			activityArea.setEnabled(true);
+		} else {
+			activityArea.setEnabled(false);
+		}
 
 	}
 

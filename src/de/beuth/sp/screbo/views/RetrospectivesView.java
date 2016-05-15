@@ -17,7 +17,31 @@ public class RetrospectivesView extends ScreboView {
 
 	public RetrospectivesView(ScreboUI screboUI) {
 		super(screboUI);
-		addComponent(new Label("Currently it is only possible to select retrospectives through the top bar."));
+		setStyleName("login_bg");
+		
+		String welcomeString = String.format("Welcome to Screbo! %n %n Our Goal is to improve your team's retrospective%nby offering a webbased platform, persistent%ndata and keeping all the benefits of a whiteboard.");
+		Label welcomeLbl = new Label(welcomeString);
+		welcomeLbl.setWidth("500px");
+		welcomeLbl.setStyleName("welcomeLbl");
+		
+		Label boardInfo = new Label("Choose your Retrospective Board");
+		boardInfo.setSizeUndefined();
+		boardInfo.setStyleName("boardInfo");
+		Label userInfo = new Label("Edit your Profile");
+		userInfo.setSizeUndefined();
+		userInfo.setStyleName("userInfo");
+		Label layerPointerInfo = new Label();
+		layerPointerInfo.setSizeUndefined();
+		layerPointerInfo.setStyleName("layerPointerInfo");
+		Label layerPointerBoard = new Label();
+		layerPointerBoard.setSizeUndefined();
+		layerPointerBoard.setStyleName("layerPointerBoard");
+		
+		addComponent(welcomeLbl);
+		addComponent(boardInfo);
+		addComponent(userInfo);
+		addComponent(layerPointerInfo);
+		addComponent(layerPointerBoard);
 	}
 
 }
