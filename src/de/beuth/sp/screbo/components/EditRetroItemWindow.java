@@ -1,9 +1,11 @@
 package de.beuth.sp.screbo.components;
 
 import com.google.common.base.Strings;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -25,13 +27,16 @@ public class EditRetroItemWindow extends ScreboWindow {
 
 	public EditRetroItemWindow(ScreboUI screboUI, RetroItem retroItem, OnOkClicked onOkClicked) {
 		super(screboUI);
+		setStyleName("EditRetroItemWindow");
 		this.retroItem = (RetroItem) Helper.slowDeepClone(retroItem);
 		this.onOkClicked = onOkClicked;
-		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		
+		Label title = new Label("Title:");
+		title.setSizeFull();
+		verticalLayout.addComponent(title);
 
-		horizontalLayout.addComponent(new Label("Title:"));
-
-		TextField titleTextField = new TextField();
+		TextArea titleTextField = new TextArea();
+		titleTextField.setSizeFull();
 		titleTextField.setValue(retroItem.getTitle());
 		titleTextField.addTextChangeListener(event -> {
 			EditRetroItemWindow.this.retroItem.setTitle(event.getText());
@@ -39,8 +44,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		});
 		setOkButtonEnabled();
 
-		horizontalLayout.addComponent(titleTextField);
-		verticalLayout.addComponent(horizontalLayout);
+		verticalLayout.addComponent(titleTextField);
 
 		cancelButton.addClickListener(event -> {
 			close();
@@ -52,14 +56,16 @@ public class EditRetroItemWindow extends ScreboWindow {
 			onOkClicked.onOkClicked(EditRetroItemWindow.this.retroItem);
 		});
 
-		horizontalLayout = new HorizontalLayout();
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-		horizontalLayout.addComponent(okButton);
+		horizontalLayout.setSizeFull();
 		horizontalLayout.addComponent(cancelButton);
+		horizontalLayout.addComponent(okButton);
+		horizontalLayout.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
+		horizontalLayout.setComponentAlignment(okButton, Alignment.MIDDLE_RIGHT);
 		verticalLayout.addComponent(horizontalLayout);
 
 		verticalLayout.setWidth("300px");
-		verticalLayout.setHeight("200px");
 		setContent(verticalLayout);
 		titleTextField.focus();
 	}

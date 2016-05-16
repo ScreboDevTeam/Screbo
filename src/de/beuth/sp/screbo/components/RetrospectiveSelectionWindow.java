@@ -95,7 +95,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		setResizable(false);
 		setDraggable(false);
 		setPositionY(40);
-		myRetrospectivesLayout.setWidth("280px");
+		myRetrospectivesLayout.setSizeFull();
 
 		setStyleName("retrospectiveSelectionWindow");
 		currentRetrospectiveLayout.setStyleName("currentRetrospectiveLayout");
@@ -151,7 +151,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 				currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
 			}
 
-			Button closeRetrospectiveButton = new Button("Close retrospective");
+			Button closeRetrospectiveButton = new Button("Close retrospective board");
 			closeRetrospectiveButton.addClickListener(event -> {
 				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
 				close();
@@ -196,7 +196,8 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 					createRetrospectiveWindow = null;
 				});
 				createRetrospectiveWindow.setPositionY(40);
-				createRetrospectiveWindow.setPositionX(280);
+				createRetrospectiveWindow.setPositionX(312);
+				createRetrospectiveWindow.setWidth("230px");
 				screboUI.addWindow(createRetrospectiveWindow);
 			} else {
 				createRetrospectiveWindow.close();

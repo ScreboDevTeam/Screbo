@@ -320,7 +320,6 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			}
 
 			final Button addRetroItemButton = new Button("Add a posting");
-			addRetroItemButton.setStyleName("linklikeButton");
 			addRetroItemButton.setDescription("Adds a posting to the category.");
 			addRetroItemButton.addClickListener(e -> {
 
@@ -334,11 +333,13 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				editRetroItemWindow.setCaption("New Posting");
 				editRetroItemWindow.center();
 				editRetroItemWindow.setVisible(true);
+				editRetroItemWindow.setResizable(false);
+				editRetroItemWindow.setModal(true);
 				screboUI.addWindow(editRetroItemWindow);
 
 			});
 
-			VerticalLayout catArea = new VerticalLayout(catTitleLabel, postsArea.getWrapper(), addRetroItemButton);
+			VerticalLayout catArea = new VerticalLayout(catTitleLabel, addRetroItemButton, postsArea.getWrapper());
 			catArea.setStyleName("catArea");
 			catArea.setComponentAlignment(catTitleLabel, Alignment.MIDDLE_CENTER);
 			catArea.setComponentAlignment(addRetroItemButton, Alignment.MIDDLE_CENTER);
