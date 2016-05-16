@@ -133,8 +133,9 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			this.category = category;
 			this.cluster = cluster;
 			setStyleName("ClusterGuiElement");
-
-			wrapper.setDragStartMode(DragStartMode.WRAPPER);
+			if (retrospective.getIsInTeamRetroStatus()) {
+				wrapper.setDragStartMode(DragStartMode.WRAPPER);
+			}
 			wrapper.setWidth("100%");
 			wrapper.setData(this);
 

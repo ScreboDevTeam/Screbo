@@ -144,10 +144,12 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			Button startTeamtRetrospectiveButton = new Button("Start team retrospective");
 			startTeamtRetrospectiveButton.addClickListener(event -> {
 				currentRetrospective.setIsInTeamRetroStatus(true);
-				screboUI.getEventBus().fireEvent(new RequestOpenRetrospectiveEvent(currentRetrospective));
+				ScreboServlet.getRetrospectiveRepository().update(currentRetrospective);
 				close();
 			});
-			currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
+			if (!currentRetrospective.getIsInTeamRetroStatus()) {
+				currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
+			}
 
 			Button closeRetrospectiveButton = new Button("Close retrospective");
 			closeRetrospectiveButton.addClickListener(event -> {
