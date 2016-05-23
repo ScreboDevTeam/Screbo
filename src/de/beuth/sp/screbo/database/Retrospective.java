@@ -14,8 +14,8 @@ public class Retrospective extends CouchDbDocument {
 
 	protected String title;
 	protected String createdByUserId;
-	
-	protected Boolean isInTeamRetroStatus;
+
+	protected boolean isInTeamRetroStatus;
 
 	protected List<String> visibleByUserIds = Lists.newArrayList();
 	protected List<String> editableByUserIds = Lists.newArrayList();
@@ -23,7 +23,6 @@ public class Retrospective extends CouchDbDocument {
 	protected ZonedDateTime dateOfRetrospective;
 	protected IDList<Category> categories = new IDList<>();
 	protected List<Activity> activities = Lists.newArrayList();
-	
 
 	/**
 	 * Constructor if retrospective is created by User.
@@ -63,10 +62,10 @@ public class Retrospective extends CouchDbDocument {
 	public void setCreatedByUserId(String createdByUserId) {
 		this.createdByUserId = createdByUserId;
 	}
-	public Boolean getIsInTeamRetroStatus() {
+	public boolean getIsInTeamRetroStatus() {
 		return isInTeamRetroStatus;
 	}
-	public void setIsInTeamRetroStatus(Boolean isInTeamRetroStatus) {
+	public void setIsInTeamRetroStatus(boolean isInTeamRetroStatus) {
 		this.isInTeamRetroStatus = isInTeamRetroStatus;
 	}
 	public ZonedDateTime getDateOfRetrospective() {

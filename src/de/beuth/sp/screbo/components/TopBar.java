@@ -38,12 +38,12 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 		setHeight("40px");
 		setStyleName("topBar", true);
 
-		boardsButton.addClickListener(e -> {
+		boardsButton.addClickListener(event -> {
 			logger.debug("boardsButton clicked");
 			if (boardSelectionWindow == null) {
 				boardSelectionWindow = new RetrospectiveSelectionWindow(screboUI);
 				boardSelectionWindow.setWidth("312px");
-				boardSelectionWindow.addCloseListener(event -> {
+				boardSelectionWindow.addCloseListener(event2 -> {
 					boardSelectionWindow = null;
 				});
 				screboUI.addWindow(boardSelectionWindow);

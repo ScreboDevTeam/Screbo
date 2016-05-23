@@ -1,5 +1,6 @@
 package de.beuth.sp.screbo.views;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import org.ektorp.DocumentNotFoundException;
@@ -295,7 +296,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					ContextMenu retroItemContextMenu = new ContextMenu();
 					retroItemContextMenu.setAsContextMenuOf(retroItemGuiElement);
 
-					retroItemContextMenu.addItem("Edit").addItemClickListener(e -> {
+					retroItemContextMenu.addItem("Edit").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 
 						EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, retroItem, new OnOkClicked() {
 
@@ -311,7 +312,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 					});
 					if (cluster.getRetroItems().size() > 1) {
-						retroItemContextMenu.addItem("Remove from cluster").addItemClickListener(e -> {
+						retroItemContextMenu.addItem("Remove from cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 							removeRetroItemFromCluster(category.getId(), cluster.getId(), retroItem.getId());
 						});
 					}
@@ -321,7 +322,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 			final Button addRetroItemButton = new Button("Add a posting");
 			addRetroItemButton.setDescription("Adds a posting to the category.");
-			addRetroItemButton.addClickListener(e -> {
+			addRetroItemButton.addClickListener(event -> {
 
 				EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, new RetroItem(""), new OnOkClicked() {
 
