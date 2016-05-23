@@ -285,6 +285,10 @@
     margin-top: 10px;
     margin-bottom: 10px;
   }
+  
+  .RetrospectiveView .movable {
+    cursor: drag;
+  }
 
   .retrospectiveSelectionWindow .popupContent {
   	padding: 20px;

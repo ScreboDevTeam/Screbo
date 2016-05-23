@@ -135,7 +135,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			this.category = category;
 			this.cluster = cluster;
 			setStyleName("ClusterGuiElement");
-			if (retrospective.isInTeamRetroStatus()) {
+			if (retrospective.isTeamRetroStarted()) {
 				wrapper.setDragStartMode(DragStartMode.WRAPPER);
 			}
 			wrapper.setWidth("100%");
@@ -299,6 +299,9 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					clusterArea.addComponent(retroItemGuiElement);
 
 					if (isEditableByUser) {
+						if (retrospective.isTeamRetroStarted()) {
+							retroItemGuiElement.setStyleName("movable", true);
+						}
 						ContextMenu retroItemContextMenu = new ContextMenu();
 						retroItemContextMenu.setAsContextMenuOf(retroItemGuiElement);
 
@@ -362,7 +365,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 		// Activityarea
 
-		if (retrospective.isInTeamRetroStatus()) {
+		if (retrospective.isTeamRetroStarted()) {
 			activityArea.removeAllComponents();
 
 			Label actLblAct = new Label("activity");

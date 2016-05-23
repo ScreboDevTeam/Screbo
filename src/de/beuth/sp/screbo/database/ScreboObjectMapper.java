@@ -7,6 +7,7 @@ import org.ektorp.impl.ObjectMapperFactory;
 import org.ektorp.impl.jackson.EktorpJacksonModule;
 import org.ektorp.util.Assert;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -62,5 +63,8 @@ public class ScreboObjectMapper implements ObjectMapperFactory, Serializable {
 	private void applyDefaultConfiguration(ObjectMapper om) {
 		om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, this.writeDatesAsTimestamps);
 		om.registerModule(new JavaTimeModule());
+
+		// Use fields instead of getters and setters
+		om.setVisibility(om.getVisibilityChecker().withFieldVisibility(JsonAutoDetect.Visibility.ANY).withGetterVisibility(JsonAutoDetect.Visibility.NONE).withSetterVisibility(JsonAutoDetect.Visibility.NONE));
 	}
 }
