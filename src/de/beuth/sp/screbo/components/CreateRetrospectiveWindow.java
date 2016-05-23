@@ -33,12 +33,14 @@ public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, me
 		setModal(true);
 		setStyleName("CreateRetrospectiveWindow");
 
+		titleTextField.setImmediate(true);
 		titleTextField.addTextChangeListener(e -> {
 			title = e.getText();
 			setCreateButtonStatus();
 		});
 
 		dateOfRetrospective = ZonedDateTime.now(user.getTimeZoneId()).plusMonths(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		retrospectiveDateField.setImmediate(true);
 		retrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).toInstant()));
 		retrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
 		retrospectiveDateField.setValue(Date.from(dateOfRetrospective.toInstant())); // we have to convert to date, because the component uses the old date api

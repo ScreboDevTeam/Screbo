@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @SuppressWarnings("serial")
-public class Activity implements Serializable {
+public class Activity implements Serializable, IDInterface {
 	public static enum ActivityPriority {
-		IMPORTANT, NORMAL, UNIMPORTANT
+		HIGH, NORMAL, LOW
 	}
 
+	protected String id;
 	protected String realizationByUserId;
 	protected String description;
 	protected boolean realized;
@@ -45,4 +46,13 @@ public class Activity implements Serializable {
 	public void setPriority(ActivityPriority priority) {
 		this.priority = priority;
 	}
+	@Override
+	public String getId() {
+		return id;
+	}
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
+
 }

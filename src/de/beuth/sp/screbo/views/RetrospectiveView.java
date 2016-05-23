@@ -13,22 +13,22 @@ import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
+import de.beuth.sp.screbo.components.ActivityEditPanel;
+import de.beuth.sp.screbo.components.ActivityOverviewPanel;
 import de.beuth.sp.screbo.components.EditRetroItemWindow;
 import de.beuth.sp.screbo.components.EditRetroItemWindow.OnOkClicked;
+import de.beuth.sp.screbo.database.Activity;
 import de.beuth.sp.screbo.database.Category;
 import de.beuth.sp.screbo.database.Cluster;
 import de.beuth.sp.screbo.database.MyCouchDbRepositorySupport.TransformationRunnable;
@@ -203,7 +203,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 	protected Retrospective retrospective;
 	protected HorizontalLayout boardLayout;
-	protected VerticalLayout activityArea;
+	protected Panel boardActivityPanel;
 
 	public RetrospectiveView(ScreboUI screboUI) {
 		super(screboUI);
@@ -211,10 +211,14 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		boardLayout.setStyleName("boardLayout");
 		Panel boardMainPanel = new Panel(boardLayout);
 		boardMainPanel.setSizeFull();
-		activityArea = new VerticalLayout();
-		activityArea.setStyleName("activityArea");
-		HorizontalLayout horizontalLayout = new HorizontalLayout(boardMainPanel, activityArea);
-		horizontalLayout.setComponentAlignment(activityArea, Alignment.TOP_RIGHT);
+
+		boardActivityPanel = new Panel();
+		boardActivityPanel.setSizeFull();
+		boardActivityPanel.setWidth(250, Unit.PIXELS);
+		boardActivityPanel.setStyleName("activityArea");
+
+		HorizontalLayout horizontalLayout = new HorizontalLayout(boardMainPanel, boardActivityPanel);
+		horizontalLayout.setComponentAlignment(boardActivityPanel, Alignment.TOP_RIGHT);
 		horizontalLayout.setExpandRatio(boardMainPanel, 1);
 		horizontalLayout.setSizeFull();
 		addComponent(horizontalLayout);
@@ -366,53 +370,28 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		// Activityarea
 
 		if (retrospective.isTeamRetroStarted()) {
-			activityArea.removeAllComponents();
-
-			Label actLblAct = new Label("activity");
-			actLblAct.setStyleName("boardLbl");
-			Label actLblDate = new Label("target date (DD.MM.YYYY)");
-			actLblDate.setStyleName("boardLbl");
-			Label actLblPrio = new Label("priority");
-			actLblPrio.setStyleName("boardLbl");
-
-			TextField actTxtAct = new TextField();
-			actTxtAct.setStyleName("boardInput");
-			DateField actTxtDate = new DateField();
-			actTxtDate.setStyleName("boardInput");
-			ComboBox actDropPrio = new ComboBox();
-			actDropPrio.setStyleName("boardInput");
-			actDropPrio.addItem("Wichtig");
-			actDropPrio.addItem("Normal");
-			actDropPrio.addItem("Unwichtig");
-
-			Button actBtnNew = new Button("");
-			actBtnNew.setDescription("add / save your activity");
-			actBtnNew.setStyleName("addSaveBtn");
-
-			Button actBtnExisting6 = new Button("kürzere Meetings");
-			actBtnExisting6.setStyleName("BoardBtn");
-			Button actBtnExisting5 = new Button("neue Rechner");
-			actBtnExisting5.setStyleName("BoardBtn");
-			Button actBtnExisting4 = new Button("ergonmische Stühle");
-			actBtnExisting4.setStyleName("BoardBtn");
-
-			activityArea.addComponent(actLblAct);
-			activityArea.addComponent(actTxtAct);
-
-			activityArea.addComponent(actLblDate);
-			activityArea.addComponent(actTxtDate);
-
-			activityArea.addComponent(actLblPrio);
-			activityArea.addComponent(actDropPrio);
-
-			activityArea.addComponent(actBtnNew);
-			activityArea.addComponent(actBtnExisting6);
-			activityArea.addComponent(actBtnExisting5);
-			activityArea.addComponent(actBtnExisting4);
-
-			activityArea.setWidth("250px");
+			boardActivityPanel.setVisible(true);
+			setActivityOverviewPanel();
+		} else {
+			boardActivityPanel.setVisible(false);
 		}
 
+	}
+
+	protected void setActivityOverviewPanel() {
+		ActivityOverviewPanel activityOverviewPanel = new ActivityOverviewPanel(retrospective);
+		boardActivityPanel.setContent(activityOverviewPanel);
+		activityOverviewPanel.setAddEditHandler(activity -> {
+			setActivityEditPanel(activity);
+		});
+	}
+
+	protected void setActivityEditPanel(Activity activity) {
+		ActivityEditPanel activityEditPanel = new ActivityEditPanel(screboUI, retrospective, activity);
+		boardActivityPanel.setContent(activityEditPanel);
+		activityEditPanel.setOnReturnToOverview(() -> {
+			setActivityOverviewPanel();
+		});
 	}
 
 	protected void removeRetroItemFromCluster(String categoryId, String clusterId, String retroItemId) {

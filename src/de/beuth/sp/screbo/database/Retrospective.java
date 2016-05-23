@@ -22,7 +22,7 @@ public class Retrospective extends CouchDbDocument {
 
 	protected ZonedDateTime dateOfRetrospective;
 	protected IDList<Category> categories = new IDList<>();
-	protected List<Activity> activities = Lists.newArrayList();
+	protected IDList<Activity> activities = new IDList<>();
 
 	/**
 	 * Constructor if retrospective is created by User.
@@ -83,7 +83,7 @@ public class Retrospective extends CouchDbDocument {
 	public IDList<Category> getCategories() {
 		return categories;
 	}
-	public List<Activity> getActivities() {
+	public IDList<Activity> getActivities() {
 		return activities;
 	}
 	public boolean isVisibleByUser(User user) {
