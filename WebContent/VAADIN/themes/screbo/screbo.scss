@@ -90,17 +90,29 @@
     margin: 4px 0;
   }
   
-  .login_bg {
+  .LoginView {
   	background: transparent url("images/screbo_bg.png") no-repeat scroll 0 0 / 100% 100%;
   }
   
-  .login_panel {
+  .LoginView .login_panel {
   	position: absolute;
   	top: 25%;
   	left:14%;
   }
   
-  .welcomeLbl {
+  .LoginView .login_panel .v-textfield {
+    width: 250px;
+  }
+  
+  .ScreboLoginForm .loginButton {
+    margin-top:20px;
+  }
+  
+  .LandingPageView {
+    background: transparent url("images/screbo_bg.png") no-repeat scroll 0 0 / 100% 100%;
+  }
+  
+  .LandingPageView .welcomeLbl {
   	position: absolute;
   	top: 35%;
   	left:5%;
@@ -109,7 +121,7 @@
     font: 20px cursive,serif;
   }
   
-  .userInfo, .boardInfo {
+  .LandingPageView .userInfo, .boardInfo {
     background: #eaeaea none repeat scroll 0 0;
     border: 1pt solid #aaaaaa;
     border-radius: 5px;
@@ -122,7 +134,7 @@
     width: 170px;
   }
   
-  .layerPointerInfo, .layerPointerBoard {
+  .LandingPageView .layerPointerInfo, .layerPointerBoard {
     background: #eaeaea none repeat scroll 0 0;
     border-left: 1pt solid #aaaaaa;
     border-top: 1pt solid #aaaaaa;
@@ -133,42 +145,20 @@
     width: 20px;
   }
   
-  .layerPointerInfo {
+  .LandingPageView .layerPointerInfo {
     left: 70px;
   }
   
-  .layerPointerBoard {
+  .LandingPageView .layerPointerBoard {
     right: 70px;
   }
   
-  .boardInfo {
+  .LandingPageView .boardInfo {
   	left: 5px;
   }
   
-  .userInfo {
+  .LandingPageView .userInfo {
   	right: 5px;
-  }
-  
-  .catTitleLabel {
-   margin: 40px 0 10px 0;
-   color: $primaryColor;
-   font: 25px cursive,serif;
-  }
-  
-  .display_on {
-  	display: block;
-  }
-  
-  .display_off {
-  	display: none;
-  }
-
-  .login_panel .v-textfield {
-    width: 250px;
-  }
-  
-  .loginButton {
-    margin-top:20px;
   }
   
   .topBar {
@@ -211,44 +201,55 @@
   	color: white;
   }
   
-  .v-slot-boardArea {
+  .RetrospectiveView .catTitleLabel {
+   margin: 40px 0 10px 0;
+   color: $primaryColor;
+   font: 25px cursive,serif;
+  }
+  
+  .RetrospectiveView .v-slot-boardArea {
     border-right: 5px solid $primaryColor;
   }
   
-  .v-slot-activityArea {
+  .RetrospectiveView .v-slot-activityArea {
     border-left: 5px solid $primaryColor;
   }
  
-  .activityArea .v-textarea {
+  .RetrospectiveView .activityArea .v-textarea {
     resize: vertical !important;
     margin-bottom: 20px !important;
   }
   
-  .boardArea {
+  .RetrospectiveView .boardArea {
   	padding: 20px;
   }
   
-  .activityArea {
+  .RetrospectiveView .boardLayout {
+  	margin: auto;
+  	display: table;
+  }
+  
+  .RetrospectiveView .activityArea {
   	padding: 20px 35px 20px 20px;
   }
   
-  .BoardBtn {
+  .RetrospectiveView .BoardBtn {
   	width: 100%;
   	border: none;
   	background: $primaryColorLight;
   	color: $btnFontColor;
   }
   
-  .BoardBtn:hover {
+  .RetrospectiveView .BoardBtn:hover {
   	background: $primaryColor;
   }
   
-  .boardInput {
+  .RetrospectiveView .boardInput {
   	width: 100%;
   	margin-bottom: 20px !important;
   }
   
-  .addSaveBtn {
+  .RetrospectiveView .addSaveBtn {
   	background: transparent url("images/disk.svg") no-repeat scroll 0 0 / 32px auto;
     border: medium none;
     float: right;
@@ -257,11 +258,11 @@
     width: 32px;
   }
   
-  .addSaveBtn:hover {
+  .RetrospectiveView .addSaveBtn:hover {
   	background: transparent url("images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
   }
 
-  .retroItemGuiElement {
+  .RetrospectiveView .retroItemGuiElement {
   	background:#fefabc; 
 	padding:15px; 
 	font-family: 'Gloria Hallelujah', cursive; 
@@ -272,7 +273,7 @@
 	-webkit-box-shadow: 0px 4px 6px #333;
   }
   
-  .PostArea {
+  .RetrospectiveView .PostArea {
   	text-align: center;
   	margin-top: 20px;
   	margin-bottom: 20px;
@@ -280,21 +281,21 @@
   	margin-right: 5px;
   }
   
-  .ClusterGuiElement {
+  .RetrospectiveView .ClusterGuiElement {
     margin-top: 10px;
     margin-bottom: 10px;
   }
-  
+
+  .retrospectiveSelectionWindow .popupContent {
+  	padding: 20px;
+  }
+    
   .retrospectiveSelectionWindow {
   	max-height: calc(100% - 80px);
   	overflow: auto !important;
   }
   
-  .popupContent {
-  	padding: 20px;
-  }
-  
-  .openRetrospectiveButton {
+  .retrospectiveSelectionWindow .openRetrospectiveButton {
     height: 32px;
     background: $primaryColorLight;
   	border-color: $primaryColorLight;
@@ -304,7 +305,7 @@
   	border-radius: 5px;
   }
   
-  .openRetrospectiveButton:hover {
+  .retrospectiveSelectionWindow .openRetrospectiveButton:hover {
   	background: $primaryColor;
   	border-color: $primaryColor;
   }

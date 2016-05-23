@@ -25,7 +25,7 @@ import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.views.LoginView;
 import de.beuth.sp.screbo.views.RetrospectiveView;
-import de.beuth.sp.screbo.views.RetrospectivesView;
+import de.beuth.sp.screbo.views.LandingPageView;
 
 @SuppressWarnings("serial")
 @Theme("screbo")
@@ -95,7 +95,7 @@ public class ScreboUI extends UI implements ScreboEventListener {
 		// Create and register the views
 		navigator.addView("login", new LoginView(this));
 		navigator.addView("retrospective", new RetrospectiveView(this));
-		navigator.addView("", new RetrospectivesView(this));
+		navigator.addView("", new LandingPageView(this));
 	}
 
 	@Override

@@ -16,6 +16,7 @@ public abstract class ScreboView extends VerticalLayout implements View {
 
 	public ScreboView(ScreboUI screboUI) {
 		super();
+		setStyleName(getClass().getSimpleName());
 		this.screboUI = screboUI;
 		setSizeFull();
 	}

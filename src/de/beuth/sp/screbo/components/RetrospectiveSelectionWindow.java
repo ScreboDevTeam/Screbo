@@ -147,7 +147,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 				ScreboServlet.getRetrospectiveRepository().update(currentRetrospective);
 				close();
 			});
-			if (!currentRetrospective.getIsInTeamRetroStatus()) {
+			if (!currentRetrospective.isInTeamRetroStatus()) {
 				currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
 			}
 

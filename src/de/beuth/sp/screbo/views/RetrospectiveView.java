@@ -34,6 +34,7 @@ import de.beuth.sp.screbo.database.Cluster;
 import de.beuth.sp.screbo.database.MyCouchDbRepositorySupport.TransformationRunnable;
 import de.beuth.sp.screbo.database.RetroItem;
 import de.beuth.sp.screbo.database.Retrospective;
+import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
@@ -134,7 +135,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			this.category = category;
 			this.cluster = cluster;
 			setStyleName("ClusterGuiElement");
-			if (retrospective.getIsInTeamRetroStatus()) {
+			if (retrospective.isInTeamRetroStatus()) {
 				wrapper.setDragStartMode(DragStartMode.WRAPPER);
 			}
 			wrapper.setWidth("100%");
@@ -207,6 +208,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	public RetrospectiveView(ScreboUI screboUI) {
 		super(screboUI);
 		boardLayout = new HorizontalLayout();
+		boardLayout.setStyleName("boardLayout");
 		Panel boardMainPanel = new Panel(boardLayout);
 		boardMainPanel.setSizeFull();
 		activityArea = new VerticalLayout();
@@ -273,6 +275,9 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 	protected void openRetrospective() {
 
+		User myUser = UserRepository.getUserFromSession();
+		boolean isEditableByUser = retrospective.getEditableByUserIds().contains(myUser.getId());
+
 		// Categories
 		boardLayout.removeAllComponents();
 		for (Category category : retrospective.getCategories()) {
@@ -293,110 +298,116 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					retroItemGuiElement.setStyleName("retroItemGuiElement");
 					clusterArea.addComponent(retroItemGuiElement);
 
-					ContextMenu retroItemContextMenu = new ContextMenu();
-					retroItemContextMenu.setAsContextMenuOf(retroItemGuiElement);
+					if (isEditableByUser) {
+						ContextMenu retroItemContextMenu = new ContextMenu();
+						retroItemContextMenu.setAsContextMenuOf(retroItemGuiElement);
 
-					retroItemContextMenu.addItem("Edit").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+						retroItemContextMenu.addItem("Edit").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 
-						EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, retroItem, new OnOkClicked() {
+							EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, retroItem, new OnOkClicked() {
 
-							@Override
-							public void onOkClicked(RetroItem retroItem) {
-								editPosting(category.getId(), cluster.getId(), retroItem);
-							}
+								@Override
+								public void onOkClicked(RetroItem retroItem) {
+									editPosting(category.getId(), cluster.getId(), retroItem);
+								}
+							});
+							editRetroItemWindow.setCaption("Edit Posting");
+							editRetroItemWindow.center();
+							editRetroItemWindow.setVisible(true);
+							screboUI.addWindow(editRetroItemWindow);
+
 						});
-						editRetroItemWindow.setCaption("Edit Posting");
-						editRetroItemWindow.center();
-						editRetroItemWindow.setVisible(true);
-						screboUI.addWindow(editRetroItemWindow);
-
-					});
-					if (cluster.getRetroItems().size() > 1) {
-						retroItemContextMenu.addItem("Remove from cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
-							removeRetroItemFromCluster(category.getId(), cluster.getId(), retroItem.getId());
-						});
+						if (cluster.getRetroItems().size() > 1) {
+							retroItemContextMenu.addItem("Remove from cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+								removeRetroItemFromCluster(category.getId(), cluster.getId(), retroItem.getId());
+							});
+						}
 					}
 
 				}
 			}
 
-			final Button addRetroItemButton = new Button("Add a posting");
-			addRetroItemButton.setDescription("Adds a posting to the category.");
-			addRetroItemButton.addClickListener(event -> {
-
-				EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, new RetroItem(""), new OnOkClicked() {
-
-					@Override
-					public void onOkClicked(RetroItem retroItem) {
-						createPosting(category.getId(), retroItem);
-					}
-				});
-				editRetroItemWindow.setCaption("New Posting");
-				editRetroItemWindow.center();
-				editRetroItemWindow.setVisible(true);
-				editRetroItemWindow.setResizable(false);
-				editRetroItemWindow.setModal(true);
-				screboUI.addWindow(editRetroItemWindow);
-
-			});
-
-			VerticalLayout catArea = new VerticalLayout(catTitleLabel, addRetroItemButton, postsArea.getWrapper());
+			VerticalLayout catArea = new VerticalLayout(catTitleLabel);
 			catArea.setStyleName("catArea");
 			catArea.setComponentAlignment(catTitleLabel, Alignment.MIDDLE_CENTER);
-			catArea.setComponentAlignment(addRetroItemButton, Alignment.MIDDLE_CENTER);
+
+			if (isEditableByUser) {
+
+				final Button addRetroItemButton = new Button("Add a posting");
+				addRetroItemButton.setDescription("Adds a posting to the category.");
+				addRetroItemButton.addClickListener(event -> {
+
+					EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, new RetroItem(""), new OnOkClicked() {
+
+						@Override
+						public void onOkClicked(RetroItem retroItem) {
+							createPosting(category.getId(), retroItem);
+						}
+					});
+					editRetroItemWindow.setCaption("New Posting");
+					editRetroItemWindow.center();
+					editRetroItemWindow.setVisible(true);
+					editRetroItemWindow.setResizable(false);
+					editRetroItemWindow.setModal(true);
+					screboUI.addWindow(editRetroItemWindow);
+
+				});
+				catArea.addComponent(addRetroItemButton);
+				catArea.setComponentAlignment(addRetroItemButton, Alignment.MIDDLE_CENTER);
+			}
+
+			catArea.addComponent(postsArea.getWrapper());
 			boardLayout.addComponent(catArea);
 		}
 
 		// Activityarea
-		activityArea.removeAllComponents();
 
-		Label actLblAct = new Label("activity");
-		actLblAct.setStyleName("boardLbl");
-		Label actLblDate = new Label("target date (DD.MM.YYYY)");
-		actLblDate.setStyleName("boardLbl");
-		Label actLblPrio = new Label("priority");
-		actLblPrio.setStyleName("boardLbl");
+		if (retrospective.isInTeamRetroStatus()) {
+			activityArea.removeAllComponents();
 
-		TextField actTxtAct = new TextField();
-		actTxtAct.setStyleName("boardInput");
-		DateField actTxtDate = new DateField();
-		actTxtDate.setStyleName("boardInput");
-		ComboBox actDropPrio = new ComboBox();
-		actDropPrio.setStyleName("boardInput");
-		actDropPrio.addItem("Wichtig");
-		actDropPrio.addItem("Normal");
-		actDropPrio.addItem("Unwichtig");
+			Label actLblAct = new Label("activity");
+			actLblAct.setStyleName("boardLbl");
+			Label actLblDate = new Label("target date (DD.MM.YYYY)");
+			actLblDate.setStyleName("boardLbl");
+			Label actLblPrio = new Label("priority");
+			actLblPrio.setStyleName("boardLbl");
 
-		Button actBtnNew = new Button("");
-		actBtnNew.setDescription("add / save your activity");
-		actBtnNew.setStyleName("addSaveBtn");
+			TextField actTxtAct = new TextField();
+			actTxtAct.setStyleName("boardInput");
+			DateField actTxtDate = new DateField();
+			actTxtDate.setStyleName("boardInput");
+			ComboBox actDropPrio = new ComboBox();
+			actDropPrio.setStyleName("boardInput");
+			actDropPrio.addItem("Wichtig");
+			actDropPrio.addItem("Normal");
+			actDropPrio.addItem("Unwichtig");
 
-		Button actBtnExisting6 = new Button("kürzere Meetings");
-		actBtnExisting6.setStyleName("BoardBtn");
-		Button actBtnExisting5 = new Button("neue Rechner");
-		actBtnExisting5.setStyleName("BoardBtn");
-		Button actBtnExisting4 = new Button("ergonmische Stühle");
-		actBtnExisting4.setStyleName("BoardBtn");
+			Button actBtnNew = new Button("");
+			actBtnNew.setDescription("add / save your activity");
+			actBtnNew.setStyleName("addSaveBtn");
 
-		activityArea.addComponent(actLblAct);
-		activityArea.addComponent(actTxtAct);
+			Button actBtnExisting6 = new Button("kürzere Meetings");
+			actBtnExisting6.setStyleName("BoardBtn");
+			Button actBtnExisting5 = new Button("neue Rechner");
+			actBtnExisting5.setStyleName("BoardBtn");
+			Button actBtnExisting4 = new Button("ergonmische Stühle");
+			actBtnExisting4.setStyleName("BoardBtn");
 
-		activityArea.addComponent(actLblDate);
-		activityArea.addComponent(actTxtDate);
+			activityArea.addComponent(actLblAct);
+			activityArea.addComponent(actTxtAct);
 
-		activityArea.addComponent(actLblPrio);
-		activityArea.addComponent(actDropPrio);
+			activityArea.addComponent(actLblDate);
+			activityArea.addComponent(actTxtDate);
 
-		activityArea.addComponent(actBtnNew);
-		activityArea.addComponent(actBtnExisting6);
-		activityArea.addComponent(actBtnExisting5);
-		activityArea.addComponent(actBtnExisting4);
+			activityArea.addComponent(actLblPrio);
+			activityArea.addComponent(actDropPrio);
 
-		activityArea.setWidth("250px");
-		if (retrospective.getIsInTeamRetroStatus()) {
-			activityArea.setEnabled(true);
-		} else {
-			activityArea.setEnabled(false);
+			activityArea.addComponent(actBtnNew);
+			activityArea.addComponent(actBtnExisting6);
+			activityArea.addComponent(actBtnExisting5);
+			activityArea.addComponent(actBtnExisting4);
+
+			activityArea.setWidth("250px");
 		}
 
 	}

@@ -62,7 +62,7 @@ public class Retrospective extends CouchDbDocument {
 	public void setCreatedByUserId(String createdByUserId) {
 		this.createdByUserId = createdByUserId;
 	}
-	public boolean getIsInTeamRetroStatus() {
+	public boolean isInTeamRetroStatus() {
 		return isInTeamRetroStatus;
 	}
 	public void setIsInTeamRetroStatus(boolean isInTeamRetroStatus) {

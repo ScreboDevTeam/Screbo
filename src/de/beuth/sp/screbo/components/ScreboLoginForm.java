@@ -34,6 +34,7 @@ public class ScreboLoginForm extends LoginForm {
 		loginButton.setStyleName("loginButton", true);
 
 		VerticalLayout layout = new VerticalLayout();
+		layout.setStyleName("ScreboLoginForm");
 		layout.setSpacing(true);
 		layout.setMargin(true);
 

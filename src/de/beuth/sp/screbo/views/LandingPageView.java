@@ -13,17 +13,16 @@ import de.beuth.sp.screbo.ScreboUI;
  */
 @SuppressWarnings("serial")
 @Theme("screbo")
-public class RetrospectivesView extends ScreboView {
+public class LandingPageView extends ScreboView {
 
-	public RetrospectivesView(ScreboUI screboUI) {
+	public LandingPageView(ScreboUI screboUI) {
 		super(screboUI);
-		setStyleName("login_bg");
-		
-		String welcomeString = String.format("Welcome to Screbo! %n %n Our Goal is to improve your team's retrospective%nby offering a webbased platform, persistent%ndata and keeping all the benefits of a whiteboard.");
+
+		String welcomeString = String.format("Welcome to Screbo! %n %n Our goal is to improve your team's retrospective%nby offering a webbased platform, persistent%ndata while keeping all the benefits of a whiteboard.");
 		Label welcomeLbl = new Label(welcomeString);
 		welcomeLbl.setWidth("500px");
 		welcomeLbl.setStyleName("welcomeLbl");
-		
+
 		Label boardInfo = new Label("Choose your Retrospective Board");
 		boardInfo.setSizeUndefined();
 		boardInfo.setStyleName("boardInfo");
@@ -36,7 +35,7 @@ public class RetrospectivesView extends ScreboView {
 		Label layerPointerBoard = new Label();
 		layerPointerBoard.setSizeUndefined();
 		layerPointerBoard.setStyleName("layerPointerBoard");
-		
+
 		addComponent(welcomeLbl);
 		addComponent(boardInfo);
 		addComponent(userInfo);
