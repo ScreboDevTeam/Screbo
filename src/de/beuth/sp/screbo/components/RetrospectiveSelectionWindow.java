@@ -140,17 +140,14 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
 			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Share this retrospective");
+			addRemoveUsersFromCurrentRetrospectiveButton.setEnabled(currentRetrospective.isEditableByUser(user));
 			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
 			addRemoveUsersFromCurrentRetrospectiveButton.addClickListener(event -> {
 				if (sharingWindow == null) {
-					sharingWindow = new SharingWindow(screboUI);
+					sharingWindow = new SharingWindow(screboUI, currentRetrospective);
 					sharingWindow.addCloseListener(event2 -> {
 						sharingWindow = null;
 					});
-					sharingWindow.setPositionY(40);
-					sharingWindow.setPositionX(312);
-					sharingWindow.setWidth("430px");
-					sharingWindow.setHeight("430px");
 					screboUI.addWindow(sharingWindow);
 				} else {
 					sharingWindow.close();

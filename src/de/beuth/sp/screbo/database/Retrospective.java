@@ -6,13 +6,13 @@ import java.util.Map;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.View;
 
-import com.google.gwt.thirdparty.guava.common.collect.Maps;
+import com.google.common.collect.Maps;
 
 @SuppressWarnings("serial")
 @View(name = "all", map = "function(doc) { if (!doc._id.startsWith('_design') ) emit( null, doc._id )}")
 public class Retrospective extends CouchDbDocument {
 	public static enum Right {
-		VIEW, EDIT
+		VIEW, EDIT, NONE
 	}
 
 	protected String title;

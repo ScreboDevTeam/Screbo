@@ -34,7 +34,6 @@ import de.beuth.sp.screbo.database.Cluster;
 import de.beuth.sp.screbo.database.MyCouchDbRepositorySupport.TransformationRunnable;
 import de.beuth.sp.screbo.database.RetroItem;
 import de.beuth.sp.screbo.database.Retrospective;
-import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
@@ -279,7 +278,6 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 	protected void openRetrospective() {
 
-		User myUser = UserRepository.getUserFromSession();
 		boolean isEditableByUser = retrospective.isEditableByUser(UserRepository.getUserFromSession());
 
 		// Categories
@@ -464,7 +462,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			return ScreboServlet.getRetrospectiveRepository().update(retrospective, transformationRunnable);
 		} catch (Exception e) {
 			logger.error("Could not write to database.", e);
-			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
+			screboUI.fireCouldNotWriteToDatabaseEvent(e);
 		}
 		return false;
 	}

@@ -1,6 +1,9 @@
 package de.beuth.sp.screbo.database;
 
+import java.util.List;
+
 import org.ektorp.CouchDbConnector;
+import org.ektorp.support.View;
 
 import com.vaadin.server.VaadinSession;
 
@@ -18,5 +21,11 @@ public class UserRepository extends MyCouchDbRepositorySupport<User> {
 			return (User) vaadinSession.getAttribute(SESSION_USER_PROPERTY);
 		}
 		return null;
+	}
+
+	@Override
+	@View(name = "myAll", map = "function(doc) {emit( null, doc._id );}")
+	public List<User> getAll() {
+		return queryView("myAll");
 	}
 }

@@ -18,14 +18,15 @@ import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.EventBus;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
+import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+import de.beuth.sp.screbo.views.LandingPageView;
 import de.beuth.sp.screbo.views.LoginView;
 import de.beuth.sp.screbo.views.RetrospectiveView;
-import de.beuth.sp.screbo.views.LandingPageView;
 
 @SuppressWarnings("serial")
 @Theme("screbo")
@@ -135,6 +136,10 @@ public class ScreboUI extends UI implements ScreboEventListener {
 
 	public Retrospective getCurrentlyOpenedRetrospective() {
 		return currentlyOpenedRetrospective;
+	}
+
+	public void fireCouldNotWriteToDatabaseEvent(Exception e) {
+		eventBus.fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
 	}
 
 }
