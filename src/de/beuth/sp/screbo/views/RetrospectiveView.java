@@ -261,7 +261,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		try {
 			retrospective = ScreboServlet.getRetrospectiveRepository().get(retrospectiveId);
 
-			if (retrospective.getVisibleByUserIds().contains(UserRepository.getUserFromSession().getId())) {
+			if (retrospective.isVisibleByUser(UserRepository.getUserFromSession())) {
 				openRetrospective();
 				screboUI.getEventBus().fireEvent(new RetrospectiveOpenedEvent(retrospective));
 			} else {
@@ -280,7 +280,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	protected void openRetrospective() {
 
 		User myUser = UserRepository.getUserFromSession();
-		boolean isEditableByUser = retrospective.getEditableByUserIds().contains(myUser.getId());
+		boolean isEditableByUser = retrospective.isEditableByUser(UserRepository.getUserFromSession());
 
 		// Categories
 		boardLayout.removeAllComponents();

@@ -1,24 +1,26 @@
 package de.beuth.sp.screbo.database;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Map;
 
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.View;
 
-import com.google.common.collect.Lists;
+import com.google.gwt.thirdparty.guava.common.collect.Maps;
 
 @SuppressWarnings("serial")
 @View(name = "all", map = "function(doc) { if (!doc._id.startsWith('_design') ) emit( null, doc._id )}")
 public class Retrospective extends CouchDbDocument {
+	public static enum Right {
+		VIEW, EDIT
+	}
 
 	protected String title;
 	protected String createdByUserId;
 
 	protected boolean teamRetroStarted;
 
-	protected List<String> visibleByUserIds = Lists.newArrayList();
-	protected List<String> editableByUserIds = Lists.newArrayList();
+	protected Map<String, Right> rights = Maps.newHashMap();
 
 	protected ZonedDateTime dateOfRetrospective;
 	protected IDList<Category> categories = new IDList<>();
@@ -34,8 +36,7 @@ public class Retrospective extends CouchDbDocument {
 		this.title = title;
 		this.createdByUserId = createdByUser.getId();
 		teamRetroStarted = false;
-		visibleByUserIds.add(createdByUserId);
-		editableByUserIds.add(createdByUserId);
+		rights.put(createdByUserId, Right.EDIT);
 
 		// add default categories
 		categories.add(new Category("Liked"));
@@ -74,12 +75,15 @@ public class Retrospective extends CouchDbDocument {
 	public void setDateOfRetrospective(ZonedDateTime dateOfRetrospective) {
 		this.dateOfRetrospective = dateOfRetrospective;
 	}
-	public List<String> getVisibleByUserIds() {
-		return visibleByUserIds;
+
+	public Map<String, Right> getRights() {
+		return rights;
 	}
-	public List<String> getEditableByUserIds() {
-		return editableByUserIds;
+
+	public void setRights(Map<String, Right> rights) {
+		this.rights = rights;
 	}
+
 	public IDList<Category> getCategories() {
 		return categories;
 	}
@@ -88,7 +92,13 @@ public class Retrospective extends CouchDbDocument {
 	}
 	public boolean isVisibleByUser(User user) {
 		String userId = user.getId();
-		return visibleByUserIds.contains(userId) || editableByUserIds.contains(userId);
+		Right right = rights.get(userId);
+		return Right.EDIT.equals(right) || Right.VIEW.equals(right);
+	}
+	public boolean isEditableByUser(User user) {
+		String userId = user.getId();
+		Right right = rights.get(userId);
+		return Right.EDIT.equals(right);
 	}
 	public Cluster getClusterFromId(String id) {
 		for (Category category : categories) {

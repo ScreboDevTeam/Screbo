@@ -70,6 +70,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 	};
 
 	protected CreateRetrospectiveWindow createRetrospectiveWindow;
+	protected SharingWindow sharingWindow;
 	protected Retrospective currentRetrospective;
 
 	protected class OpenRetrospectiveButton extends Button implements Button.ClickListener {
@@ -138,8 +139,23 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 			dateOfRetrospectiveLine.setComponentAlignment(dateOfRetrospectiveLabel, Alignment.MIDDLE_LEFT);
 			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
-			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Invite or remove users");
+			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Share this retrospective");
 			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
+			addRemoveUsersFromCurrentRetrospectiveButton.addClickListener(event -> {
+				if (sharingWindow == null) {
+					sharingWindow = new SharingWindow(screboUI);
+					sharingWindow.addCloseListener(event2 -> {
+						sharingWindow = null;
+					});
+					sharingWindow.setPositionY(40);
+					sharingWindow.setPositionX(312);
+					sharingWindow.setWidth("430px");
+					sharingWindow.setHeight("430px");
+					screboUI.addWindow(sharingWindow);
+				} else {
+					sharingWindow.close();
+				}
+			});
 
 			Button startTeamtRetrospectiveButton = new Button("Start team retrospective");
 			startTeamtRetrospectiveButton.addClickListener(event -> {
@@ -151,7 +167,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 				currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
 			}
 
-			Button closeRetrospectiveButton = new Button("Close retrospective board");
+			Button closeRetrospectiveButton = new Button("Close this retrospective");
 			closeRetrospectiveButton.addClickListener(event -> {
 				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
 				close();
