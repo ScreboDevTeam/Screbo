@@ -15,7 +15,7 @@ import com.vaadin.server.VaadinSession;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties({"displayName", "emailAddress"})
-@View(name = "all", map = "function(doc) { if (!doc._id.startsWith('_design') ) emit( null, doc._id )}")
+@View(name = "all", map = "function(doc) {emit( null, doc._id )}")
 public class User extends CouchDbDocument {
 
 	public void setAsSessionUser() {

@@ -16,10 +16,4 @@ public class RetrospectiveRepository extends MyCouchDbRepositorySupport<Retrospe
 		// TODO modify the view to only return the board title and id -> more performance
 		return queryView("by_visibleByUserId", userId);
 	}
-
-	@Override
-	@View(name = "myAll", map = "function(doc) {emit( null, doc._id );}")
-	public List<Retrospective> getAll() {
-		return queryView("myAll");
-	}
 }

@@ -9,7 +9,7 @@ import org.ektorp.support.View;
 import com.google.common.collect.Maps;
 
 @SuppressWarnings("serial")
-@View(name = "all", map = "function(doc) { if (!doc._id.startsWith('_design') ) emit( null, doc._id )}")
+@View(name = "all", map = "function(doc) {emit( null, doc._id )}")
 public class Retrospective extends CouchDbDocument {
 	public static enum Right {
 		VIEW, EDIT, NONE
