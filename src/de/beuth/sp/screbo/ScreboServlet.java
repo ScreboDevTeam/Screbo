@@ -102,16 +102,24 @@ public class ScreboServlet extends VaadinServlet {
 
 		CouchDbConnector userDatabase = new StdCouchDbConnector("screbo_users", dbInstance, ScreboObjectMapper.getInstance());
 		userRepository = new UserRepository(userDatabase);
-		ChangesListenerThread changesListenerThread = new ChangesListenerThread(globalEventBus, User.class, userDatabase);
-		changesListenerThread.setDaemon(true);
-		changesListenerThread.start();
+		final ChangesListenerThread userChangesListenerThread = new ChangesListenerThread(globalEventBus, User.class, userDatabase);
+		userChangesListenerThread.setDaemon(true);
+		userChangesListenerThread.start();
 
 		CouchDbConnector retrospectiveDatabase = new StdCouchDbConnector("retrospectives", dbInstance, ScreboObjectMapper.getInstance());
 		retrospectiveRepository = new RetrospectiveRepository(retrospectiveDatabase);
-		changesListenerThread = new ChangesListenerThread(globalEventBus, Retrospective.class, retrospectiveDatabase);
-		changesListenerThread.setDaemon(true);
-		changesListenerThread.start();
+		final ChangesListenerThread retrospectiveChangesListenerThread = new ChangesListenerThread(globalEventBus, Retrospective.class, retrospectiveDatabase);
+		retrospectiveChangesListenerThread.setDaemon(true);
+		retrospectiveChangesListenerThread.start();
 
+		ScreboContextListener.addShutdownListener(new Runnable() {
+
+			@Override
+			public void run() {
+				userChangesListenerThread.interrupt();
+				retrospectiveChangesListenerThread.interrupt();
+			}
+		});
 	}
 
 	public static UserRepository getUserRepository() {

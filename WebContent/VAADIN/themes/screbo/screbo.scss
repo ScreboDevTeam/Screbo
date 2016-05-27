@@ -226,8 +226,32 @@
   }
   
   .RetrospectiveView .boardLayout {
-  	margin: auto;
-  	display: table;
+ 	-webkit-box-align:center;
+    -webkit-box-pack:center;
+    display:-webkit-box;
+  	height: 100%;
+  }
+  
+  .RetrospectiveView .boardLayout .v-slot-catArea{
+  	height: 100%;
+  }
+  
+  .RetrospectiveView .boardLayout .catArea{
+  	height: 100%;
+  	margin-left: 4px;
+  	margin-right: 4px;
+  }
+  
+  .RetrospectiveView .boardLayout .catArea .v-slot:nth-child(3){
+  	height: 100%;
+  }
+  
+  .RetrospectiveView .boardLayout .catArea .v-slot:nth-child(3) > .v-ddwrapper{
+  	height: 100%;
+  }
+  
+  .RetrospectiveView .boardLayout .postsArea{
+  	height: 100%;
   }
   
   .RetrospectiveView .ActivityOverviewPanel {

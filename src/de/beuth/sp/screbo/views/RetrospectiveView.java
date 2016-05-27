@@ -125,15 +125,19 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	}
 
 	protected class ClusterGuiElement extends VerticalLayout {
-		protected final DragAndDropWrapper wrapper = new DragAndDropWrapper(this);
-		final protected Category category;
+		protected final Category category;
 		protected final Cluster cluster;
+		protected DragAndDropWrapper wrapper;
 
 		public ClusterGuiElement(Category category, Cluster cluster) {
 			super();
 			this.category = category;
 			this.cluster = cluster;
 			setStyleName("ClusterGuiElement");
+		}
+
+		protected void initWrapper() {
+			wrapper = new DragAndDropWrapper(this);
 			if (retrospective.isTeamRetroStarted()) {
 				wrapper.setDragStartMode(DragStartMode.WRAPPER);
 			}
@@ -187,6 +191,9 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		}
 
 		public DragAndDropWrapper getWrapper() {
+			if (wrapper == null) {
+				initWrapper();
+			}
 			return wrapper;
 		}
 
@@ -279,6 +286,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	protected void openRetrospective() {
 
 		boolean isEditableByUser = retrospective.isEditableByUser(UserRepository.getUserFromSession());
+		boolean isDragAndDropEnabled = isEditableByUser && retrospective.isTeamRetroStarted();
 
 		// Categories
 		boardLayout.removeAllComponents();
@@ -290,18 +298,23 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 			// Drag&Drop wrapper
 			final PostsArea postsArea = new PostsArea(category);
+			postsArea.setStyleName("postsArea");
 
 			//Posts
 			for (Cluster cluster : category.getCluster()) {
 				ClusterGuiElement clusterArea = new ClusterGuiElement(category, cluster);
-				postsArea.addComponent(clusterArea.getWrapper());
+				if (isDragAndDropEnabled) {
+					postsArea.addComponent(clusterArea.getWrapper());
+				} else {
+					postsArea.addComponent(clusterArea);
+				}
 				for (RetroItem retroItem : cluster.getRetroItems()) {
 					Label retroItemGuiElement = new Label(retroItem.getTitle());
 					retroItemGuiElement.setStyleName("retroItemGuiElement");
 					clusterArea.addComponent(retroItemGuiElement);
 
 					if (isEditableByUser) {
-						if (retrospective.isTeamRetroStarted()) {
+						if (isDragAndDropEnabled) {
 							retroItemGuiElement.setStyleName("movable", true);
 						}
 						ContextMenu retroItemContextMenu = new ContextMenu();
