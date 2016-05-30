@@ -3,15 +3,15 @@ package de.beuth.sp.screbo.database;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class RetroItem implements Serializable, IDInterface {
+public class Posting implements Serializable, IDInterface {
 	protected String id;
 	protected String title;
 
-	public RetroItem(String title) {
+	public Posting(String title) {
 		super();
 		this.title = title;
 	}
-	public RetroItem() {
+	public Posting() {
 		super();
 	}
 	public String getTitle() {

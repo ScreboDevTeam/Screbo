@@ -11,24 +11,24 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.Helper;
 import de.beuth.sp.screbo.ScreboUI;
-import de.beuth.sp.screbo.database.RetroItem;
+import de.beuth.sp.screbo.database.Posting;
 
 @SuppressWarnings("serial")
 public class EditRetroItemWindow extends ScreboWindow {
 	public static interface OnOkClicked {
-		public void onOkClicked(RetroItem retroItem);
+		public void onOkClicked(Posting retroItem);
 	}
 	protected final VerticalLayout verticalLayout = new VerticalLayout();
 	protected final Button okButton = new Button("Ok");
 	protected final Button cancelButton = new Button("Cancel");
-	protected final RetroItem retroItem;
+	protected final Posting retroItem;
 	protected boolean exitedWithOk;
 	protected final OnOkClicked onOkClicked;
 
-	public EditRetroItemWindow(ScreboUI screboUI, RetroItem retroItem, OnOkClicked onOkClicked) {
+	public EditRetroItemWindow(ScreboUI screboUI, Posting retroItem, OnOkClicked onOkClicked) {
 		super(screboUI);
 		setStyleName("EditRetroItemWindow");
-		this.retroItem = (RetroItem) Helper.slowDeepClone(retroItem);
+		this.retroItem = (Posting) Helper.slowDeepClone(retroItem);
 		this.onOkClicked = onOkClicked;
 		
 		Label title = new Label("Title:");
@@ -78,7 +78,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		return exitedWithOk;
 	}
 
-	public RetroItem getRetroItem() {
+	public Posting getRetroItem() {
 		return retroItem;
 	}
 }

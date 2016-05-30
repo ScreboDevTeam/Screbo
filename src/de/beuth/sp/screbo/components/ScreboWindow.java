@@ -17,5 +17,6 @@ public class ScreboWindow extends Window implements Serializable {
 	protected ScreboWindow(ScreboUI screboUI) {
 		super();
 		this.screboUI = screboUI;
+		setStyleName(getClass().getSimpleName());
 	}
 }

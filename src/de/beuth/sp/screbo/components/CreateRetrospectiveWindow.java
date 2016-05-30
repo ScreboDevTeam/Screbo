@@ -31,7 +31,6 @@ public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, me
 		setCaption("Create Retrospective");
 		setResizable(false);
 		setModal(true);
-		setStyleName("CreateRetrospectiveWindow");
 
 		titleTextField.setImmediate(true);
 		titleTextField.addTextChangeListener(e -> {

@@ -6,10 +6,10 @@ import java.io.Serializable;
 public class Cluster implements Serializable, IDInterface {
 
 	protected String id;
-	protected IDList<RetroItem> retroItems = new IDList<>();
+	protected IDList<Posting> postings = new IDList<>();
 
-	public IDList<RetroItem> getRetroItems() {
-		return retroItems;
+	public IDList<Posting> getPostings() {
+		return postings;
 	}
 	@Override
 	public String getId() {

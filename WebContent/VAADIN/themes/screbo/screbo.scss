@@ -322,16 +322,16 @@
     cursor: drag;
   }
 
-  .retrospectiveSelectionWindow .popupContent {
+  .TopBarRetrospectivePopupWindow .popupContent {
   	padding: 20px;
   }
     
-  .retrospectiveSelectionWindow {
+  .TopBarRetrospectivePopupWindow {
   	max-height: calc(100% - 80px);
   	overflow: auto !important;
   }
   
-  .retrospectiveSelectionWindow .openRetrospectiveButton {
+  .TopBarRetrospectivePopupWindow .openRetrospectiveButton {
     height: 32px;
     background: $primaryColorLight;
   	border-color: $primaryColorLight;
@@ -341,42 +341,42 @@
   	border-radius: 5px;
   }
   
-  .retrospectiveSelectionWindow .openRetrospectiveButton:hover {
+  .TopBarRetrospectivePopupWindow .openRetrospectiveButton:hover {
   	background: $primaryColor;
   	border-color: $primaryColor;
   }
   
-  .retrospectiveSelectionWindow .v-button {
+  .TopBarRetrospectivePopupWindow .v-button {
   	width: 253px;
   }
 
-  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:active {
+  .TopBarRetrospectivePopupWindow .v-button-openRetrospectiveButton:active {
   	background: #C49188;
   }
   
-  .retrospectiveSelectionWindow .v-button-openRetrospectiveButton:focus:after {
+  .TopBarRetrospectivePopupWindow .v-button-openRetrospectiveButton:focus:after {
   	content: none;
     border-color: none;
     -webkit-box-shadow: none;
     box-shadow: none;
   }
   
-  .retrospectiveSelectionWindow .currentRetrospectiveLine {
+  .TopBarRetrospectivePopupWindow .currentRetrospectiveLine {
   	margin: 4px;
   }
   
-  .retrospectiveSelectionWindow .currentRetrospectiveLabel {
+  .TopBarRetrospectivePopupWindow .currentRetrospectiveLabel {
   	width: 60px;
   	margin-left: 4px;
   }
   
-  .retrospectiveSelectionWindow .v-button-currentRetrospectiveButton {
+  .TopBarRetrospectivePopupWindow .v-button-currentRetrospectiveButton {
   	margin-left: 70px;
   	width: 184px;
   	padding: 0;
   }
   
-  .retrospectiveSelectionWindow .sectionLabel {
+  .TopBarRetrospectivePopupWindow .sectionLabel {
   	margin-top: 12px;
   	margin-bottom: 4px;
   	font-size: 17px;

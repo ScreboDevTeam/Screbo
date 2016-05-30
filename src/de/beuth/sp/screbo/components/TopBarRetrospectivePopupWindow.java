@@ -33,7 +33,7 @@ import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
 @SuppressWarnings({"serial"})
-public class RetrospectiveSelectionWindow extends ScreboWindow implements ScreboEventListener {
+public class TopBarRetrospectivePopupWindow extends ScreboWindow implements ScreboEventListener {
 	protected final VerticalLayout currentRetrospectiveLayout = new VerticalLayout();
 	protected final VerticalLayout myRetrospectivesLayout = new VerticalLayout();
 	protected final User user = UserRepository.getUserFromSession();
@@ -89,7 +89,7 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 
 	}
 
-	public RetrospectiveSelectionWindow(ScreboUI screboUI) {
+	public TopBarRetrospectivePopupWindow(ScreboUI screboUI) {
 		super(screboUI);
 
 		setClosable(false);
@@ -98,7 +98,6 @@ public class RetrospectiveSelectionWindow extends ScreboWindow implements Screbo
 		setPositionY(40);
 		myRetrospectivesLayout.setSizeFull();
 
-		setStyleName("retrospectiveSelectionWindow");
 		currentRetrospectiveLayout.setStyleName("currentRetrospectiveLayout");
 		myRetrospectivesLayout.setStyleName("myRetrospectivesLayout");
 

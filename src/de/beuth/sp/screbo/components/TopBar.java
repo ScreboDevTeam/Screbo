@@ -27,7 +27,7 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 	protected final ScreboUI screboUI;
 	protected final Button boardsButton = new Button("Retrospectives");
 	protected final Button userButton = new Button("User");
-	protected RetrospectiveSelectionWindow boardSelectionWindow;
+	protected TopBarRetrospectivePopupWindow boardSelectionWindow;
 	protected String boardsButtonShowsRetrospectiveId;
 
 	public TopBar(final ScreboUI screboUI) {
@@ -41,7 +41,7 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 		boardsButton.addClickListener(event -> {
 			logger.debug("boardsButton clicked");
 			if (boardSelectionWindow == null) {
-				boardSelectionWindow = new RetrospectiveSelectionWindow(screboUI);
+				boardSelectionWindow = new TopBarRetrospectivePopupWindow(screboUI);
 				boardSelectionWindow.setWidth("312px");
 				boardSelectionWindow.addCloseListener(event2 -> {
 					boardSelectionWindow = null;
