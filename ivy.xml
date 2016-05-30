@@ -18,6 +18,9 @@
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
 		
+		<!-- Dialogs -->
+		<dependency org="de.steinwedel.vaadin.addon" name="messagebox" rev="3.0.16" />
+		
 		<!-- Context menus -->
 		<dependency org="org.vaadin.addons" name="contextmenu" rev="4.5" />
 		

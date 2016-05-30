@@ -32,6 +32,7 @@ import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
+import de.steinwedel.messagebox.MessageBox;
 
 @SuppressWarnings({"serial"})
 public class TopBarRetrospectivePopupWindow extends ScreboWindow implements ScreboEventListener {
@@ -165,13 +166,26 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 				currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
 			}
 
-			Button closeRetrospectiveButton = new Button("Close this retrospective");
-			closeRetrospectiveButton.addClickListener(event -> {
-				screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
-				close();
+			Button deleteRetrospectiveButton = new Button("Delete this retrospective");
+			deleteRetrospectiveButton.addClickListener(event -> {
+
+				MessageBox.createQuestion().withCaption("Deletion").withMessage("Do you really want to delete this retrospective?").withYesButton(new Runnable() {
+
+					@Override
+					public void run() {
+						deleteRetrospective();
+					}
+				}).withNoButton().open();
+
 			});
-			currentRetrospectiveLayout.addComponent(closeRetrospectiveButton);
+			currentRetrospectiveLayout.addComponent(deleteRetrospectiveButton);
 		}
+	}
+
+	protected void deleteRetrospective() {
+		screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
+		close();
+		ScreboServlet.getRetrospectiveRepository().remove(currentRetrospective);
 	}
 
 	private void setTitle() {
@@ -209,9 +223,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 				createRetrospectiveWindow.addCloseListener(event2 -> {
 					createRetrospectiveWindow = null;
 				});
-				createRetrospectiveWindow.setPositionY(40);
-				createRetrospectiveWindow.setPositionX(312);
-				createRetrospectiveWindow.setWidth("230px");
+				createRetrospectiveWindow.center();
 				screboUI.addWindow(createRetrospectiveWindow);
 			} else {
 				createRetrospectiveWindow.close();

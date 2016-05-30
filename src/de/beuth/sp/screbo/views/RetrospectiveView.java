@@ -43,6 +43,7 @@ import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEve
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+import de.steinwedel.messagebox.MessageBox;
 
 /**
  * Displays a retrospective board.
@@ -308,25 +309,25 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				} else {
 					postsArea.addComponent(clusterArea);
 				}
-				for (Posting retroItem : cluster.getPostings()) {
-					Label retroItemGuiElement = new Label(retroItem.getTitle());
-					retroItemGuiElement.setStyleName("retroItemGuiElement");
-					clusterArea.addComponent(retroItemGuiElement);
+				for (Posting posting : cluster.getPostings()) {
+					Label postingGuiElement = new Label(posting.getTitle());
+					postingGuiElement.setStyleName("postingGuiElement");
+					clusterArea.addComponent(postingGuiElement);
 
 					if (isEditableByUser) {
 						if (isDragAndDropEnabled) {
-							retroItemGuiElement.setStyleName("movable", true);
+							postingGuiElement.setStyleName("movable", true);
 						}
 						ContextMenu retroItemContextMenu = new ContextMenu();
-						retroItemContextMenu.setAsContextMenuOf(retroItemGuiElement);
+						retroItemContextMenu.setAsContextMenuOf(postingGuiElement);
 
-						retroItemContextMenu.addItem("Edit").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+						retroItemContextMenu.addItem("Edit Posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 
-							EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, retroItem, new OnOkClicked() {
+							EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, posting, new OnOkClicked() {
 
 								@Override
-								public void onOkClicked(Posting retroItem) {
-									editPosting(category.getId(), cluster.getId(), retroItem);
+								public void onOkClicked(Posting postingToEdit) {
+									editPosting(category.getId(), cluster.getId(), postingToEdit);
 								}
 							});
 							editRetroItemWindow.setCaption("Edit Posting");
@@ -335,11 +336,24 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 							screboUI.addWindow(editRetroItemWindow);
 
 						});
+
 						if (cluster.getPostings().size() > 1) {
-							retroItemContextMenu.addItem("Remove from cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
-								removeRetroItemFromCluster(category.getId(), cluster.getId(), retroItem.getId());
+							retroItemContextMenu.addItem("Remove Posting from Cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+								removeRetroItemFromCluster(category.getId(), cluster.getId(), posting.getId());
 							});
 						}
+
+						retroItemContextMenu.addItem("Delete Posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+
+							MessageBox.createQuestion().withCaption("Deletion").withMessage("Do you really want to delete this posting?").withYesButton(new Runnable() {
+
+								@Override
+								public void run() {
+									deletePosting(category.getId(), cluster.getId(), posting.getId());
+								}
+							}).withNoButton().open();
+
+						});
 					}
 
 				}
@@ -433,7 +447,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		});
 	}
 
-	protected void editPosting(String categoryId, String clusterId, Posting retroItem) {
+	protected void editPosting(String categoryId, String clusterId, Posting posting) {
 		modifyRetrospective(new TransformationRunnable<Retrospective>() {
 
 			@Override
@@ -446,14 +460,14 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					if (clusterToModify == null) {
 						screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
 					} else {
-						clusterToModify.getPostings().replace(retroItem);
+						clusterToModify.getPostings().replace(posting);
 					}
 				}
 			}
 		});
 	}
 
-	protected void createPosting(String categoryId, Posting retroItem) {
+	protected void createPosting(String categoryId, Posting posting) {
 		modifyRetrospective(new TransformationRunnable<Retrospective>() {
 
 			@Override
@@ -463,8 +477,31 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
 				} else {
 					Cluster newCluster = new Cluster();
-					newCluster.getPostings().add(retroItem);
+					newCluster.getPostings().add(posting);
 					categoryToModify.getCluster().add(newCluster);
+				}
+			}
+		});
+	}
+
+	protected void deletePosting(String categoryId, String clusterId, String postingId) {
+		modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+			@Override
+			public void applyChanges(Retrospective retrospectiveToWrite) {
+				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
+				if (categoryToModify == null) {
+					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+				} else {
+					Cluster clusterToModify = categoryToModify.getCluster().getFromID(clusterId);
+					if (clusterToModify == null) {
+						screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+					} else {
+						clusterToModify.getPostings().removeItemWithId(postingId);
+						if (clusterToModify.getPostings().size() == 0) {
+							categoryToModify.getCluster().removeItemWithId(clusterId);
+						}
+					}
 				}
 			}
 		});
