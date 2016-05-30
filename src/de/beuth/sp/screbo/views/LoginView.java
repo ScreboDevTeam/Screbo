@@ -14,6 +14,7 @@ import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.components.ScreboLoginForm;
 import de.beuth.sp.screbo.database.User;
+import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 
 @SuppressWarnings("serial")
@@ -96,7 +97,7 @@ public class LoginView extends ScreboView implements LoginListener {
 
 	protected void doLogin(User user) {
 		Notification.show("Hi", "Welcome " + user.getDisplayName(), Notification.Type.TRAY_NOTIFICATION);
-		user.setAsSessionUser();
+		UserRepository.setSessionUser(user);
 		screboUI.getEventBus().fireEvent(new UserChangedEvent());
 		screboUI.afterLogin();
 	}

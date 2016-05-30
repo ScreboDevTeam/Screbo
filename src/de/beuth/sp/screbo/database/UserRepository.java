@@ -19,4 +19,8 @@ public class UserRepository extends MyCouchDbRepositorySupport<User> {
 		}
 		return null;
 	}
+
+	public static void setSessionUser(User user) {
+		VaadinSession.getCurrent().setAttribute(UserRepository.SESSION_USER_PROPERTY, user);
+	}
 }

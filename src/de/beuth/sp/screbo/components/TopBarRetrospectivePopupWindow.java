@@ -31,6 +31,7 @@ import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 
 @SuppressWarnings({"serial"})
 public class TopBarRetrospectivePopupWindow extends ScreboWindow implements ScreboEventListener {
@@ -96,6 +97,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		setResizable(false);
 		setDraggable(false);
 		setPositionY(40);
+		setWidth("312px");
 		myRetrospectivesLayout.setSizeFull();
 
 		currentRetrospectiveLayout.setStyleName("currentRetrospectiveLayout");
@@ -220,7 +222,9 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
-		if (screboEvent instanceof DatabaseObjectChangedEvent) {
+		if (screboEvent instanceof UserChangedEvent) {
+			close();
+		} else if (screboEvent instanceof DatabaseObjectChangedEvent) {
 			if (((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(Retrospective.class)) { // a retrospective object was changed, we update the view
 				if (currentRetrospective != null && currentRetrospective.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
 					try {

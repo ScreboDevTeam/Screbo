@@ -24,6 +24,7 @@ import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+import de.beuth.sp.screbo.views.EditAccountView;
 import de.beuth.sp.screbo.views.LandingPageView;
 import de.beuth.sp.screbo.views.LoginView;
 import de.beuth.sp.screbo.views.RetrospectiveView;
@@ -96,7 +97,16 @@ public class ScreboUI extends UI implements ScreboEventListener {
 		// Create and register the views
 		navigator.addView("login", new LoginView(this));
 		navigator.addView("retrospective", new RetrospectiveView(this));
+		navigator.addView("editAccount", new EditAccountView(this));
 		navigator.addView("", new LandingPageView(this));
+	}
+
+	public void openLoginView() {
+		navigator.navigateTo("login");
+	}
+
+	public void openEditAccountView() {
+		navigator.navigateTo("editAccount");
 	}
 
 	@Override

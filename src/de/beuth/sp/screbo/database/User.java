@@ -11,17 +11,11 @@ import org.ektorp.support.View;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.base.Joiner;
-import com.vaadin.server.VaadinSession;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties({"displayName", "emailAddress"})
 @View(name = "all", map = "function(doc) {emit( null, doc._id )}")
 public class User extends CouchDbDocument {
-
-	public void setAsSessionUser() {
-		VaadinSession.getCurrent().setAttribute(UserRepository.SESSION_USER_PROPERTY, this);
-	}
-
 	protected String password;
 	protected String lastName;
 	protected String firstName;

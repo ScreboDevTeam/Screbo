@@ -28,6 +28,7 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 	protected final Button boardsButton = new Button("Retrospectives");
 	protected final Button userButton = new Button("User");
 	protected TopBarRetrospectivePopupWindow boardSelectionWindow;
+	protected TopBarUserPopupWindow userSelectionWindow;
 	protected String boardsButtonShowsRetrospectiveId;
 
 	public TopBar(final ScreboUI screboUI) {
@@ -40,9 +41,11 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 
 		boardsButton.addClickListener(event -> {
 			logger.debug("boardsButton clicked");
+			if (userSelectionWindow != null) {
+				userSelectionWindow.close();
+			}
 			if (boardSelectionWindow == null) {
 				boardSelectionWindow = new TopBarRetrospectivePopupWindow(screboUI);
-				boardSelectionWindow.setWidth("312px");
 				boardSelectionWindow.addCloseListener(event2 -> {
 					boardSelectionWindow = null;
 				});
@@ -62,6 +65,21 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 		setComponentAlignment(logoImage, Alignment.MIDDLE_CENTER);
 
 		userButton.setCaption("User");
+		userButton.addClickListener(event -> {
+			logger.debug("boardsButton clicked");
+			if (boardSelectionWindow != null) {
+				boardSelectionWindow.close();
+			}
+			if (userSelectionWindow == null) {
+				userSelectionWindow = new TopBarUserPopupWindow(screboUI);
+				userSelectionWindow.addCloseListener(event2 -> {
+					userSelectionWindow = null;
+				});
+				screboUI.addWindow(userSelectionWindow);
+			} else {
+				userSelectionWindow.close();
+			}
+		});
 		addComponent(userButton);
 		setComponentAlignment(userButton, Alignment.MIDDLE_RIGHT);
 

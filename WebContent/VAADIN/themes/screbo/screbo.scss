@@ -45,6 +45,18 @@
   $secondaryColor : #73878a;
   $secondaryColorDark: #343C3D;
   $btnFontColor: #fff;
+  
+  .TopBarUserPopupWindow {
+  	right: 0;
+    left: auto !important;
+    top: 40px !important;
+    height: 120px;
+    width: 300px;
+  }
+  
+  .TopBarUserPopupWindow .VerticalLayout{
+   padding: 20px;
+  }
 
   .v-button:focus::after {
     border-color: #fff;
