@@ -228,12 +228,14 @@
   .RetrospectiveView .boardLayout {
  	-webkit-box-align:center;
     -webkit-box-pack:center;
+    flex-direction: row;
     display:-webkit-box;
   	height: 100%;
+  	overflow: auto;
   }
   
   .RetrospectiveView .boardLayout .v-slot-catArea{
-  	height: 100%;
+  	height: 100%;  	
   }
   
   .RetrospectiveView .boardLayout .catArea{
@@ -243,7 +245,8 @@
   }
   
   .RetrospectiveView .boardLayout .catArea .v-slot:nth-child(3){
-  	height: 100%;
+  	height: calc(100% - 130px);
+  	margin-top:4px;
   }
   
   .RetrospectiveView .boardLayout .catArea .v-slot:nth-child(3) > .v-ddwrapper{
