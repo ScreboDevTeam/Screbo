@@ -6,7 +6,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.Helper;
@@ -30,7 +29,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		setStyleName("EditRetroItemWindow");
 		this.retroItem = (Posting) Helper.slowDeepClone(retroItem);
 		this.onOkClicked = onOkClicked;
-		
+
 		Label title = new Label("Title:");
 		title.setSizeFull();
 		verticalLayout.addComponent(title);
