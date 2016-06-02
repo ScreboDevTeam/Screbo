@@ -102,7 +102,9 @@
   	padding: 20px;
   }
   
-  .LoginView {
+  .LoginView,
+  .LandingPageView,
+  .EditAccountView {
   	background: transparent url("images/screbo_bg.png") no-repeat scroll 0 0 / 100% 100%;
   }
   
@@ -118,10 +120,6 @@
   
   .ScreboLoginForm .loginButton {
     margin-top:20px;
-  }
-  
-  .LandingPageView {
-    background: transparent url("images/screbo_bg.png") no-repeat scroll 0 0 / 100% 100%;
   }
   
   .LandingPageView .welcomeLbl {
@@ -402,6 +400,34 @@
   .EditRetroItemWindow .v-window-contents .v-button {
     margin: 15px 2px 0 0;
     width: 80px;
+  }
+  
+  .edit_profile_panel {
+	margin: 5% 0 0 5%;
+  }
+  
+  .v-panel-content-edit_profile_panel {
+  	padding: 20px;
+  }
+  
+  .edit_profile_panel .sectionLabel {
+  	margin-top: 10px;
+  	margin-bottom: 4px;
+  	font-size: 17px;
+  	border-bottom: 2pt solid;
+  }
+  
+  .edit_profile_panel .v-textfield {
+    width: 240px;
+    margin: 0 2px 2px;
+  }
+  
+  .edit_profile_panel .emailAddressTextfield {
+  	width: calc(100% - 4px);
+  }
+  
+  .v-required-field-indicator {
+  	color: $primaryColor;
   }
 
 }

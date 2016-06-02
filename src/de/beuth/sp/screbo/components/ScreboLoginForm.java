@@ -1,6 +1,7 @@
 package de.beuth.sp.screbo.components;
 
 import com.ejt.vaadin.loginform.LoginForm;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -31,6 +32,9 @@ public class ScreboLoginForm extends LoginForm {
 	@Override
 	protected Component createContent(TextField userNameField, PasswordField passwordField, Button loginButton) {
 		this.userNameField = userNameField;
+		EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
+		userNameField.addValidator(emailValidator);
+		userNameField.setImmediate(false);
 		this.passwordField = passwordField;
 		loginButton.setCaption("login / register");
 
