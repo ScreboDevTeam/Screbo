@@ -61,11 +61,11 @@ public class ActivityEditPanel extends VerticalLayout {
 
 		VerticalLayout editPane = new VerticalLayout();
 
-		Label actLblAct = new Label("Activity");
+		Label actLblAct = new Label("activity");
 		actLblAct.setStyleName("boardLbl");
-		Label actLblDate = new Label("Target Date");
+		Label actLblDate = new Label("target date");
 		actLblDate.setStyleName("boardLbl");
-		Label actLblPrio = new Label("Priority");
+		Label actLblPrio = new Label("priority");
 		actLblPrio.setStyleName("boardLbl");
 
 		actTxtAct.setImmediate(true);
@@ -93,9 +93,9 @@ public class ActivityEditPanel extends VerticalLayout {
 			Map<ActivityPriority, Object> translations = Maps.newHashMap();
 
 			{
-				translations.put(ActivityPriority.HIGH, "High");
-				translations.put(ActivityPriority.NORMAL, "Normal");
-				translations.put(ActivityPriority.LOW, "Low");
+				translations.put(ActivityPriority.HIGH, "high");
+				translations.put(ActivityPriority.NORMAL, "normal");
+				translations.put(ActivityPriority.LOW, "low");
 			}
 
 			@Override
@@ -139,7 +139,7 @@ public class ActivityEditPanel extends VerticalLayout {
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 
 		buttonSave.setImmediate(true);
-		buttonSave.setDescription(((activity == null) ? "Add" : "Save") + " the activity");
+		buttonSave.setDescription(((activity == null) ? "add" : "save") + " the activity");
 		buttonSave.setStyleName("addSaveBtn");
 		buttonLayout.addComponent(buttonSave);
 		buttonSave.addClickListener(event -> {
@@ -170,8 +170,8 @@ public class ActivityEditPanel extends VerticalLayout {
 		});
 
 		if (activity != null) {
-			Button buttonDelete = new Button("Delete the activity");
-			buttonDelete.setDescription("Delete the activity");
+			Button buttonDelete = new Button("delete the activity");
+			buttonDelete.setDescription("delete the activity");
 			//	buttonDelete.setStyleName("addSaveBtn");
 			buttonLayout.addComponent(buttonDelete);
 			buttonDelete.addClickListener(event -> {
@@ -188,8 +188,8 @@ public class ActivityEditPanel extends VerticalLayout {
 			});
 		}
 
-		Button buttonCancel = new Button("Return to overview");
-		buttonCancel.setDescription("Return to overview");
+		Button buttonCancel = new Button("return to overview");
+		buttonCancel.setDescription("return to overview");
 		//buttonCancel.setStyleName("addSaveBtn");
 		buttonLayout.addComponent(buttonCancel);
 		buttonCancel.addClickListener(event -> {

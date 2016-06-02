@@ -18,13 +18,13 @@ public class TopBarUserPopupWindow extends ScreboWindow implements ScreboEventLi
 		setResizable(false);
 		setDraggable(false);
 
-		Button editButton = new Button("Edit Account");
+		Button editButton = new Button("edit profile");
 		editButton.addClickListener(event -> {
 			close();
 			screboUI.openEditAccountView();
 		});
 
-		Button logoutButton = new Button("Logout");
+		Button logoutButton = new Button("logout");
 		logoutButton.addClickListener(event -> {
 			close();
 			UserRepository.setSessionUser(null);

@@ -18,15 +18,15 @@ public class LandingPageView extends ScreboView {
 	public LandingPageView(ScreboUI screboUI) {
 		super(screboUI);
 
-		String welcomeString = String.format("Welcome to Screbo! %n %n Our goal is to improve your team's retrospective%nby offering a webbased platform, persistent%ndata while keeping all the benefits of a whiteboard.");
+		String welcomeString = String.format("Welcome to Screbo! %n %n Our goal is to improve your team's retrospective%nby offering a webbased platform and persistent%ndata while keeping all the benefits of a whiteboard.");
 		Label welcomeLbl = new Label(welcomeString);
 		welcomeLbl.setWidth("500px");
 		welcomeLbl.setStyleName("welcomeLbl");
 
-		Label boardInfo = new Label("Choose your Retrospective Board");
+		Label boardInfo = new Label("choose your retrospective board");
 		boardInfo.setSizeUndefined();
 		boardInfo.setStyleName("boardInfo");
-		Label userInfo = new Label("Edit your Profile");
+		Label userInfo = new Label("edit your profile");
 		userInfo.setSizeUndefined();
 		userInfo.setStyleName("userInfo");
 		Label layerPointerInfo = new Label();

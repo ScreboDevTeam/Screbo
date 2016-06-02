@@ -321,7 +321,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 						ContextMenu retroItemContextMenu = new ContextMenu();
 						retroItemContextMenu.setAsContextMenuOf(postingGuiElement);
 
-						retroItemContextMenu.addItem("Edit Posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+						retroItemContextMenu.addItem("edit posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 
 							EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, posting, new OnOkClicked() {
 
@@ -330,7 +330,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 									editPosting(category.getId(), cluster.getId(), postingToEdit);
 								}
 							});
-							editRetroItemWindow.setCaption("Edit Posting");
+							editRetroItemWindow.setCaption("edit posting");
 							editRetroItemWindow.center();
 							editRetroItemWindow.setVisible(true);
 							screboUI.addWindow(editRetroItemWindow);
@@ -338,14 +338,14 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 						});
 
 						if (cluster.getPostings().size() > 1) {
-							retroItemContextMenu.addItem("Remove Posting from Cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+							retroItemContextMenu.addItem("remove posting from cluster").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 								removeRetroItemFromCluster(category.getId(), cluster.getId(), posting.getId());
 							});
 						}
 
-						retroItemContextMenu.addItem("Delete Posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
+						retroItemContextMenu.addItem("delete posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 
-							MessageBox.createQuestion().withCaption("Deletion").withMessage("Do you really want to delete this posting?").withYesButton(new Runnable() {
+							MessageBox.createQuestion().withCaption("deletion").withMessage("Do you really want to delete this posting?").withYesButton(new Runnable() {
 
 								@Override
 								public void run() {
@@ -365,8 +365,8 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 			if (isEditableByUser) {
 
-				final Button addRetroItemButton = new Button("Add a posting");
-				addRetroItemButton.setDescription("Adds a posting to the category.");
+				final Button addRetroItemButton = new Button("add a posting");
+				addRetroItemButton.setDescription("adds a posting to the category.");
 				addRetroItemButton.addClickListener(event -> {
 
 					EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, new Posting(""), new OnOkClicked() {
@@ -376,7 +376,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 							createPosting(category.getId(), retroItem);
 						}
 					});
-					editRetroItemWindow.setCaption("New Posting");
+					editRetroItemWindow.setCaption("new posting");
 					editRetroItemWindow.center();
 					editRetroItemWindow.setVisible(true);
 					editRetroItemWindow.setResizable(false);

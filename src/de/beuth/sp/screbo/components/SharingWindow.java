@@ -96,7 +96,7 @@ public class SharingWindow extends ScreboWindow {
 
 		setWidth("830px");
 		setHeight("430px");
-		setCaption("Share Retrospective");
+		setCaption("share retrospective");
 		setResizable(true);
 		setModal(true);
 		center();
@@ -107,8 +107,8 @@ public class SharingWindow extends ScreboWindow {
 
 		/* Define the names and data types of columns.
 		 * The "default value" parameter is meaningless here. */
-		table.addContainerProperty("User", ComboBox.class, null);
-		table.addContainerProperty("Rights", ComboBox.class, null);
+		table.addContainerProperty("user", ComboBox.class, null);
+		table.addContainerProperty("rights", ComboBox.class, null);
 
 		List<User> userList = ScreboServlet.getUserRepository().getAll();
 		List<UserWrapper> userWrapperListIncludingMe = Lists.newArrayList();
@@ -137,9 +137,9 @@ public class SharingWindow extends ScreboWindow {
 		addEmptyItem();
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-		Button okButton = new Button("OK");
+		Button okButton = new Button("ok");
 		horizontalLayout.addComponent(okButton);
-		Button cancelButton = new Button("Cancel");
+		Button cancelButton = new Button("cancel");
 		horizontalLayout.addComponent(cancelButton);
 
 		okButton.addClickListener(event -> {

@@ -18,8 +18,8 @@ public class EditRetroItemWindow extends ScreboWindow {
 		public void onOkClicked(Posting retroItem);
 	}
 	protected final VerticalLayout verticalLayout = new VerticalLayout();
-	protected final Button okButton = new Button("Ok");
-	protected final Button cancelButton = new Button("Cancel");
+	protected final Button okButton = new Button("ok");
+	protected final Button cancelButton = new Button("cancel");
 	protected final Posting retroItem;
 	protected boolean exitedWithOk;
 	protected final OnOkClicked onOkClicked;
@@ -30,7 +30,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		this.retroItem = (Posting) Helper.slowDeepClone(retroItem);
 		this.onOkClicked = onOkClicked;
 
-		Label title = new Label("Title:");
+		Label title = new Label("title:");
 		title.setSizeFull();
 		verticalLayout.addComponent(title);
 

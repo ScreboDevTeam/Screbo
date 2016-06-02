@@ -21,14 +21,14 @@ import de.beuth.sp.screbo.database.UserRepository;
 public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, members section
 	protected User user = UserRepository.getUserFromSession();
 	protected final TextField titleTextField = new TextField();
-	protected final Button createButton = new Button("Create retrospective");
+	protected final Button createButton = new Button("create retrospective");
 	protected DateField retrospectiveDateField = new DateField();
 	protected ZonedDateTime dateOfRetrospective;
 	protected String title;
 
 	protected CreateRetrospectiveWindow(ScreboUI screboUI) {
 		super(screboUI);
-		setCaption("Create Retrospective");
+		setCaption("create retrospective");
 		setResizable(false);
 		setModal(true);
 		setWidth("230px");
@@ -53,7 +53,7 @@ public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, me
 		});
 
 		setCreateButtonStatus();
-		VerticalLayout verticalLayout = new VerticalLayout(new Label("Title:"), titleTextField, new Label("Date:"), retrospectiveDateField, new Label("Members"), createButton);
+		VerticalLayout verticalLayout = new VerticalLayout(new Label("title:"), titleTextField, new Label("date:"), retrospectiveDateField, new Label("members"), createButton);
 		setContent(verticalLayout);
 		titleTextField.focus();
 	}

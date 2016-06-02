@@ -37,7 +37,7 @@ public class ActivityOverviewPanel extends VerticalLayout {
 		}
 
 		if (editable) {
-			Button addActivityButton = new Button("Add Activity");
+			Button addActivityButton = new Button("add activity");
 			addActivityButton.addClickListener(event -> {
 				if (addEditHandler != null) {
 					addEditHandler.addEditActivity(null);

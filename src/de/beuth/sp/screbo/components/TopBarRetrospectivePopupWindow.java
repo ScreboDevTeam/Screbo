@@ -120,28 +120,28 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 
 		currentRetrospective = screboUI.getCurrentlyOpenedRetrospective();
 		if (currentRetrospective != null) {
-			Label currentRetrospectiveLabel = new Label("Current Retrospective");
+			Label currentRetrospectiveLabel = new Label("current retrospective");
 			currentRetrospectiveLabel.setStyleName("sectionLabel");
 			currentRetrospectiveLayout.addComponent(currentRetrospectiveLabel);
 
 			setTitle();
 			setDate();
 
-			Label titleLabel = new Label("Title:");
+			Label titleLabel = new Label("title:");
 			titleLabel.setStyleName("currentRetrospectiveLabel");
 			HorizontalLayout editTitleLine = new HorizontalLayout(titleLabel, currentRetrospectiveTitleTextField);
 			editTitleLine.setStyleName("currentRetrospectiveLine");
 			editTitleLine.setComponentAlignment(titleLabel, Alignment.MIDDLE_LEFT);
 			currentRetrospectiveLayout.addComponent(editTitleLine);
 
-			Label dateOfRetrospectiveLabel = new Label("Date:");
+			Label dateOfRetrospectiveLabel = new Label("date:");
 			dateOfRetrospectiveLabel.setStyleName("currentRetrospectiveLabel");
 			HorizontalLayout dateOfRetrospectiveLine = new HorizontalLayout(dateOfRetrospectiveLabel, currentRetrospectiveDateField);
 			dateOfRetrospectiveLine.setStyleName("currentRetrospectiveLine");
 			dateOfRetrospectiveLine.setComponentAlignment(dateOfRetrospectiveLabel, Alignment.MIDDLE_LEFT);
 			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
-			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("Share this retrospective");
+			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("share this retrospective");
 			addRemoveUsersFromCurrentRetrospectiveButton.setEnabled(currentRetrospective.isEditableByUser(user));
 			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
 			addRemoveUsersFromCurrentRetrospectiveButton.addClickListener(event -> {
@@ -156,7 +156,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 				}
 			});
 
-			Button startTeamtRetrospectiveButton = new Button("Start team retrospective");
+			Button startTeamtRetrospectiveButton = new Button("start team retrospective");
 			startTeamtRetrospectiveButton.addClickListener(event -> {
 				currentRetrospective.setTeamRetroStarted(true);
 				ScreboServlet.getRetrospectiveRepository().update(currentRetrospective);
@@ -166,10 +166,10 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 				currentRetrospectiveLayout.addComponent(startTeamtRetrospectiveButton);
 			}
 
-			Button deleteRetrospectiveButton = new Button("Delete this retrospective");
+			Button deleteRetrospectiveButton = new Button("delete this retrospective");
 			deleteRetrospectiveButton.addClickListener(event -> {
 
-				MessageBox.createQuestion().withCaption("Deletion").withMessage("Do you really want to delete this retrospective?").withYesButton(new Runnable() {
+				MessageBox.createQuestion().withCaption("deletion").withMessage("Do you really want to delete this retrospective?").withYesButton(new Runnable() {
 
 					@Override
 					public void run() {
@@ -203,7 +203,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 	protected void fillMyRetrospectivesLayout() {
 		myRetrospectivesLayout.removeAllComponents();
 
-		Label myRetrospectivesLabel = new Label("My Retrospectives");
+		Label myRetrospectivesLabel = new Label("my retrospectives");
 		myRetrospectivesLabel.setStyleName("sectionLabel");
 		myRetrospectivesLayout.addComponent(myRetrospectivesLabel);
 
@@ -216,7 +216,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
 		}
 
-		Button createNewRetrospectiveButton = new Button("Create new retrospective");
+		Button createNewRetrospectiveButton = new Button("create new retrospective");
 		createNewRetrospectiveButton.addClickListener(event -> {
 			if (createRetrospectiveWindow == null) {
 				createRetrospectiveWindow = new CreateRetrospectiveWindow(screboUI);

@@ -23,13 +23,12 @@ public class LoginView extends ScreboView implements LoginListener {
 
 	public LoginView(ScreboUI screboUI) {
 		super(screboUI);
-		Panel loginPanel = new Panel("Login");
+		Panel loginPanel = new Panel("login");
 		loginPanel.setSizeUndefined();
 		loginPanel.setStyleName("login_panel");
 
 		loginForm = new ScreboLoginForm();
 		loginForm.addLoginListener(this);
-		//setStyleName("login_bg");
 		loginPanel.setContent(loginForm);
 
 		addComponent(loginPanel);

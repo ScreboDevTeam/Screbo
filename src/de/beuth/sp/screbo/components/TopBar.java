@@ -25,8 +25,8 @@ import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 public class TopBar extends HorizontalLayout implements ScreboEventListener {
 	protected static final Logger logger = LogManager.getLogger();
 	protected final ScreboUI screboUI;
-	protected final Button boardsButton = new Button("Retrospectives");
-	protected final Button userButton = new Button("User");
+	protected final Button boardsButton = new Button("retrospectives");
+	protected final Button userButton = new Button("user");
 	protected TopBarRetrospectivePopupWindow boardSelectionWindow;
 	protected TopBarUserPopupWindow userSelectionWindow;
 	protected String boardsButtonShowsRetrospectiveId;
@@ -64,7 +64,7 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 		addComponent(logoImage);
 		setComponentAlignment(logoImage, Alignment.MIDDLE_CENTER);
 
-		userButton.setCaption("User");
+		userButton.setCaption("user");
 		userButton.addClickListener(event -> {
 			logger.debug("boardsButton clicked");
 			if (boardSelectionWindow != null) {
@@ -94,12 +94,12 @@ public class TopBar extends HorizontalLayout implements ScreboEventListener {
 		} else if (screboEvent instanceof RetrospectiveOpenedEvent) {
 			Retrospective retrospective = ((RetrospectiveOpenedEvent) screboEvent).getRetrospective();
 			boardsButtonShowsRetrospectiveId = retrospective.getId();
-			boardsButton.setCaption("Retrospective: " + retrospective.getTitle());
+			boardsButton.setCaption("retrospective: " + retrospective.getTitle());
 		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
 			Retrospective retrospective = ((RetrospectiveClosedEvent) screboEvent).getRetrospective();
 			if (Objects.equals(boardsButtonShowsRetrospectiveId, retrospective.getId())) {
 				boardsButtonShowsRetrospectiveId = null;
-				boardsButton.setCaption("Retrospectives");
+				boardsButton.setCaption("retrospectives");
 			}
 		}
 	}

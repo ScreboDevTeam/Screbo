@@ -15,19 +15,24 @@ public class ScreboLoginForm extends LoginForm {
 
 	@Override
 	protected String getUserNameFieldCaption() {
-		return "Email Address";
+		return "email address";
 	}
 
 	@Override
 	protected String getLoginButtonCaption() {
-		return "Login / Register";
+		return "login / register";
 	}
+	
+	@Override
+	protected String getPasswordFieldCaption() {
+        return "password";
+    }
 
 	@Override
 	protected Component createContent(TextField userNameField, PasswordField passwordField, Button loginButton) {
 		this.userNameField = userNameField;
 		this.passwordField = passwordField;
-		loginButton.setCaption("Login / Register");
+		loginButton.setCaption("login / register");
 
 		userNameField.setStyleName("loginMailAddress", true);
 		passwordField.setStyleName("loginPassword", true);
