@@ -4,16 +4,11 @@ package de.beuth.sp.screbo.views;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-
 import de.beuth.sp.screbo.ScreboUI;
 
 @SuppressWarnings("serial")
