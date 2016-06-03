@@ -2,6 +2,7 @@ package de.beuth.sp.screbo.components;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.database.Activity;
@@ -23,9 +24,37 @@ public class ActivityOverviewPanel extends VerticalLayout {
 
 		boolean editable = retrospective.isEditableByUser(UserRepository.getUserFromSession());
 		VerticalLayout overviewPane = new VerticalLayout();
-
+		overviewPane.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		
+		final Label activityTitleLabel = new Label("activities");
+		activityTitleLabel.setStyleName("activityTitleLabel");
+		activityTitleLabel.setSizeUndefined();
+		overviewPane.addComponent(activityTitleLabel);
+		
+		
+		if (editable) {
+			Button addActivityButton = new Button("add activity");
+			addActivityButton.setStyleName("addActivityButton ");
+			addActivityButton.addClickListener(event -> {
+				if (addEditHandler != null) {
+					addEditHandler.addEditActivity(null);
+				}
+			});
+			overviewPane.addComponent(addActivityButton);
+		}
+		
 		for (final Activity activity : retrospective.getActivities()) {
-			Button activityButton = new Button(activity.getDescription());
+			String activityDescription = String.format("%1$te.%1$tm.%1$tY - %2$s%n-------------------------------%n%3$s", 
+										activity.getDateOfLatestRealization(), 
+										activity.getPriority(),
+										activity.getDescription());
+			Button activityButton = new Button(activityDescription);
+			activityButton.setStyleName("activityButton");
+			activityButton.setSizeFull();
+			activityButton.setDescription("open activity details");
+			if (activity.isRealized()) {
+				activityButton.addStyleName("activityButtonDone");
+			}
 			if (editable) {
 				activityButton.addClickListener(event -> {
 					if (addEditHandler != null) {
@@ -34,16 +63,6 @@ public class ActivityOverviewPanel extends VerticalLayout {
 				});
 			}
 			overviewPane.addComponent(activityButton);
-		}
-
-		if (editable) {
-			Button addActivityButton = new Button("add activity");
-			addActivityButton.addClickListener(event -> {
-				if (addEditHandler != null) {
-					addEditHandler.addEditActivity(null);
-				}
-			});
-			overviewPane.addComponent(addActivityButton);
 		}
 
 		addComponent(overviewPane);

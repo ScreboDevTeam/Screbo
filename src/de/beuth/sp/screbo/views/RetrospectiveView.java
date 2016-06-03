@@ -216,6 +216,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 		super(screboUI);
 		boardLayout = new HorizontalLayout();
 		boardLayout.setStyleName("boardLayout");
+		boardLayout.setSizeFull();
 		Panel boardMainPanel = new Panel(boardLayout);
 		boardMainPanel.setSizeFull();
 
@@ -312,6 +313,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				for (Posting posting : cluster.getPostings()) {
 					Label postingGuiElement = new Label(posting.getTitle());
 					postingGuiElement.setStyleName("postingGuiElement");
+					postingGuiElement.setDescription("right-click for more options");
 					clusterArea.addComponent(postingGuiElement);
 
 					if (isEditableByUser) {

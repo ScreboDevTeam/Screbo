@@ -291,19 +291,6 @@
   	margin-bottom: 20px !important;
   }
   
-  .RetrospectiveView .addSaveBtn {
-  	background: transparent url("images/disk.svg") no-repeat scroll 0 0 / 32px auto;
-    border: medium none;
-    float: right;
-    height: 32px;
-    margin-bottom: 20px;
-    width: 32px;
-  }
-  
-  .RetrospectiveView .addSaveBtn:hover {
-  	background: transparent url("images/diskHover.svg") no-repeat scroll 0 0 / 32px auto;
-  }
-
   .RetrospectiveView .postingGuiElement {
   	background:#fefabc; 
 	padding:15px; 
@@ -428,6 +415,42 @@
   
   .v-required-field-indicator {
   	color: $primaryColor;
+  }
+  
+  .ActivityOverviewPanel {
+  	overflow-y: auto;
+  }
+  
+  .ActivityOverviewPanel .addActivityButton {
+  	margin-bottom: 10px;
+  }
+  
+  .ActivityOverviewPanel .activityButton {
+    height: auto;
+    background: $primaryColorLight;
+  	border-color: $primaryColorLight;
+  	color: white;
+  	box-shadow: none;
+  	margin: 4px 0;
+  	border-radius: 5px;
+  	white-space: pre-line;
+  	font: 14px helvetica,serif;
+  	padding: 8px 3px;
+  }
+  
+  .ActivityOverviewPanel .activityButtonDone {
+    background: #678464;
+  	border-color: #678464;
+  }
+  
+  .ActivityOverviewPanel .activityTitleLabel {
+   margin: 20px 0 10px 0;
+   color: $primaryColor;
+   font: 25px cursive,serif;
+  }
+  
+  .ActivityEditPanel .buttonLayout {
+  	margin-top: 30px;
   }
 
 }

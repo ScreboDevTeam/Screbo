@@ -206,16 +206,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		Label myRetrospectivesLabel = new Label("my retrospectives");
 		myRetrospectivesLabel.setStyleName("sectionLabel");
 		myRetrospectivesLayout.addComponent(myRetrospectivesLabel);
-
-		for (Retrospective retrospective : retrospectiveRepository.getVisibleByUser(user.getId())) {
-			OpenRetrospectiveButton openRetrospectiveButton = new OpenRetrospectiveButton(retrospective);
-			openRetrospectiveButton.setStyleName("openRetrospectiveButton");
-			openRetrospectiveButton.addClickListener(event -> {
-				close();
-			});
-			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
-		}
-
+		
 		Button createNewRetrospectiveButton = new Button("create new retrospective");
 		createNewRetrospectiveButton.addClickListener(event -> {
 			if (createRetrospectiveWindow == null) {
@@ -230,6 +221,17 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			}
 		});
 		myRetrospectivesLayout.addComponent(createNewRetrospectiveButton);
+
+		for (Retrospective retrospective : retrospectiveRepository.getVisibleByUser(user.getId())) {
+			OpenRetrospectiveButton openRetrospectiveButton = new OpenRetrospectiveButton(retrospective);
+			openRetrospectiveButton.setStyleName("openRetrospectiveButton");
+			openRetrospectiveButton.setDescription("show retrospective on board");
+			openRetrospectiveButton.addClickListener(event -> {
+				close();
+			});
+			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
+		}
+		
 	}
 
 	@Override

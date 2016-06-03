@@ -17,7 +17,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -43,6 +42,7 @@ public class ActivityEditPanel extends VerticalLayout {
 	protected TextField actTxtAct = new TextField();
 	protected DateField actTxtDate = new DateField();
 	protected ComboBox actDropPrio = new ComboBox();
+	protected ComboBox actDropRealized = new ComboBox();
 	protected Button buttonSave = new Button("");
 
 	protected void updateSaveButtonState(String text, Date date) {
@@ -67,6 +67,8 @@ public class ActivityEditPanel extends VerticalLayout {
 		actLblDate.setStyleName("boardLbl");
 		Label actLblPrio = new Label("priority");
 		actLblPrio.setStyleName("boardLbl");
+		Label actLblRealized = new Label("status");
+		actLblRealized.setStyleName("boardLbl");
 
 		actTxtAct.setImmediate(true);
 		actTxtAct.setStyleName("boardInput");
@@ -93,9 +95,9 @@ public class ActivityEditPanel extends VerticalLayout {
 			Map<ActivityPriority, Object> translations = Maps.newHashMap();
 
 			{
-				translations.put(ActivityPriority.HIGH, "high");
+				translations.put(ActivityPriority.HIGH, "High");
 				translations.put(ActivityPriority.NORMAL, "normal");
-				translations.put(ActivityPriority.LOW, "low");
+				translations.put(ActivityPriority.LOW, "Low");
 			}
 
 			@Override
@@ -124,6 +126,15 @@ public class ActivityEditPanel extends VerticalLayout {
 				return Object.class;
 			}
 		});
+		
+		actDropRealized.setStyleName("boardInput");
+		actDropRealized.addItem("Pending");
+		actDropRealized.addItem("Done");
+		actDropRealized.setNullSelectionAllowed(false);
+		actDropRealized.setInvalidAllowed(false);
+		actDropRealized.setTextInputAllowed(false);
+		actDropRealized.setNewItemsAllowed(false);
+		
 
 		actTxtDate.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant()));
 		actTxtDate.setLocale(Locale.forLanguageTag(user.getLocale()));
@@ -132,15 +143,20 @@ public class ActivityEditPanel extends VerticalLayout {
 			actTxtAct.setValue(activity.getDescription());
 			actTxtDate.setValue(Date.from(activity.getDateOfLatestRealization().toInstant()));
 			actDropPrio.select(activity.getPriority());
+			actDropRealized.select(activity.isRealized() ? "Done" : "Pending");
 		} else {
 			actDropPrio.select(ActivityPriority.NORMAL);
+			actDropRealized.select("Pending");
 		}
 
-		HorizontalLayout buttonLayout = new HorizontalLayout();
+		VerticalLayout buttonLayout = new VerticalLayout();
+		buttonLayout.setSpacing(true);
+		buttonLayout.setStyleName("buttonLayout");
 
 		buttonSave.setImmediate(true);
 		buttonSave.setDescription(((activity == null) ? "add" : "save") + " the activity");
-		buttonSave.setStyleName("addSaveBtn");
+		buttonSave.setCaption(((activity == null) ? "add" : "save") + " the activity");
+		buttonSave.setSizeFull();
 		buttonLayout.addComponent(buttonSave);
 		buttonSave.addClickListener(event -> {
 			if (onReturnToOverview != null) {
@@ -163,6 +179,8 @@ public class ActivityEditPanel extends VerticalLayout {
 					activityToSave.setDescription(actTxtAct.getValue());
 					activityToSave.setDateOfLatestRealization(ZonedDateTime.ofInstant(actTxtDate.getValue().toInstant(), ZoneId.systemDefault()));
 					activityToSave.setPriority((ActivityPriority) actDropPrio.getConvertedValue());
+					activityToSave.setPriority((ActivityPriority) actDropPrio.getConvertedValue());
+					activityToSave.setRealized(actDropRealized.getValue() == "Done" ? true : false);
 
 				}
 			});
@@ -172,7 +190,7 @@ public class ActivityEditPanel extends VerticalLayout {
 		if (activity != null) {
 			Button buttonDelete = new Button("delete the activity");
 			buttonDelete.setDescription("delete the activity");
-			//	buttonDelete.setStyleName("addSaveBtn");
+			buttonDelete.setSizeFull();
 			buttonLayout.addComponent(buttonDelete);
 			buttonDelete.addClickListener(event -> {
 				if (onReturnToOverview != null) {
@@ -190,7 +208,7 @@ public class ActivityEditPanel extends VerticalLayout {
 
 		Button buttonCancel = new Button("return to overview");
 		buttonCancel.setDescription("return to overview");
-		//buttonCancel.setStyleName("addSaveBtn");
+		buttonCancel.setSizeFull();
 		buttonLayout.addComponent(buttonCancel);
 		buttonCancel.addClickListener(event -> {
 			if (onReturnToOverview != null) {
@@ -206,6 +224,9 @@ public class ActivityEditPanel extends VerticalLayout {
 
 		editPane.addComponent(actLblPrio);
 		editPane.addComponent(actDropPrio);
+		
+		editPane.addComponent(actLblRealized);
+		editPane.addComponent(actDropRealized);
 
 		editPane.addComponent(buttonLayout);
 
