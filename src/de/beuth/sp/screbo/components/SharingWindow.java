@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -97,7 +98,7 @@ public class SharingWindow extends ScreboWindow {
 		setWidth("830px");
 		setHeight("430px");
 		setCaption("share retrospective");
-		setResizable(true);
+		setResizable(false);
 		setModal(true);
 		center();
 
@@ -137,6 +138,9 @@ public class SharingWindow extends ScreboWindow {
 		addEmptyItem();
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setStyleName("SharingWindowButtonArea");
+		horizontalLayout.setWidthUndefined();
+		horizontalLayout.setSpacing(true);
 		Button okButton = new Button("ok");
 		horizontalLayout.addComponent(okButton);
 		Button cancelButton = new Button("cancel");
@@ -152,8 +156,10 @@ public class SharingWindow extends ScreboWindow {
 		});
 
 		VerticalLayout verticalLayout = new VerticalLayout();
+		verticalLayout.setSpacing(true);
 		verticalLayout.addComponent(table);
 		verticalLayout.addComponent(horizontalLayout);
+		verticalLayout.setComponentAlignment(horizontalLayout, Alignment.MIDDLE_RIGHT);
 		verticalLayout.setSizeFull();
 		verticalLayout.setExpandRatio(table, 1);
 		setContent(verticalLayout);

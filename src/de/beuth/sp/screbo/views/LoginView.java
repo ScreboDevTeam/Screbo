@@ -76,7 +76,7 @@ public class LoginView extends ScreboView implements LoginListener {
 	}
 
 	protected void askToCreateNewUser(final String mailAddress, final String password) {
-		ConfirmDialog.show(screboUI, "Not found", "A user with the mail address" + mailAddress + " was not found.\nDo you want to create a new user?", "Sorry, my bad", "Create new user", new ConfirmDialog.Listener() {
+		ConfirmDialog.show(screboUI, "Not found", "A user with the mail address " + mailAddress + " was not found.\nDo you want to create a new user?", "Sorry, my bad", "Create new user", new ConfirmDialog.Listener() {
 
 			@Override
 			public void onClose(ConfirmDialog dialog) {

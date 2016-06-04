@@ -83,7 +83,7 @@
   	width: auto !important;
   }
   
-  .v-label, .v-captiontext, .v-window-outerheader {
+  .v-label, .v-captiontext, .v-window-outerheader, .v-table-caption-container {
   	color: $primaryColor;
   	font: 15px cursive,serif;
   }
@@ -98,7 +98,10 @@
     margin: 4px 0;
   }
   
-  .popupContent {
+  .CreateRetrospectiveWindow .popupContent,
+  .EditRetroItemWindow .popupContent,
+  .TopBarRetrospectivePopupWindow .popupContent,
+  .TopBarUserPopupWindow .popupContent {
   	padding: 20px;
   }
   
@@ -451,6 +454,10 @@
   
   .ActivityEditPanel .buttonLayout {
   	margin-top: 30px;
+  }
+  
+  .SharingWindowButtonArea {
+  	margin: 0 10px 10px 0;
   }
 
 }
