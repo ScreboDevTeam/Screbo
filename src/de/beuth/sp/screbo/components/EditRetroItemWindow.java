@@ -1,6 +1,7 @@
 package de.beuth.sp.screbo.components;
 
 import com.google.common.base.Strings;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -35,6 +36,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		verticalLayout.addComponent(title);
 
 		TextArea titleTextField = new TextArea();
+		titleTextField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		titleTextField.setSizeFull();
 		titleTextField.setValue(retroItem.getTitle());
 		titleTextField.addTextChangeListener(event -> {

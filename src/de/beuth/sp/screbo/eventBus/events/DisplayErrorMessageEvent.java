@@ -30,4 +30,8 @@ public class DisplayErrorMessageEvent extends ScreboEvent {
 		return getClass().getSimpleName() + " [textToShowToUser=" + textToShowToUser + (exception == null ? "" : (", exception=" + exception)) + "]";
 	}
 
+	public String getTextToShowToUser() {
+		return textToShowToUser;
+	}
+
 }

@@ -9,6 +9,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -19,6 +20,7 @@ import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.EventBus;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
@@ -106,6 +108,9 @@ public class ScreboUI extends UI implements ScreboEventListener {
 	}
 
 	public void openEditAccountView() {
+		if (currentlyOpenedRetrospective != null) {
+			eventBus.fireEvent(new RequestCloseRetrospectiveEvent(currentlyOpenedRetrospective));
+		}
 		navigator.navigateTo("editAccount");
 	}
 
@@ -133,7 +138,10 @@ public class ScreboUI extends UI implements ScreboEventListener {
 
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
-		if (screboEvent instanceof RequestOpenRetrospectiveEvent) {
+		if (screboEvent instanceof DisplayErrorMessageEvent) {
+			logger.error("Displaying error message: {}", ((DisplayErrorMessageEvent) screboEvent).getTextToShowToUser(), ((DisplayErrorMessageEvent) screboEvent).getException());
+			Notification.show(((DisplayErrorMessageEvent) screboEvent).getTextToShowToUser(), Notification.Type.ERROR_MESSAGE);
+		} else if (screboEvent instanceof RequestOpenRetrospectiveEvent) {
 			navigator.navigateTo("retrospective/" + ((RequestOpenRetrospectiveEvent) screboEvent).getRetrospective().getId());
 		} else if (screboEvent instanceof RequestNavigateToRetrospectivesViewEvent) {
 			navigator.navigateTo("/");

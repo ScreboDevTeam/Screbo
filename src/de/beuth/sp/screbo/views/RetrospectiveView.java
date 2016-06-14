@@ -254,6 +254,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			} else if (screboEvent instanceof RequestCloseRetrospectiveEvent) {
 				if (Objects.equals(retrospective.getId(), ((RequestCloseRetrospectiveEvent) screboEvent).getRetrospective().getId())) {
 					screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
+					retrospective = null;
 					screboUI.getEventBus().fireEvent(new RequestNavigateToRetrospectivesViewEvent());
 				}
 			}
@@ -281,8 +282,9 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	}
 
 	protected void showError(String message) {
-		removeAllComponents();
-		addComponent(new Label(message));
+		screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
+		screboUI.getEventBus().fireEvent(new RequestNavigateToRetrospectivesViewEvent());
+		screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent(message));
 	}
 
 	protected void openRetrospective() {

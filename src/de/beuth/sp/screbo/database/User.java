@@ -75,13 +75,29 @@ public class User extends CouchDbDocument {
 		return "User [" + getDisplayName() + "]";
 	}
 
-	public String getDisplayName() {
+	public String getDisplayNameAndEmail() {
 		List<String> result = Lists.newArrayList();
+		if (firstName != null) {
+			result.add(firstName);
+		}
 		if (lastName != null) {
 			result.add(lastName);
 		}
+		if (result.size() == 0) {
+			result.add(getEmailAddress());
+		} else {
+			result.add("(" + getEmailAddress() + ")");
+		}
+		return Joiner.on(' ').join(result);
+	}
+
+	public String getDisplayName() {
+		List<String> result = Lists.newArrayList();
 		if (firstName != null) {
 			result.add(firstName);
+		}
+		if (lastName != null) {
+			result.add(lastName);
 		}
 		if (result.size() == 0) {
 			result.add(getEmailAddress());

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.google.common.base.Strings;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
@@ -33,7 +34,7 @@ public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, me
 		setModal(true);
 		setWidth("230px");
 
-		titleTextField.setImmediate(true);
+		titleTextField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		titleTextField.addTextChangeListener(e -> {
 			title = e.getText();
 			setCreateButtonStatus();

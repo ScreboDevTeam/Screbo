@@ -72,7 +72,6 @@
 			rev="&vaadin.version;" conf="widgetset-compile->default" />
 			
 		<!-- Vaadin addons -->
-		<dependency org="org.vaadin.addons" name="loginform" rev="0.6.2" />		
-		<dependency org="org.vaadin.addon" name="confirmdialog" rev="2.1.3" />
+		<dependency org="org.vaadin.addons" name="loginform" rev="0.6.2" />
 	</dependencies>
 </ivy-module>

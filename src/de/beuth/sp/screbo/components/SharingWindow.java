@@ -21,9 +21,12 @@ import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.Retrospective.Right;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
+import de.beuth.sp.screbo.eventBus.ScreboEventListener;
+import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
+import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
 @SuppressWarnings("serial")
-public class SharingWindow extends ScreboWindow {
+public class SharingWindow extends ScreboWindow implements ScreboEventListener {
 	protected static class UserWrapper {
 		protected User user;
 
@@ -34,7 +37,7 @@ public class SharingWindow extends ScreboWindow {
 
 		@Override
 		public String toString() {
-			return user.getDisplayName();
+			return user.getDisplayNameAndEmail();
 		}
 
 		public User getUser() {
@@ -94,6 +97,7 @@ public class SharingWindow extends ScreboWindow {
 	protected SharingWindow(ScreboUI screboUI, Retrospective retrospective) {
 		super(screboUI);
 		this.retrospective = retrospective;
+		screboUI.getEventBus().addEventListener(this, true);
 
 		setWidth("830px");
 		setHeight("430px");
@@ -141,7 +145,7 @@ public class SharingWindow extends ScreboWindow {
 		horizontalLayout.setStyleName("SharingWindowButtonArea");
 		horizontalLayout.setWidthUndefined();
 		horizontalLayout.setSpacing(true);
-		Button okButton = new Button("ok");
+		Button okButton = new Button("save changes");
 		horizontalLayout.addComponent(okButton);
 		Button cancelButton = new Button("cancel");
 		horizontalLayout.addComponent(cancelButton);
@@ -222,5 +226,15 @@ public class SharingWindow extends ScreboWindow {
 			}
 		});
 		return rightsComboBox;
+	}
+
+	@Override
+	public void onScreboEvent(ScreboEvent screboEvent) {
+		if (screboEvent instanceof DatabaseObjectChangedEvent) {
+			if (Retrospective.class.equals(((DatabaseObjectChangedEvent) screboEvent).getObjectClass()) && retrospective.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
+				//TODO only close if lost right to share, otherwise reload the window if sharing stuff changed				
+				close();
+			}
+		}
 	}
 }

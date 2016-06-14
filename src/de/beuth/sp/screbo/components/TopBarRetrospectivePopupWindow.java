@@ -30,6 +30,8 @@ import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
+import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 import de.steinwedel.messagebox.MessageBox;
@@ -98,7 +100,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		setResizable(false);
 		setDraggable(false);
 		setPositionY(40);
-		setWidth("312px");
+		setWidth("302px");
 		myRetrospectivesLayout.setSizeFull();
 
 		currentRetrospectiveLayout.setStyleName("currentRetrospectiveLayout");
@@ -120,6 +122,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 
 		currentRetrospective = screboUI.getCurrentlyOpenedRetrospective();
 		if (currentRetrospective != null) {
+			boolean isEditable = currentRetrospective.isEditableByUser(user);
 			Label currentRetrospectiveLabel = new Label("current retrospective");
 			currentRetrospectiveLabel.setStyleName("sectionLabel");
 			currentRetrospectiveLayout.addComponent(currentRetrospectiveLabel);
@@ -142,7 +145,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			currentRetrospectiveLayout.addComponent(dateOfRetrospectiveLine);
 
 			Button addRemoveUsersFromCurrentRetrospectiveButton = new Button("share this retrospective");
-			addRemoveUsersFromCurrentRetrospectiveButton.setEnabled(currentRetrospective.isEditableByUser(user));
+			addRemoveUsersFromCurrentRetrospectiveButton.setEnabled(isEditable);
 			currentRetrospectiveLayout.addComponent(addRemoveUsersFromCurrentRetrospectiveButton);
 			addRemoveUsersFromCurrentRetrospectiveButton.addClickListener(event -> {
 				if (sharingWindow == null) {
@@ -157,6 +160,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			});
 
 			Button startTeamtRetrospectiveButton = new Button("start team retrospective");
+			startTeamtRetrospectiveButton.setEnabled(isEditable);
 			startTeamtRetrospectiveButton.addClickListener(event -> {
 				currentRetrospective.setTeamRetroStarted(true);
 				ScreboServlet.getRetrospectiveRepository().update(currentRetrospective);
@@ -167,6 +171,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			}
 
 			Button deleteRetrospectiveButton = new Button("delete this retrospective");
+			deleteRetrospectiveButton.setEnabled(isEditable);
 			deleteRetrospectiveButton.addClickListener(event -> {
 
 				MessageBox.createQuestion().withCaption("deletion").withMessage("Do you really want to delete this retrospective?").withYesButton(new Runnable() {
@@ -183,9 +188,10 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 	}
 
 	protected void deleteRetrospective() {
-		screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(currentRetrospective));
+		final Retrospective retrospectiveToDelete = currentRetrospective;
+		screboUI.getEventBus().fireEvent(new RequestCloseRetrospectiveEvent(retrospectiveToDelete));
 		close();
-		ScreboServlet.getRetrospectiveRepository().remove(currentRetrospective);
+		ScreboServlet.getRetrospectiveRepository().remove(retrospectiveToDelete);
 	}
 
 	private void setTitle() {
@@ -206,7 +212,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		Label myRetrospectivesLabel = new Label("my retrospectives");
 		myRetrospectivesLabel.setStyleName("sectionLabel");
 		myRetrospectivesLayout.addComponent(myRetrospectivesLabel);
-		
+
 		Button createNewRetrospectiveButton = new Button("create new retrospective");
 		createNewRetrospectiveButton.addClickListener(event -> {
 			if (createRetrospectiveWindow == null) {
@@ -231,13 +237,23 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			});
 			myRetrospectivesLayout.addComponent(openRetrospectiveButton);
 		}
-		
+
 	}
 
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
 		if (screboEvent instanceof UserChangedEvent) {
 			close();
+		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
+			if (currentRetrospective != null && currentRetrospective.getId().equals(((RetrospectiveClosedEvent) screboEvent).getRetrospective().getId())) {
+				currentRetrospective = null;
+				fillCurrentRetrospectiveLayout();
+			}
+			fillMyRetrospectivesLayout();
+		} else if (screboEvent instanceof RetrospectiveOpenedEvent) {
+			currentRetrospective = ((RetrospectiveOpenedEvent) screboEvent).getRetrospective();
+			fillCurrentRetrospectiveLayout();
+			fillMyRetrospectivesLayout();
 		} else if (screboEvent instanceof DatabaseObjectChangedEvent) {
 			if (((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(Retrospective.class)) { // a retrospective object was changed, we update the view
 				if (currentRetrospective != null && currentRetrospective.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
@@ -250,6 +266,8 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 							setDate();
 						}
 					} catch (DocumentNotFoundException e) {
+						currentRetrospective = null;
+						fillCurrentRetrospectiveLayout();
 					}
 				}
 				fillMyRetrospectivesLayout();

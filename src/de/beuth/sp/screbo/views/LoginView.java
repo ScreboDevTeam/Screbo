@@ -1,7 +1,6 @@
 package de.beuth.sp.screbo.views;
 
 import org.ektorp.DocumentNotFoundException;
-import org.vaadin.dialogs.ConfirmDialog;
 
 import com.ejt.vaadin.loginform.LoginForm.LoginEvent;
 import com.ejt.vaadin.loginform.LoginForm.LoginListener;
@@ -16,20 +15,18 @@ import de.beuth.sp.screbo.components.ScreboLoginForm;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
+import de.steinwedel.messagebox.MessageBox;
 
 @SuppressWarnings("serial")
 public class LoginView extends ScreboView implements LoginListener {
 	protected ScreboLoginForm loginForm;
+	protected Panel loginPanel = new Panel("login");
 
 	public LoginView(ScreboUI screboUI) {
 		super(screboUI);
-		Panel loginPanel = new Panel("login");
+
 		loginPanel.setSizeUndefined();
 		loginPanel.setStyleName("login_panel");
-
-		loginForm = new ScreboLoginForm();
-		loginForm.addLoginListener(this);
-		loginPanel.setContent(loginForm);
 
 		addComponent(loginPanel);
 		setExpandRatio(loginPanel, 1);
@@ -38,7 +35,9 @@ public class LoginView extends ScreboView implements LoginListener {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-
+		loginForm = new ScreboLoginForm();
+		loginForm.addLoginListener(this);
+		loginPanel.setContent(loginForm);
 	}
 
 	/**
@@ -76,22 +75,25 @@ public class LoginView extends ScreboView implements LoginListener {
 	}
 
 	protected void askToCreateNewUser(final String mailAddress, final String password) {
-		ConfirmDialog.show(screboUI, "Not found", "A user with the mail address " + mailAddress + " was not found.\nDo you want to create a new user?", "Sorry, my bad", "Create new user", new ConfirmDialog.Listener() {
+
+		MessageBox.createQuestion().withCaption("Not found").withMessage("A user with the mail address " + mailAddress + " was not found.\nDo you want to create the user?").withYesButton(new Runnable() {
 
 			@Override
-			public void onClose(ConfirmDialog dialog) {
-				if (!dialog.isConfirmed()) { //Create new user clicked, I ordered the buttons that the other one is the default
-					User user = new User();
-					user.setEmailAddress(mailAddress);
-					user.setPassword(password);
-					ScreboServlet.getUserRepository().add(user);
-					doLogin(user);
-				} else {
-					loginForm.clear();
-					loginForm.focusUserNameField();
-				}
+			public void run() {
+				User user = new User();
+				user.setEmailAddress(mailAddress);
+				user.setPassword(password);
+				ScreboServlet.getUserRepository().add(user);
+				doLogin(user);
 			}
-		});
+		}).withNoButton(new Runnable() {
+
+			@Override
+			public void run() {
+				loginForm.clear();
+				loginForm.focusUserNameField();
+			}
+		}).open();
 	}
 
 	protected void doLogin(User user) {

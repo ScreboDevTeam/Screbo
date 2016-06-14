@@ -45,8 +45,8 @@ public class ScreboServlet extends VaadinServlet {
 	protected static Logger logger = null;
 
 	protected Configuration configuration;
-	protected UserRepository userRepository;
-	protected RetrospectiveRepository retrospectiveRepository;
+	protected transient UserRepository userRepository;
+	protected transient RetrospectiveRepository retrospectiveRepository;
 	protected EventBus globalEventBus = new EventBus(); // for events, which are distributed to all clients
 
 	public Path getWebInfPath() {

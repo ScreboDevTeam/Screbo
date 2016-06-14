@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Maps;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -70,7 +71,7 @@ public class ActivityEditPanel extends VerticalLayout {
 		Label actLblRealized = new Label("status");
 		actLblRealized.setStyleName("boardLbl");
 
-		actTxtAct.setImmediate(true);
+		actTxtAct.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		actTxtAct.setStyleName("boardInput");
 		actTxtAct.addTextChangeListener(e -> {
 			updateSaveButtonState(e.getText(), actTxtDate.getValue());
@@ -126,7 +127,7 @@ public class ActivityEditPanel extends VerticalLayout {
 				return Object.class;
 			}
 		});
-		
+
 		actDropRealized.setStyleName("boardInput");
 		actDropRealized.addItem("Pending");
 		actDropRealized.addItem("Done");
@@ -134,7 +135,6 @@ public class ActivityEditPanel extends VerticalLayout {
 		actDropRealized.setInvalidAllowed(false);
 		actDropRealized.setTextInputAllowed(false);
 		actDropRealized.setNewItemsAllowed(false);
-		
 
 		actTxtDate.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant()));
 		actTxtDate.setLocale(Locale.forLanguageTag(user.getLocale()));
@@ -224,7 +224,7 @@ public class ActivityEditPanel extends VerticalLayout {
 
 		editPane.addComponent(actLblPrio);
 		editPane.addComponent(actDropPrio);
-		
+
 		editPane.addComponent(actLblRealized);
 		editPane.addComponent(actDropRealized);
 
