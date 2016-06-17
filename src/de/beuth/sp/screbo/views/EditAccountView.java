@@ -7,6 +7,7 @@ import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -35,6 +36,9 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 	protected TextField lastNameTextfield = new TextField("last name");
 	protected TextField emailAddressTextfield = new TextField("email address");
 	protected Button saveButton = new Button("save changes");
+	protected EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
+	protected PasswordField newPasswordTextfield = new PasswordField("new password");
+	protected PasswordField newPasswordConfirmTextfield = new PasswordField("confirm new password");
 
 	protected String password1 = "";
 	protected String password2 = "";
@@ -57,6 +61,8 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 		changePasswordLabel.setStyleName("sectionLabel");
 
 		emailAddressTextfield.setRequired(true);
+		emailAddressTextfield.addValidator(emailValidator);
+		emailAddressTextfield.setValidationVisible(true);
 		emailAddressTextfield.setStyleName("emailAddressTextfield");
 		emailAddressTextfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		emailAddressTextfield.addTextChangeListener(new TextChangeListener() {
@@ -68,8 +74,6 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 			}
 		});
 
-		//		PasswordField currentPasswordTextfield = new PasswordField("current password");
-		PasswordField newPasswordTextfield = new PasswordField("new password");
 		newPasswordTextfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		newPasswordTextfield.addTextChangeListener(new TextChangeListener() {
 
@@ -79,7 +83,6 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 				onFieldsChanged();
 			}
 		});
-		PasswordField newPasswordConfirmTextfield = new PasswordField("confirm new password");
 		newPasswordConfirmTextfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		newPasswordConfirmTextfield.addTextChangeListener(new TextChangeListener() {
 
@@ -109,8 +112,14 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 	}
 
 	protected void onFieldsChanged() {
-		EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
 		saveButton.setEnabled(Objects.equals(password1, password2) && !Strings.isNullOrEmpty(emailAddress) && emailValidator.isValid(emailAddress));
+		if (!Objects.equals(password1, password2) && !Strings.isNullOrEmpty(password1) && !Strings.isNullOrEmpty(password2)) {
+			newPasswordTextfield.setComponentError(new UserError("The passwords you entered do not match."));
+			newPasswordConfirmTextfield.setComponentError(new UserError("The passwords you entered do not match."));
+		} else {
+			newPasswordTextfield.setComponentError(null);
+			newPasswordConfirmTextfield.setComponentError(null);
+		}
 	}
 
 	protected void save() {

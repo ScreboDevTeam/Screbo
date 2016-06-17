@@ -55,7 +55,7 @@
   }
 
   .v-button:focus::after {
-    border-color: #fff;
+    border-color: $primaryColor;
     box-shadow: 0 0 0 0px rgba(25, 125, 225, 0.5);
   }
   
@@ -345,7 +345,8 @@
   	border-radius: 5px;
   }
   
-  .TopBarRetrospectivePopupWindow .openRetrospectiveButton:hover {
+  .TopBarRetrospectivePopupWindow .openRetrospectiveButton:hover,
+  .ActivityOverviewPanel .activityButton:hover {
   	background: $primaryColor;
   	border-color: $primaryColor;
   }
@@ -454,6 +455,11 @@
   	border-color: #678464;
   }
   
+  .ActivityOverviewPanel .activityButtonDone:hover {
+    background: #244421;
+  	border-color: #244421;
+  }
+  
   .ActivityOverviewPanel .activityTitleLabel {
    margin: 20px 0 10px 0;
    color: $primaryColor;
@@ -466,6 +472,10 @@
   
   .SharingWindowButtonArea {
   	margin: 0 10px 10px 0;
+  }
+  
+  .edit_profile_panel .v-button {
+  	margin-bottom: 2px;
   }
 
 }

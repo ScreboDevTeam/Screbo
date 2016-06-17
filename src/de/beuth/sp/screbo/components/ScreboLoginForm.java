@@ -3,6 +3,7 @@ package de.beuth.sp.screbo.components;
 import com.ejt.vaadin.loginform.LoginForm;
 import com.google.common.base.Strings;
 import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
@@ -17,6 +18,8 @@ import com.vaadin.ui.VerticalLayout;
 public class ScreboLoginForm extends LoginForm {
 	protected TextField userNameField;
 	protected PasswordField passwordField;
+	protected EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
+	protected StringLengthValidator passwordValidator = new StringLengthValidator("Your Password must be at least 8 characters long", 8, null, true);
 
 	@Override
 	protected String getUserNameFieldCaption() {
@@ -32,21 +35,37 @@ public class ScreboLoginForm extends LoginForm {
 	protected String getPasswordFieldCaption() {
 		return "password";
 	}
-
+	
 	@Override
 	protected Component createContent(TextField userNameField, PasswordField passwordField, Button loginButton) {
 		this.userNameField = userNameField;
+		userNameField.addValidator(emailValidator);
+		userNameField.setValidationVisible(true);
 		userNameField.addTextChangeListener(new TextChangeListener() {
-			EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
 			@Override
 			public void textChange(TextChangeEvent event) {
-				loginButton.setEnabled(!Strings.isNullOrEmpty(event.getText()) && emailValidator.isValid(event.getText()));
+				loginButton.setEnabled(!Strings.isNullOrEmpty(passwordField.getValue()) && !Strings.isNullOrEmpty(event.getText()) && emailValidator.isValid(event.getText()) && passwordValidator.isValid(passwordField.getValue()));
 			}
 		});
 		userNameField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 
 		this.passwordField = passwordField;
+		passwordField.addValidator(passwordValidator);
+		passwordField.setValidationVisible(false);
+		passwordField.addTextChangeListener(new TextChangeListener() {
+			@Override
+			public void textChange(TextChangeEvent event) {
+				if (!Strings.isNullOrEmpty(event.getText())) {
+					passwordField.setValidationVisible(true);
+				} else {
+					passwordField.setValidationVisible(false);
+				}
+				loginButton.setEnabled(!Strings.isNullOrEmpty(userNameField.getValue()) && !Strings.isNullOrEmpty(event.getText()) && passwordValidator.isValid(event.getText()) && emailValidator.isValid(userNameField.getValue()));
+			}
+		});
+		passwordField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		loginButton.setCaption("login / register");
+		loginButton.setEnabled(false);
 
 		userNameField.setStyleName("loginMailAddress", true);
 		passwordField.setStyleName("loginPassword", true);
