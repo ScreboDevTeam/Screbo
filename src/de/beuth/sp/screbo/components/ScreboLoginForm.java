@@ -19,7 +19,7 @@ public class ScreboLoginForm extends LoginForm {
 	protected TextField userNameField;
 	protected PasswordField passwordField;
 	protected EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
-	protected StringLengthValidator passwordValidator = new StringLengthValidator("Your Password must be at least 8 characters long", 8, null, true);
+	protected StringLengthValidator passwordValidator = new StringLengthValidator("Your password must be at least 8 characters long", 8, null, true);
 
 	@Override
 	protected String getUserNameFieldCaption() {

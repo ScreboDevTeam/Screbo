@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.google.common.base.Strings;
 import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -39,6 +40,8 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 	protected EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
 	protected PasswordField newPasswordTextfield = new PasswordField("new password");
 	protected PasswordField newPasswordConfirmTextfield = new PasswordField("confirm new password");
+	protected StringLengthValidator passwordValidator = new StringLengthValidator("Your password must be at least 8 characters long", 8, null, true);
+
 
 	protected String password1 = "";
 	protected String password2 = "";
@@ -62,7 +65,7 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 
 		emailAddressTextfield.setRequired(true);
 		emailAddressTextfield.addValidator(emailValidator);
-		emailAddressTextfield.setValidationVisible(true);
+		emailAddressTextfield.setValidationVisible(false);
 		emailAddressTextfield.setStyleName("emailAddressTextfield");
 		emailAddressTextfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		emailAddressTextfield.addTextChangeListener(new TextChangeListener() {
@@ -73,7 +76,9 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 				onFieldsChanged();
 			}
 		});
-
+		
+		newPasswordTextfield.addValidator(passwordValidator);
+		newPasswordTextfield.setValidationVisible(false);
 		newPasswordTextfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		newPasswordTextfield.addTextChangeListener(new TextChangeListener() {
 
@@ -83,6 +88,8 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 				onFieldsChanged();
 			}
 		});
+		newPasswordConfirmTextfield.addValidator(passwordValidator);
+		newPasswordConfirmTextfield.setValidationVisible(false);
 		newPasswordConfirmTextfield.setTextChangeEventMode(TextChangeEventMode.EAGER);
 		newPasswordConfirmTextfield.addTextChangeListener(new TextChangeListener() {
 
@@ -112,14 +119,34 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 	}
 
 	protected void onFieldsChanged() {
-		saveButton.setEnabled(Objects.equals(password1, password2) && !Strings.isNullOrEmpty(emailAddress) && emailValidator.isValid(emailAddress));
-		if (!Objects.equals(password1, password2) && !Strings.isNullOrEmpty(password1) && !Strings.isNullOrEmpty(password2)) {
+		boolean formIsValid = true;
+		if (!Strings.isNullOrEmpty(password1) && !passwordValidator.isValid(password1)) {
+			newPasswordTextfield.setValidationVisible(true);
+			formIsValid = false;
+		} else {
+			newPasswordTextfield.setValidationVisible(false);
+		}
+		if (!Strings.isNullOrEmpty(password2) && !passwordValidator.isValid(password2)) {
+			newPasswordConfirmTextfield.setValidationVisible(true);
+			formIsValid = false;
+		} else {
+			newPasswordConfirmTextfield.setValidationVisible(false);
+		}
+		if ((!Strings.isNullOrEmpty(password1) || !Strings.isNullOrEmpty(password2)) && !Objects.equals(password1, password2)) {
 			newPasswordTextfield.setComponentError(new UserError("The passwords you entered do not match."));
 			newPasswordConfirmTextfield.setComponentError(new UserError("The passwords you entered do not match."));
+			formIsValid = false;
 		} else {
 			newPasswordTextfield.setComponentError(null);
 			newPasswordConfirmTextfield.setComponentError(null);
 		}
+		if(!Strings.isNullOrEmpty(emailAddress) && !emailValidator.isValid(emailAddress)) {
+			emailAddressTextfield.setValidationVisible(true);
+			formIsValid = false;
+		} else {
+			emailAddressTextfield.setValidationVisible(false);
+		}
+		saveButton.setEnabled(formIsValid);
 	}
 
 	protected void save() {
