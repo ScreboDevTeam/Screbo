@@ -4,8 +4,8 @@ import org.ektorp.DocumentNotFoundException;
 
 import com.ejt.vaadin.loginform.LoginForm.LoginEvent;
 import com.ejt.vaadin.loginform.LoginForm.LoginListener;
+import com.google.common.base.Strings;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 
 import de.beuth.sp.screbo.SHA256;
@@ -13,8 +13,8 @@ import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.components.ScreboLoginForm;
 import de.beuth.sp.screbo.database.User;
-import de.beuth.sp.screbo.database.UserRepository;
-import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
+import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.beuth.sp.screbo.eventBus.events.SetEditAccountFormData;
 import de.steinwedel.messagebox.MessageBox;
 
 @SuppressWarnings("serial")
@@ -46,9 +46,20 @@ public class LoginView extends ScreboView implements LoginListener {
 	@Override
 	public void onLogin(LoginEvent event) {
 		final String mailAddress = event.getUserName();
+		final String password = event.getPassword();
+
+		if (Strings.isNullOrEmpty(mailAddress)) {
+			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The mail address field must not be empty."));
+			return;
+		}
+		if (Strings.isNullOrEmpty(password)) {
+			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The password field must not be empty."));
+			return;
+		}
+
 		try {
-			final String password = SHA256.getSHA256(event.getPassword());
-			User user = null;
+
+			User user;
 			try {
 				user = ScreboServlet.getUserRepository().get(mailAddress);
 			} catch (DocumentNotFoundException e) {
@@ -57,8 +68,9 @@ public class LoginView extends ScreboView implements LoginListener {
 				return;
 			}
 
-			if (password.equals(user.getPassword())) {
-				doLogin(user);
+			final String hashedPassword = SHA256.getSHA256(password);
+			if (hashedPassword.equals(user.getPassword())) {
+				screboUI.doLogin(user);
 			} else {
 				showWrongPassword();
 			}
@@ -69,22 +81,19 @@ public class LoginView extends ScreboView implements LoginListener {
 	}
 
 	protected void showWrongPassword() {
-		Notification.show("Sorry, wrong password.", Notification.Type.WARNING_MESSAGE);
+		screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Sorry, wrong password."));
 		loginForm.clearPasswordField();
 		loginForm.focusPasswordField();
 	}
 
 	protected void askToCreateNewUser(final String mailAddress, final String password) {
 
-		MessageBox.createQuestion().withCaption("Not found").withMessage("A user with the mail address " + mailAddress + " was not found.\nDo you want to create the user?").withYesButton(new Runnable() {
+		MessageBox.createQuestion().withCaption("Not found").withMessage("An account with the mail address " + mailAddress + " was not found.\nDo you want to create the account?").withYesButton(new Runnable() {
 
 			@Override
 			public void run() {
-				User user = new User();
-				user.setEmailAddress(mailAddress);
-				user.setPassword(password);
-				ScreboServlet.getUserRepository().add(user);
-				doLogin(user);
+				screboUI.getNavigator().navigateTo("editAccount");
+				screboUI.getEventBus().fireEvent(new SetEditAccountFormData(mailAddress, password));
 			}
 		}).withNoButton(new Runnable() {
 
@@ -94,13 +103,6 @@ public class LoginView extends ScreboView implements LoginListener {
 				loginForm.focusUserNameField();
 			}
 		}).open();
-	}
-
-	protected void doLogin(User user) {
-		Notification.show("Hi", "Welcome " + user.getDisplayName(), Notification.Type.TRAY_NOTIFICATION);
-		UserRepository.setSessionUser(user);
-		screboUI.getEventBus().fireEvent(new UserChangedEvent());
-		screboUI.afterLogin();
 	}
 
 }

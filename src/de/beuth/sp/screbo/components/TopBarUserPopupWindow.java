@@ -4,7 +4,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.ScreboUI;
-import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
@@ -27,9 +26,7 @@ public class TopBarUserPopupWindow extends ScreboWindow implements ScreboEventLi
 		Button logoutButton = new Button("logout");
 		logoutButton.addClickListener(event -> {
 			close();
-			UserRepository.setSessionUser(null);
-			screboUI.getEventBus().fireEvent(new UserChangedEvent());
-			screboUI.openLoginView();
+			screboUI.doLogout();
 		});
 
 		VerticalLayout verticalLayout = new VerticalLayout(editButton, logoutButton);

@@ -31,6 +31,7 @@ import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.steinwedel.messagebox.MessageBox;
 
 @SuppressWarnings("serial")
 public class ActivityEditPanel extends VerticalLayout {
@@ -179,7 +180,6 @@ public class ActivityEditPanel extends VerticalLayout {
 					activityToSave.setDescription(actTxtAct.getValue());
 					activityToSave.setDateOfLatestRealization(ZonedDateTime.ofInstant(actTxtDate.getValue().toInstant(), ZoneId.systemDefault()));
 					activityToSave.setPriority((ActivityPriority) actDropPrio.getConvertedValue());
-					activityToSave.setPriority((ActivityPriority) actDropPrio.getConvertedValue());
 					activityToSave.setRealized(actDropRealized.getValue() == "Done" ? true : false);
 
 				}
@@ -193,16 +193,24 @@ public class ActivityEditPanel extends VerticalLayout {
 			buttonDelete.setSizeFull();
 			buttonLayout.addComponent(buttonDelete);
 			buttonDelete.addClickListener(event -> {
-				if (onReturnToOverview != null) {
-					onReturnToOverview.run();
-				}
-				modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+				MessageBox.createQuestion().withCaption("deletion").withMessage("Do you really want to delete this activity?").withYesButton(new Runnable() {
 
 					@Override
-					public void applyChanges(Retrospective retrospective) throws Exception {
-						retrospective.getActivities().removeItemWithId(activity.getId());
+					public void run() {
+						if (onReturnToOverview != null) {
+							onReturnToOverview.run();
+						}
+						modifyRetrospective(new TransformationRunnable<Retrospective>() {
+
+							@Override
+							public void applyChanges(Retrospective retrospective) throws Exception {
+								retrospective.getActivities().removeItemWithId(activity.getId());
+							}
+						});
 					}
-				});
+				}).withNoButton().open();
+
 			});
 		}
 

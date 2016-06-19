@@ -19,6 +19,7 @@ import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.EventBus;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
+import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
 import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
@@ -26,6 +27,7 @@ import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
+import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 import de.beuth.sp.screbo.views.EditAccountView;
 import de.beuth.sp.screbo.views.LandingPageView;
 import de.beuth.sp.screbo.views.LoginView;
@@ -88,7 +90,7 @@ public class ScreboUI extends UI implements ScreboEventListener {
 
 		if (user == null) {
 			String fragment = getPage().getUriFragment();
-			VaadinSession.getCurrent().getSession().setAttribute(SESSION_KEY_LOAD_PAGE_AFTER_LOGIN, fragment);
+			setPageToLoadAfterLogin(fragment);
 			getPage().setUriFragment("!login");
 			//navigator.navigateTo("login");
 		}
@@ -101,6 +103,10 @@ public class ScreboUI extends UI implements ScreboEventListener {
 		navigator.addView("retrospective", new RetrospectiveView(this));
 		navigator.addView("editAccount", new EditAccountView(this));
 		navigator.addView("", new LandingPageView(this));
+	}
+
+	public void setPageToLoadAfterLogin(String page) {
+		VaadinSession.getCurrent().getSession().setAttribute(SESSION_KEY_LOAD_PAGE_AFTER_LOGIN, page);
 	}
 
 	public void openLoginView() {
@@ -119,7 +125,11 @@ public class ScreboUI extends UI implements ScreboEventListener {
 		return navigator;
 	}
 
-	public void afterLogin() {
+	public void doLogin(User user) {
+		Notification.show("Hi", "Welcome " + user.getDisplayName(), Notification.Type.TRAY_NOTIFICATION);
+		UserRepository.setSessionUser(user);
+		getEventBus().fireEvent(new UserChangedEvent());
+
 		String pageToLoadAfterLogin = getPageToLoadAfterLogin();
 		if ("login".equals(pageToLoadAfterLogin)) {
 			pageToLoadAfterLogin = "";
@@ -149,6 +159,14 @@ public class ScreboUI extends UI implements ScreboEventListener {
 			currentlyOpenedRetrospective = ((RetrospectiveOpenedEvent) screboEvent).getRetrospective();
 		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
 			currentlyOpenedRetrospective = null;
+		} else if (screboEvent instanceof DatabaseObjectChangedEvent) {
+			if (((DatabaseObjectChangedEvent) screboEvent).isDeleted() && ((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(User.class)) {
+				User currentUser = UserRepository.getUserFromSession();
+				if (currentUser != null && currentUser.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
+					doLogout();
+					eventBus.fireEvent(new DisplayErrorMessageEvent("Sorry, your account was deleted."));
+				}
+			}
 		}
 	}
 
@@ -158,6 +176,13 @@ public class ScreboUI extends UI implements ScreboEventListener {
 
 	public void fireCouldNotWriteToDatabaseEvent(Exception e) {
 		eventBus.fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
+	}
+
+	public void doLogout() {
+		UserRepository.setSessionUser(null);
+		getEventBus().fireEvent(new UserChangedEvent());
+		setPageToLoadAfterLogin("/");
+		openLoginView();
 	}
 
 }

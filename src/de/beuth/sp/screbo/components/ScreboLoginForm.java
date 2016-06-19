@@ -1,12 +1,6 @@
 package de.beuth.sp.screbo.components;
 
 import com.ejt.vaadin.loginform.LoginForm;
-import com.google.common.base.Strings;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
-import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -16,10 +10,9 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 public class ScreboLoginForm extends LoginForm {
-	protected TextField userNameField;
+	protected TextField mailAddressTextField;
 	protected PasswordField passwordField;
-	protected EmailValidator emailValidator = new EmailValidator("Please enter a valid email address");
-	protected StringLengthValidator passwordValidator = new StringLengthValidator("Your password must be at least 8 characters long", 8, null, true);
+	protected Button loginButton;
 
 	@Override
 	protected String getUserNameFieldCaption() {
@@ -35,39 +28,16 @@ public class ScreboLoginForm extends LoginForm {
 	protected String getPasswordFieldCaption() {
 		return "password";
 	}
-	
+
 	@Override
-	protected Component createContent(TextField userNameField, PasswordField passwordField, Button loginButton) {
-		this.userNameField = userNameField;
-		userNameField.addValidator(emailValidator);
-		userNameField.setValidationVisible(true);
-		userNameField.addTextChangeListener(new TextChangeListener() {
-			@Override
-			public void textChange(TextChangeEvent event) {
-				loginButton.setEnabled(!Strings.isNullOrEmpty(passwordField.getValue()) && !Strings.isNullOrEmpty(event.getText()) && emailValidator.isValid(event.getText()) && passwordValidator.isValid(passwordField.getValue()));
-			}
-		});
-		userNameField.setTextChangeEventMode(TextChangeEventMode.EAGER);
-
+	protected Component createContent(TextField mailAddressTextField, PasswordField passwordField, Button loginButton) {
+		this.mailAddressTextField = mailAddressTextField;
 		this.passwordField = passwordField;
-		passwordField.addValidator(passwordValidator);
-		passwordField.setValidationVisible(false);
-		passwordField.addTextChangeListener(new TextChangeListener() {
-			@Override
-			public void textChange(TextChangeEvent event) {
-				if (!Strings.isNullOrEmpty(event.getText())) {
-					passwordField.setValidationVisible(true);
-				} else {
-					passwordField.setValidationVisible(false);
-				}
-				loginButton.setEnabled(!Strings.isNullOrEmpty(userNameField.getValue()) && !Strings.isNullOrEmpty(event.getText()) && passwordValidator.isValid(event.getText()) && emailValidator.isValid(userNameField.getValue()));
-			}
-		});
-		passwordField.setTextChangeEventMode(TextChangeEventMode.EAGER);
-		loginButton.setCaption("login / register");
-		loginButton.setEnabled(false);
+		this.loginButton = loginButton;
 
-		userNameField.setStyleName("loginMailAddress", true);
+		loginButton.setCaption("login / register");
+
+		mailAddressTextField.setStyleName("loginMailAddress", true);
 		passwordField.setStyleName("loginPassword", true);
 		loginButton.setStyleName("loginButton", true);
 
@@ -76,11 +46,13 @@ public class ScreboLoginForm extends LoginForm {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 
-		layout.addComponent(userNameField);
+		layout.addComponent(mailAddressTextField);
 		layout.addComponent(passwordField);
 		layout.addComponent(loginButton);
 
 		layout.setComponentAlignment(loginButton, Alignment.MIDDLE_RIGHT);
+
+		mailAddressTextField.focus();
 
 		return layout;
 	}
@@ -94,7 +66,7 @@ public class ScreboLoginForm extends LoginForm {
 	}
 
 	public void focusUserNameField() {
-		userNameField.focus();
+		mailAddressTextField.focus();
 	}
 
 }
