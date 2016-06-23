@@ -39,7 +39,7 @@ import de.beuth.sp.screbo.eventBus.EventBus;
  *
  */
 @SuppressWarnings("serial")
-@WebServlet(value = "/*", asyncSupported = true, loadOnStartup = 1)
+@WebServlet(value = "/*", asyncSupported = true)
 @VaadinServletConfiguration(productionMode = false, ui = ScreboUI.class, widgetset = "de.beuth.sp.screbo.widgetset.ScreboWidgetset")
 public class ScreboServlet extends VaadinServlet {
 	protected static Logger logger = null;
