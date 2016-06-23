@@ -56,7 +56,6 @@ public class ScreboServlet extends VaadinServlet {
 		public void run() {
 			if (loggerContext != null) {
 				Configurator.shutdown(loggerContext);
-				loggerContext = null;
 			}
 		}
 	};
