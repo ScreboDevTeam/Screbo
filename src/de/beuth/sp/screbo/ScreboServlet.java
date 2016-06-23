@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -48,6 +49,17 @@ public class ScreboServlet extends VaadinServlet {
 	protected transient UserRepository userRepository;
 	protected transient RetrospectiveRepository retrospectiveRepository;
 	protected EventBus globalEventBus = new EventBus(); // for events, which are distributed to all clients
+	protected LoggerContext loggerContext;
+	protected Runnable shutdownListener = new Runnable() {
+
+		@Override
+		public void run() {
+			if (loggerContext != null) {
+				Configurator.shutdown(loggerContext);
+				loggerContext = null;
+			}
+		}
+	};
 
 	public Path getWebInfPath() {
 		ServletContext servletContext = getServletContext();
@@ -65,13 +77,15 @@ public class ScreboServlet extends VaadinServlet {
 	public void init(ServletConfig servletConfig) throws ServletException {
 		super.init(servletConfig);
 
+		ScreboContextListener.addShutdownListener(shutdownListener);
 		System.setProperty("org.ektorp.support.AutoUpdateViewOnChange", "true"); // Allows Ektorp to automatically replace views in CouchDB, that differ from our definition
 		getServletConfig().getServletContext().setAttribute("unloadDelay", 5000);
 
 		// Init log4j
 		Path log4jSettings = getWebInfPath().resolve("log4j2.xml");
 		if (Files.isReadable(log4jSettings)) {
-			Configurator.initialize("config", null, log4jSettings.toUri());
+			loggerContext = Configurator.initialize("config", null, log4jSettings.toUri());
+
 		} else {
 			throw new ServletException("No log4j settings found under: " + log4jSettings);
 		}
