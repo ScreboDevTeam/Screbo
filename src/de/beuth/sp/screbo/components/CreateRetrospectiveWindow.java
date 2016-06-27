@@ -54,7 +54,7 @@ public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, me
 		});
 
 		setCreateButtonStatus();
-		VerticalLayout verticalLayout = new VerticalLayout(new Label("title:"), titleTextField, new Label("date of start:"), retrospectiveDateField, new Label("members"), createButton);
+		VerticalLayout verticalLayout = new VerticalLayout(new Label("title:"), titleTextField, new Label("date of start:"), retrospectiveDateField, createButton);
 		setContent(verticalLayout);
 		titleTextField.focus();
 	}
