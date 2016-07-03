@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="OFF">
+	<appenders>
+		<RollingRandomAccessFile name="Screbo"
+			fileName="${sys:catalina.base}/logs/Screbo.log"
+			filePattern="${sys:catalina.base}/logs/Screbo %i.log.gz"
+			append="true">
+			<PatternLayout>
+				<pattern>%d [%t] %-5level %logger{36} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="1" />
+		</RollingRandomAccessFile>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+	</appenders>
+	<loggers>
+		<root level="debug">
+			<!-- <appender-ref ref="Console" /> -->
+			<appender-ref ref="Screbo" />
+		</root>
+	</loggers>
+</configuration>
