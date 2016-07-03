@@ -110,10 +110,13 @@
 		<copy todir="${workdir}/WEB-INF/lib" flatten="true">
 			<fileset refid="ivy.deps.default.fileset" />
 		</copy>
-		<copy todir="${workdir}/WEB-INF" flatten="true">
-			<fileset dir="WebContent/WEB-INF" />
+		<copy todir="${workdir}/WEB-INF">
+			<fileset dir="WebContent/WEB-INF">
+				<exclude name="log4j2.deployment.xml" />
+				<exclude name="log4j2.xml" />
+			</fileset>
 		</copy>
-
+		<copy file="WebContent/WEB-INF/log4j2.deployment.xml" tofile="${workdir}/WEB-INF/log4j2.xml" />
 
 
 		<!-- Source in the web-app? No thanks. Maybe conf files? -->

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE ivy-module [
-	<!ENTITY vaadin.version "7.6.6">
+	<!ENTITY vaadin.version "7.6.7">
 ]>
 <ivy-module version="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,8 +16,7 @@
 			Should be deployed to the server -->
 		<conf name="nodeploy" />
 	</configurations>
-	<dependencies defaultconf="default" defaultconfmapping="default->default">
-		
+	<dependencies defaultconf="default" defaultconfmapping="default->default">		
 		<!-- Dialogs -->
 		<dependency org="de.steinwedel.vaadin.addon" name="messagebox" rev="3.0.16" />
 		
@@ -31,9 +30,9 @@
 		<dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-jsr310" rev="2.7.3" />
 
 		<!-- Log4j 2 of course -->
-		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.5" />
-  		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.5" />
-  		<dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.5" />
+		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.6.1" />
+  		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.6.1" />
+  		<dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.6.1" />
   		 
   		<!-- Google Guava -->
   		<dependency org="com.google.guava" name="guava" rev="19.0" />
