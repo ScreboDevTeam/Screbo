@@ -4,6 +4,12 @@ import org.ektorp.CouchDbConnector;
 
 import com.vaadin.server.VaadinSession;
 
+/**
+ * Class to access the user storage of the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 public class UserRepository extends MyCouchDbRepositorySupport<User> {
 	protected final static String SESSION_USER_PROPERTY = "currentUser";
 

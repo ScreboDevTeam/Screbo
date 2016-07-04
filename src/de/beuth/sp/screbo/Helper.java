@@ -5,6 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * Helper class for common used functions.
+ * 
+ * @author volker.gronau
+ *
+ */
 public class Helper {
 	/**
 	 * This method makes a "deep clone" of any Java object it is given.

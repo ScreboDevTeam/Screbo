@@ -99,7 +99,7 @@
   }
   
   .CreateRetrospectiveWindow .popupContent,
-  .EditRetroItemWindow .popupContent,
+  .EditPostingWindow .popupContent,
   .TopBarRetrospectivePopupWindow .popupContent,
   .TopBarUserPopupWindow .popupContent {
   	padding: 20px;
@@ -392,11 +392,11 @@
     margin: 0 2px;
   }
   
-  .EditRetroItemWindow .v-window-contents .v-slot {
+  .EditPostingWindow .v-window-contents .v-slot {
     margin: 0 2px;
   }
   
-  .EditRetroItemWindow .v-window-contents .v-button {
+  .EditPostingWindow .v-window-contents .v-button {
     margin: 15px 2px 0 0;
     width: 80px;
   }

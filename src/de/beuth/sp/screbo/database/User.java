@@ -12,6 +12,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.base.Joiner;
 
+/**
+ * POJO representing a single user.
+ * This object is serialized and deserialized when writing or reading to/from the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 @JsonIgnoreProperties({"displayName", "emailAddress"})
 @View(name = "all", map = "function(doc) {emit( null, doc._id )}")

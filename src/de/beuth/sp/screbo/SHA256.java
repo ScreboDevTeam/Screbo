@@ -4,9 +4,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * utility function Source: bytesToHexString function is from the IOSched project.
+ * http://stackoverflow.com/questions/332079
+ * 
+ * @author volker.gronau
+ *
+ */
 public class SHA256 {
-	// utility function Source: bytesToHexString function is from the IOSched project.
-	// http://stackoverflow.com/questions/332079
+
 	private static String bytesToHexString(byte[] bytes) {
 
 		StringBuffer sb = new StringBuffer();

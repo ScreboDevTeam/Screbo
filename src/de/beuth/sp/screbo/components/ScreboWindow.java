@@ -9,6 +9,12 @@ import com.vaadin.ui.Window;
 
 import de.beuth.sp.screbo.ScreboUI;
 
+/**
+ * Superclass of our windows which sets the style name corresponding to the class name.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class ScreboWindow extends Window implements Serializable {
 	protected static final Logger logger = LogManager.getLogger();

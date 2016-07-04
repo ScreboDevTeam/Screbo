@@ -6,6 +6,7 @@ import java.util.UUID;
 
 /**
  * Copied from other project, list of IDInterface.
+ * A list for element which are unique by id.
  * 
  * @author volker.gronau
  *

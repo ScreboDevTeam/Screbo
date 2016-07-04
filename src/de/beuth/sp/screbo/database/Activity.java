@@ -3,6 +3,13 @@ package de.beuth.sp.screbo.database;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+/**
+ * POJO representing a single activity.
+ * This object is serialized and deserialized when writing or reading to/from the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class Activity implements Serializable, IDInterface {
 	public static enum ActivityPriority {

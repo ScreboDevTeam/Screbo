@@ -26,8 +26,8 @@ import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.components.ActivityEditPanel;
 import de.beuth.sp.screbo.components.ActivityOverviewPanel;
-import de.beuth.sp.screbo.components.EditRetroItemWindow;
-import de.beuth.sp.screbo.components.EditRetroItemWindow.OnOkClicked;
+import de.beuth.sp.screbo.components.EditPostingWindow;
+import de.beuth.sp.screbo.components.EditPostingWindow.OnOkClicked;
 import de.beuth.sp.screbo.database.Activity;
 import de.beuth.sp.screbo.database.Category;
 import de.beuth.sp.screbo.database.Cluster;
@@ -37,7 +37,7 @@ import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
-import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
@@ -92,11 +92,11 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 							public void applyChanges(Retrospective retrospectiveToWrite) {
 								Cluster clusterToModify = retrospectiveToWrite.getClusterFromId(clusterId); // Get new object
 								if (clusterToModify == null) {
-									screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+									screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The cluster was deleted."));
 								} else {
 									Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(category.getId()); // Get new object
 									if (categoryToModify == null) {
-										screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+										screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The category was deleted."));
 									} else {
 										// Remove from all categories
 										for (Category category : retrospectiveToWrite.getCategories()) {
@@ -162,15 +162,15 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 							public void applyChanges(Retrospective retrospectiveToWrite) {
 								Cluster clusterToModify = retrospectiveToWrite.getClusterFromId(cluster.getId()); // Get new object
 								if (clusterToModify == null) {
-									screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+									screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The cluster was deleted."));
 								} else {
 									Category categoryToRemoveFrom = retrospectiveToWrite.getCategories().getFromID(otherCategoryId); // Get new object
 									if (categoryToRemoveFrom == null) {
-										screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+										screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The category was deleted."));
 									} else {
 										Cluster clusterToRemove = retrospectiveToWrite.getClusterFromId(otherClusterId); // Get new object
 										if (clusterToRemove == null) {
-											screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+											screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The cluster was deleted."));
 										} else {
 											categoryToRemoveFrom.getCluster().remove(clusterToRemove);
 											clusterToModify.getPostings().addAll(clusterToRemove.getPostings());
@@ -284,7 +284,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 	protected void showError(String message) {
 		screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
 		screboUI.getEventBus().fireEvent(new RequestNavigateToRetrospectivesViewEvent());
-		screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent(message));
+		screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent(message));
 	}
 
 	protected void openRetrospective() {
@@ -327,17 +327,17 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 						retroItemContextMenu.addItem("edit posting").addItemClickListener((ContextMenu.ContextMenuItemClickListener & Serializable) (event) -> {
 
-							EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, posting, new OnOkClicked() {
+							EditPostingWindow editPostingWindow = new EditPostingWindow(screboUI, posting, new OnOkClicked() {
 
 								@Override
 								public void onOkClicked(Posting postingToEdit) {
 									editPosting(category.getId(), cluster.getId(), postingToEdit);
 								}
 							});
-							editRetroItemWindow.setCaption("edit posting");
-							editRetroItemWindow.center();
-							editRetroItemWindow.setVisible(true);
-							screboUI.addWindow(editRetroItemWindow);
+							editPostingWindow.setCaption("edit posting");
+							editPostingWindow.center();
+							editPostingWindow.setVisible(true);
+							screboUI.addWindow(editPostingWindow);
 
 						});
 
@@ -373,19 +373,19 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 				addRetroItemButton.setDescription("adds a posting to the category.");
 				addRetroItemButton.addClickListener(event -> {
 
-					EditRetroItemWindow editRetroItemWindow = new EditRetroItemWindow(screboUI, new Posting(""), new OnOkClicked() {
+					EditPostingWindow editPostingWindow = new EditPostingWindow(screboUI, new Posting(""), new OnOkClicked() {
 
 						@Override
 						public void onOkClicked(Posting retroItem) {
 							createPosting(category.getId(), retroItem);
 						}
 					});
-					editRetroItemWindow.setCaption("new posting");
-					editRetroItemWindow.center();
-					editRetroItemWindow.setVisible(true);
-					editRetroItemWindow.setResizable(false);
-					editRetroItemWindow.setModal(true);
-					screboUI.addWindow(editRetroItemWindow);
+					editPostingWindow.setCaption("new posting");
+					editPostingWindow.center();
+					editPostingWindow.setVisible(true);
+					editPostingWindow.setResizable(false);
+					editPostingWindow.setModal(true);
+					screboUI.addWindow(editPostingWindow);
 
 				});
 				catArea.addComponent(addRetroItemButton);
@@ -430,15 +430,15 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			public void applyChanges(Retrospective retrospectiveToWrite) {
 				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
 				if (categoryToModify == null) {
-					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+					screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The category was deleted."));
 				} else {
 					Cluster clusterToModify = categoryToModify.getCluster().getFromID(clusterId);
 					if (clusterToModify == null) {
-						screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+						screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The cluster was deleted."));
 					} else {
 						Posting retroItemToModify = clusterToModify.getPostings().getFromID(retroItemId);
 						if (retroItemToModify == null) {
-							screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The item was deleted."));
+							screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The item was deleted."));
 						} else {
 							clusterToModify.getPostings().remove(retroItemToModify);
 							Cluster newCluster = new Cluster();
@@ -458,11 +458,11 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			public void applyChanges(Retrospective retrospectiveToWrite) {
 				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
 				if (categoryToModify == null) {
-					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+					screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The category was deleted."));
 				} else {
 					Cluster clusterToModify = categoryToModify.getCluster().getFromID(clusterId);
 					if (clusterToModify == null) {
-						screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+						screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The cluster was deleted."));
 					} else {
 						clusterToModify.getPostings().replace(posting);
 					}
@@ -478,7 +478,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			public void applyChanges(Retrospective retrospectiveToWrite) {
 				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
 				if (categoryToModify == null) {
-					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+					screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The category was deleted."));
 				} else {
 					Cluster newCluster = new Cluster();
 					newCluster.getPostings().add(posting);
@@ -495,11 +495,11 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			public void applyChanges(Retrospective retrospectiveToWrite) {
 				Category categoryToModify = retrospectiveToWrite.getCategories().getFromID(categoryId);
 				if (categoryToModify == null) {
-					screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The category was deleted."));
+					screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The category was deleted."));
 				} else {
 					Cluster clusterToModify = categoryToModify.getCluster().getFromID(clusterId);
 					if (clusterToModify == null) {
-						screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The cluster was deleted."));
+						screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The cluster was deleted."));
 					} else {
 						clusterToModify.getPostings().removeItemWithId(postingId);
 						if (clusterToModify.getPostings().size() == 0) {

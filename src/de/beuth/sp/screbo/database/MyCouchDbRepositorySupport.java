@@ -8,6 +8,13 @@ import org.ektorp.ViewQuery;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.CouchDbRepositorySupport;
 
+/**
+ * Superclass of RetrospectiveRepository and UserRepsitory.
+ * 
+ * @author volker.gronau
+ *
+ * @param <T>
+ */
 public class MyCouchDbRepositorySupport<T extends CouchDbDocument> extends CouchDbRepositorySupport<T> {
 	protected static final int WRITE_TIMEOUT = 10_000;
 	protected static final Logger logger = LogManager.getLogger();

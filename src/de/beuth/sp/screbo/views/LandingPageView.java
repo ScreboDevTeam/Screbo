@@ -6,7 +6,7 @@ import com.vaadin.ui.Label;
 import de.beuth.sp.screbo.ScreboUI;
 
 /**
- * Allows creation of new boards and selection of a board.
+ * Page shown after login.
  * 
  * @author geoffrey.teuber
  *

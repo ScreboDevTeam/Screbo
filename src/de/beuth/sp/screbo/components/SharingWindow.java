@@ -25,6 +25,12 @@ import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 
+/**
+ * Window for sharing retrospectives.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class SharingWindow extends ScreboWindow implements ScreboEventListener {
 	protected static class UserWrapper {

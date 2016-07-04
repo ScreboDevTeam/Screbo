@@ -30,9 +30,15 @@ import de.beuth.sp.screbo.database.MyCouchDbRepositorySupport.TransformationRunn
 import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
-import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.steinwedel.messagebox.MessageBox;
 
+/**
+ * The panel in which activities are edited.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class ActivityEditPanel extends VerticalLayout {
 	protected static final Logger logger = LogManager.getLogger();
@@ -252,7 +258,7 @@ public class ActivityEditPanel extends VerticalLayout {
 			return ScreboServlet.getRetrospectiveRepository().update(retrospective, transformationRunnable);
 		} catch (Exception e) {
 			logger.error("Could not write to database.", e);
-			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
+			screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("Could not write to database.", e));
 		}
 		return false;
 	}

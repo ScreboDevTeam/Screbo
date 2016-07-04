@@ -8,6 +8,12 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+/**
+ * Extension of the LoginForm component (addon) to fit our needs.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class ScreboLoginForm extends LoginForm {
 	protected TextField mailAddressTextField;

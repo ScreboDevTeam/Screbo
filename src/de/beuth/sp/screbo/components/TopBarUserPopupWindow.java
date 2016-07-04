@@ -8,6 +8,12 @@ import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 
+/**
+ * The menu which pops up when clicking the user button of the top bar.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class TopBarUserPopupWindow extends ScreboWindow implements ScreboEventListener {
 

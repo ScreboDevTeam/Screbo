@@ -6,18 +6,18 @@ import org.ektorp.support.CouchDbDocument;
 
 /**
  * If we write to the database ourself we could update the UI ourself too.
- * This suppresses exactly one revision
+ * This suppresses exactly one DataBaseObjectChangedEvent.
  * 
  * @author volker.gronau
  *
  */
 @SuppressWarnings("serial")
-public class EatDatabaseObjectChangedEvent extends EventSupressor {
+public class SuppressDatabaseObjectChangedEvent extends EventSupressor {
 	protected final Class<?> objectClass;
 	protected final String documentId;
 	protected final String revision;
 
-	public EatDatabaseObjectChangedEvent(CouchDbDocument couchDbDocument) {
+	public SuppressDatabaseObjectChangedEvent(CouchDbDocument couchDbDocument) {
 		super();
 		objectClass = couchDbDocument.getClass();
 		documentId = couchDbDocument.getId();

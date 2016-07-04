@@ -2,6 +2,13 @@ package de.beuth.sp.screbo.database;
 
 import java.io.Serializable;
 
+/**
+ * POJO representing a single posting.
+ * This object is serialized and deserialized when writing or reading to/from the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class Posting implements Serializable, IDInterface {
 	protected String id;

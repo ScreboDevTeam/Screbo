@@ -30,6 +30,12 @@ import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.SetEditAccountFormData;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 
+/**
+ * Page which allows management of a user's account.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class EditAccountView extends ScreboView implements ScreboEventListener {
 

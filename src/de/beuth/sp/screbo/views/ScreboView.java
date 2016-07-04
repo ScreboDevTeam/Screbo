@@ -9,6 +9,12 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.beuth.sp.screbo.ScreboUI;
 
+/**
+ * Superclass for all views.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public abstract class ScreboView extends VerticalLayout implements View {
 	protected static final Logger logger = LogManager.getLogger();

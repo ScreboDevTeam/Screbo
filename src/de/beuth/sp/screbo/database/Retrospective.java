@@ -8,6 +8,13 @@ import org.ektorp.support.View;
 
 import com.google.common.collect.Maps;
 
+/**
+ * POJO representing a single retrospective.
+ * This object is serialized and deserialized when writing or reading to/from the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 @View(name = "all", map = "function(doc) {emit( null, doc._id )}")
 public class Retrospective extends CouchDbDocument {

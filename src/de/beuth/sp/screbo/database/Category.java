@@ -2,6 +2,13 @@ package de.beuth.sp.screbo.database;
 
 import java.io.Serializable;
 
+/**
+ * POJO representing a category of a retrospective.
+ * This object is serialized and deserialized when writing or reading to/from the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class Category implements Serializable, IDInterface {
 	protected String name;

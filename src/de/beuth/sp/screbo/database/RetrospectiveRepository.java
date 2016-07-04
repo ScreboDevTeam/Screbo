@@ -5,6 +5,12 @@ import java.util.List;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.View;
 
+/**
+ * Class to access the retrospective storage of the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 public class RetrospectiveRepository extends MyCouchDbRepositorySupport<Retrospective> {
 	public RetrospectiveRepository(CouchDbConnector db) {
 		super(Retrospective.class, db, true);

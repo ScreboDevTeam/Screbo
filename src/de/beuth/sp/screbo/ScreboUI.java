@@ -20,7 +20,7 @@ import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.EventBus;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
-import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
@@ -33,6 +33,12 @@ import de.beuth.sp.screbo.views.LandingPageView;
 import de.beuth.sp.screbo.views.LoginView;
 import de.beuth.sp.screbo.views.RetrospectiveView;
 
+/**
+ * Vaadin entry class for each client.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 @Theme("screbo")
 @Push
@@ -148,9 +154,9 @@ public class ScreboUI extends UI implements ScreboEventListener {
 
 	@Override
 	public void onScreboEvent(ScreboEvent screboEvent) {
-		if (screboEvent instanceof DisplayErrorMessageEvent) {
-			logger.error("Displaying error message: {}", ((DisplayErrorMessageEvent) screboEvent).getTextToShowToUser(), ((DisplayErrorMessageEvent) screboEvent).getException());
-			Notification.show(((DisplayErrorMessageEvent) screboEvent).getTextToShowToUser(), Notification.Type.ERROR_MESSAGE);
+		if (screboEvent instanceof RequestDisplayErrorMessageEvent) {
+			logger.error("Displaying error message: {}", ((RequestDisplayErrorMessageEvent) screboEvent).getTextToShowToUser(), ((RequestDisplayErrorMessageEvent) screboEvent).getException());
+			Notification.show(((RequestDisplayErrorMessageEvent) screboEvent).getTextToShowToUser(), Notification.Type.ERROR_MESSAGE);
 		} else if (screboEvent instanceof RequestOpenRetrospectiveEvent) {
 			navigator.navigateTo("retrospective/" + ((RequestOpenRetrospectiveEvent) screboEvent).getRetrospective().getId());
 		} else if (screboEvent instanceof RequestNavigateToRetrospectivesViewEvent) {
@@ -164,7 +170,7 @@ public class ScreboUI extends UI implements ScreboEventListener {
 				User currentUser = UserRepository.getUserFromSession();
 				if (currentUser != null && currentUser.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
 					doLogout();
-					eventBus.fireEvent(new DisplayErrorMessageEvent("Sorry, your account was deleted."));
+					eventBus.fireEvent(new RequestDisplayErrorMessageEvent("Sorry, your account was deleted."));
 				}
 			}
 		}
@@ -175,7 +181,7 @@ public class ScreboUI extends UI implements ScreboEventListener {
 	}
 
 	public void fireCouldNotWriteToDatabaseEvent(Exception e) {
-		eventBus.fireEvent(new DisplayErrorMessageEvent("Could not write to database.", e));
+		eventBus.fireEvent(new RequestDisplayErrorMessageEvent("Could not write to database.", e));
 	}
 
 	public void doLogout() {

@@ -14,7 +14,7 @@ import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.database.Posting;
 
 @SuppressWarnings("serial")
-public class EditRetroItemWindow extends ScreboWindow {
+public class EditPostingWindow extends ScreboWindow {
 	public static interface OnOkClicked {
 		public void onOkClicked(Posting retroItem);
 	}
@@ -25,9 +25,9 @@ public class EditRetroItemWindow extends ScreboWindow {
 	protected boolean exitedWithOk;
 	protected final OnOkClicked onOkClicked;
 
-	public EditRetroItemWindow(ScreboUI screboUI, Posting retroItem, OnOkClicked onOkClicked) {
+	public EditPostingWindow(ScreboUI screboUI, Posting retroItem, OnOkClicked onOkClicked) {
 		super(screboUI);
-		setStyleName("EditRetroItemWindow");
+		setStyleName("EditPostingWindow");
 		this.retroItem = (Posting) Helper.slowDeepClone(retroItem);
 		this.onOkClicked = onOkClicked;
 
@@ -40,7 +40,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		titleTextField.setSizeFull();
 		titleTextField.setValue(retroItem.getTitle());
 		titleTextField.addTextChangeListener(event -> {
-			EditRetroItemWindow.this.retroItem.setTitle(event.getText());
+			EditPostingWindow.this.retroItem.setTitle(event.getText());
 			setOkButtonEnabled();
 		});
 		setOkButtonEnabled();
@@ -54,7 +54,7 @@ public class EditRetroItemWindow extends ScreboWindow {
 		okButton.addClickListener(event -> {
 			exitedWithOk = true;
 			close();
-			onOkClicked.onOkClicked(EditRetroItemWindow.this.retroItem);
+			onOkClicked.onOkClicked(EditPostingWindow.this.retroItem);
 		});
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();

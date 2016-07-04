@@ -1,14 +1,20 @@
 package de.beuth.sp.screbo.eventBus.events;
 
+/**
+ * An event which is sent to request a message to be displayed to the user.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
-public class DisplayErrorMessageEvent extends ScreboEvent {
+public class RequestDisplayErrorMessageEvent extends ScreboEvent {
 	protected String textToShowToUser;
 	protected Exception exception;
 
 	/**
 	 * Beware, you have to i18n yourself.
 	 */
-	public DisplayErrorMessageEvent(String textToShowToUser, Exception exception) {
+	public RequestDisplayErrorMessageEvent(String textToShowToUser, Exception exception) {
 		this(textToShowToUser);
 		this.exception = exception;
 	}
@@ -16,7 +22,7 @@ public class DisplayErrorMessageEvent extends ScreboEvent {
 	/**
 	 * Beware, you have to i18n yourself.
 	 */
-	public DisplayErrorMessageEvent(String textToShowToUser) {
+	public RequestDisplayErrorMessageEvent(String textToShowToUser) {
 		super();
 		this.textToShowToUser = textToShowToUser;
 	}

@@ -13,10 +13,16 @@ import de.beuth.sp.screbo.ScreboServlet;
 import de.beuth.sp.screbo.ScreboUI;
 import de.beuth.sp.screbo.components.ScreboLoginForm;
 import de.beuth.sp.screbo.database.User;
-import de.beuth.sp.screbo.eventBus.events.DisplayErrorMessageEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.SetEditAccountFormData;
 import de.steinwedel.messagebox.MessageBox;
 
+/**
+ * Page which contains the LoginDialog.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class LoginView extends ScreboView implements LoginListener {
 	protected ScreboLoginForm loginForm;
@@ -49,11 +55,11 @@ public class LoginView extends ScreboView implements LoginListener {
 		final String password = event.getPassword();
 
 		if (Strings.isNullOrEmpty(mailAddress)) {
-			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The mail address field must not be empty."));
+			screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The mail address field must not be empty."));
 			return;
 		}
 		if (Strings.isNullOrEmpty(password)) {
-			screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("The password field must not be empty."));
+			screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("The password field must not be empty."));
 			return;
 		}
 
@@ -81,7 +87,7 @@ public class LoginView extends ScreboView implements LoginListener {
 	}
 
 	protected void showWrongPassword() {
-		screboUI.getEventBus().fireEvent(new DisplayErrorMessageEvent("Sorry, wrong password."));
+		screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("Sorry, wrong password."));
 		loginForm.clearPasswordField();
 		loginForm.focusPasswordField();
 	}

@@ -9,6 +9,12 @@ import de.beuth.sp.screbo.database.Activity;
 import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.UserRepository;
 
+/**
+ * The panel which shows the activity overview.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class ActivityOverviewPanel extends VerticalLayout {
 	public static interface AddEditHandler {
@@ -25,13 +31,12 @@ public class ActivityOverviewPanel extends VerticalLayout {
 		boolean editable = retrospective.isEditableByUser(UserRepository.getUserFromSession());
 		VerticalLayout overviewPane = new VerticalLayout();
 		overviewPane.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-		
+
 		final Label activityTitleLabel = new Label("activities");
 		activityTitleLabel.setStyleName("activityTitleLabel");
 		activityTitleLabel.setSizeUndefined();
 		overviewPane.addComponent(activityTitleLabel);
-		
-		
+
 		if (editable) {
 			Button addActivityButton = new Button("add activity");
 			addActivityButton.setStyleName("addActivityButton ");
@@ -42,12 +47,9 @@ public class ActivityOverviewPanel extends VerticalLayout {
 			});
 			overviewPane.addComponent(addActivityButton);
 		}
-		
+
 		for (final Activity activity : retrospective.getActivities()) {
-			String activityDescription = String.format("%1$te.%1$tm.%1$tY - %2$s%n-------------------------------%n%3$s", 
-										activity.getDateOfLatestRealization(), 
-										activity.getPriority(),
-										activity.getDescription());
+			String activityDescription = String.format("%1$te.%1$tm.%1$tY - %2$s%n-------------------------------%n%3$s", activity.getDateOfLatestRealization(), activity.getPriority(), activity.getDescription());
 			Button activityButton = new Button(activityDescription);
 			activityButton.setStyleName("activityButton");
 			activityButton.setSizeFull();

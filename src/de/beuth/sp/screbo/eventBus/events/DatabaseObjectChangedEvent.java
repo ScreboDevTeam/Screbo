@@ -1,5 +1,11 @@
 package de.beuth.sp.screbo.eventBus.events;
 
+/**
+ * Event, which is populated after an object is changed in the database.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class DatabaseObjectChangedEvent extends ScreboEvent {
 	protected Class<?> objectClass;

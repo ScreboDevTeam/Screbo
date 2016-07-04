@@ -8,6 +8,12 @@ import javax.servlet.annotation.WebListener;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Static class to distribute notifications of web application shutdown.
+ * 
+ * @author volker.gronau
+ *
+ */
 @WebListener
 public class ScreboContextListener implements ServletContextListener {
 

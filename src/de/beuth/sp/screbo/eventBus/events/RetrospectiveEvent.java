@@ -2,6 +2,12 @@ package de.beuth.sp.screbo.eventBus.events;
 
 import de.beuth.sp.screbo.database.Retrospective;
 
+/**
+ * Superclass for all retrospective based events.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class RetrospectiveEvent extends ScreboEvent {
 	protected Retrospective retrospective;

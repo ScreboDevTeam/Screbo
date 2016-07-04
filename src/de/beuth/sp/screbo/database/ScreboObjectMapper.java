@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
- * Modified org.ektorp.impl.StdObjectMapperFactory to be able to de-/serialize new java.time objects.
+ * Modified org.ektorp.impl.StdObjectMapperFactory to be able to de-/serialize new Java 8 java.time objects.
  * 
  * @author volker.gronau
  *

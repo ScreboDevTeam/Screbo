@@ -21,6 +21,12 @@ import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
 import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 
+/**
+ * Class managing the bar on top of the page.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class TopBar extends HorizontalLayout implements ScreboEventListener {
 	protected static final Logger logger = LogManager.getLogger();

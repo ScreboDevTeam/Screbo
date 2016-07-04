@@ -36,6 +36,12 @@ import de.beuth.sp.screbo.eventBus.events.ScreboEvent;
 import de.beuth.sp.screbo.eventBus.events.UserChangedEvent;
 import de.steinwedel.messagebox.MessageBox;
 
+/**
+ * The menu which pops up when clicking the retrospective button of the top bar.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings({"serial"})
 public class TopBarRetrospectivePopupWindow extends ScreboWindow implements ScreboEventListener {
 	protected final VerticalLayout currentRetrospectiveLayout = new VerticalLayout();

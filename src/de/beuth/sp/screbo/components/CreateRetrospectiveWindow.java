@@ -18,6 +18,12 @@ import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.User;
 import de.beuth.sp.screbo.database.UserRepository;
 
+/**
+ * A window which is used to create retrospecitves.
+ * 
+ * @author volker.gronau
+ *
+ */
 @SuppressWarnings("serial")
 public class CreateRetrospectiveWindow extends ScreboWindow { // TODO design, members section
 	protected User user = UserRepository.getUserFromSession();
