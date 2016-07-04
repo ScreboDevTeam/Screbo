@@ -9,7 +9,8 @@
       <w>200</w>
       <h>110</h>
     </coordinates>
-    <panel_attributes>'Couch DB</panel_attributes>
+    <panel_attributes>'Couch DB
+bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -20,7 +21,8 @@
       <w>200</w>
       <h>110</h>
     </coordinates>
-    <panel_attributes>'Ektorp</panel_attributes>
+    <panel_attributes>'Ektorp
+bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -40,10 +42,12 @@ HTTP</panel_attributes>
     <coordinates>
       <x>450</x>
       <y>460</y>
-      <w>750</w>
+      <w>790</w>
       <h>480</h>
     </coordinates>
-    <panel_attributes>'Persistence</panel_attributes>
+    <panel_attributes>'Persistence
+bg=light_gray
+layer=-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -51,10 +55,12 @@ HTTP</panel_attributes>
     <coordinates>
       <x>450</x>
       <y>90</y>
-      <w>750</w>
+      <w>790</w>
       <h>330</h>
     </coordinates>
-    <panel_attributes>'Frontend</panel_attributes>
+    <panel_attributes>'Frontend
+bg=light_gray
+layer=-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -65,7 +71,8 @@ HTTP</panel_attributes>
       <w>200</w>
       <h>50</h>
     </coordinates>
-    <panel_attributes>'Userdirectory</panel_attributes>
+    <panel_attributes>'User
+bg=green</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -76,95 +83,160 @@ HTTP</panel_attributes>
       <w>200</w>
       <h>50</h>
     </coordinates>
-    <panel_attributes>'Boards</panel_attributes>
+    <panel_attributes>'Retrospectives
+bg=cyan</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.baselet.element.old.element.Component</type>
     <coordinates>
       <x>480</x>
-      <y>210</y>
+      <y>220</y>
       <w>220</w>
       <h>50</h>
     </coordinates>
-    <panel_attributes>'Accountmanagement</panel_attributes>
+    <panel_attributes>'Accountmanagement
+group=2</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.baselet.element.old.element.Component</type>
     <coordinates>
       <x>720</x>
-      <y>160</y>
-      <w>440</w>
+      <y>170</y>
+      <w>490</w>
       <h>200</h>
     </coordinates>
-    <panel_attributes>'Boardeditor</panel_attributes>
+    <panel_attributes>'Retrospective Management
+fg=black
+bg=cyan
+group=1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>740</x>
-      <y>560</y>
-      <w>60</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>40.0;80.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>870</x>
+      <x>700</x>
       <y>560</y>
       <w>70</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;80.0;50.0;10.0</additional_attributes>
+    <additional_attributes>50.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>920</x>
+      <y>560</y>
+      <w>60</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;80.0;40.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>590</x>
-      <y>350</y>
-      <w>100</w>
-      <h>190</h>
+      <y>360</y>
+      <w>120</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>80.0;170.0;10.0;10.0</additional_attributes>
+    <additional_attributes>100.0;160.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>940</x>
-      <y>350</y>
-      <w>90</w>
-      <h>190</h>
+      <x>960</x>
+      <y>360</y>
+      <w>30</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;170.0;70.0;10.0</additional_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Class</type>
     <coordinates>
       <x>400</x>
       <y>40</y>
-      <w>860</w>
+      <w>890</w>
       <h>950</h>
     </coordinates>
-    <panel_attributes>Screbo - Scrum Retro Board</panel_attributes>
+    <panel_attributes>Screbo - Scrum Retrospective Board
+layer=-2</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.baselet.element.old.element.Component</type>
     <coordinates>
       <x>480</x>
-      <y>160</y>
+      <y>170</y>
       <w>220</w>
       <h>200</h>
     </coordinates>
-    <panel_attributes>'Sessionmanagement</panel_attributes>
+    <panel_attributes>'Sessionmanagement
+bg=green
+group=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Component</type>
+    <coordinates>
+      <x>740</x>
+      <y>230</y>
+      <w>220</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>'Retrospective Creation
+fg=black
+bg=cyan
+layer=1
+group=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Component</type>
+    <coordinates>
+      <x>740</x>
+      <y>300</y>
+      <w>220</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>'Retrospective Sharing
+bg=cyan
+layer=1
+group=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Component</type>
+    <coordinates>
+      <x>970</x>
+      <y>230</y>
+      <w>220</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>'Retrospective Editor
+bg=cyan
+layer=1
+group=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Component</type>
+    <coordinates>
+      <x>970</x>
+      <y>300</y>
+      <w>220</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>'Activity Editor
+bg=cyan
+layer=1
+group=1</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
