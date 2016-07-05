@@ -371,7 +371,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 			if (isEditableByUser) {
 
 				final Button addRetroItemButton = new Button("add a posting");
-				addRetroItemButton.setDescription("adds a posting to the category.");
+				addRetroItemButton.setDescription("adds a posting to the category");
 				addRetroItemButton.addClickListener(event -> {
 
 					EditPostingWindow editPostingWindow = new EditPostingWindow(screboUI, new Posting(""), new OnOkClicked() {
