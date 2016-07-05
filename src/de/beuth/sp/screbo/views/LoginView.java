@@ -41,6 +41,7 @@ public class LoginView extends ScreboView implements LoginListener {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		super.enter(event);
 		loginForm = new ScreboLoginForm();
 		loginForm.addLoginListener(this);
 		loginPanel.setContent(loginForm);

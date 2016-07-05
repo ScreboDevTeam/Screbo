@@ -37,8 +37,8 @@ import de.beuth.sp.screbo.database.Retrospective;
 import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
-import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveOpenedEvent;
@@ -263,6 +263,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		super.enter(event);
 		openRetrospective(event.getParameters(), false);
 	}
 
