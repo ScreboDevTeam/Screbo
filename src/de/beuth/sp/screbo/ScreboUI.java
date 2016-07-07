@@ -20,8 +20,8 @@ import de.beuth.sp.screbo.database.UserRepository;
 import de.beuth.sp.screbo.eventBus.EventBus;
 import de.beuth.sp.screbo.eventBus.ScreboEventListener;
 import de.beuth.sp.screbo.eventBus.events.DatabaseObjectChangedEvent;
-import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestCloseRetrospectiveEvent;
+import de.beuth.sp.screbo.eventBus.events.RequestDisplayErrorMessageEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestNavigateToRetrospectivesViewEvent;
 import de.beuth.sp.screbo.eventBus.events.RequestOpenRetrospectiveEvent;
 import de.beuth.sp.screbo.eventBus.events.RetrospectiveClosedEvent;
@@ -166,11 +166,15 @@ public class ScreboUI extends UI implements ScreboEventListener {
 		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
 			currentlyOpenedRetrospective = null;
 		} else if (screboEvent instanceof DatabaseObjectChangedEvent) {
-			if (((DatabaseObjectChangedEvent) screboEvent).isDeleted() && ((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(User.class)) {
+			if (((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(User.class)) {
 				User currentUser = UserRepository.getUserFromSession();
 				if (currentUser != null && currentUser.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
-					doLogout();
-					eventBus.fireEvent(new RequestDisplayErrorMessageEvent("Sorry, your account was deleted."));
+					if (((DatabaseObjectChangedEvent) screboEvent).isDeleted()) {
+						doLogout();
+						eventBus.fireEvent(new RequestDisplayErrorMessageEvent("Sorry, your account was deleted."));
+					} else {
+						UserRepository.setSessionUser(ScreboServlet.getUserRepository().get(currentUser.getId()));
+					}
 				}
 			}
 		}
