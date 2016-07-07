@@ -273,17 +273,15 @@ public class EditAccountView extends ScreboView implements ScreboEventListener {
 		passwordTextfield.setCaption(user == null ? "password" : "new password");
 		passwordConfirmTextfield.setCaption(user == null ? "confirm password" : "confirm new password");
 
-		if (user != null) {
-			firstName = Strings.nullToEmpty(user.getFirstName());
-			lastName = Strings.nullToEmpty(user.getLastName());
-			emailAddress = Strings.nullToEmpty(user.getEmailAddress());
+		firstName = Strings.nullToEmpty(user != null ? user.getFirstName() : null);
+		lastName = Strings.nullToEmpty(user != null ? user.getLastName() : null);
+		emailAddress = Strings.nullToEmpty(user != null ? user.getEmailAddress() : null);
 
-			firstNameTextfield.setValue(firstName);
-			lastNameTextfield.setValue(lastName);
-			emailAddressTextfield.setValue(emailAddress);
+		firstNameTextfield.setValue(firstName);
+		lastNameTextfield.setValue(lastName);
+		emailAddressTextfield.setValue(emailAddress);
 
-			onFieldsChanged();
-		}
+		onFieldsChanged();
 	}
 
 }
