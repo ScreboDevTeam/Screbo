@@ -8,7 +8,6 @@ import java.util.TimeZone;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.View;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.base.Joiner;
 
@@ -20,12 +19,12 @@ import com.google.gwt.thirdparty.guava.common.base.Joiner;
  *
  */
 @SuppressWarnings("serial")
-@JsonIgnoreProperties({"displayName", "emailAddress"})
 @View(name = "all", map = "function(doc) {emit( null, doc._id )}")
 public class User extends CouchDbDocument {
 	protected String password;
 	protected String lastName;
 	protected String firstName;
+	protected String emailAddress;
 	protected ZoneId timeZoneId = TimeZone.getDefault().toZoneId();
 	protected String locale = Locale.getDefault().toLanguageTag();
 
@@ -70,11 +69,11 @@ public class User extends CouchDbDocument {
 	}
 
 	public String getEmailAddress() {
-		return getId();
+		return emailAddress;
 	}
 
 	public void setEmailAddress(String emailAddress) {
-		this.setId(emailAddress);
+		this.emailAddress = emailAddress;
 	}
 
 	@Override

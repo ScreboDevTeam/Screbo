@@ -68,7 +68,7 @@ public class LoginView extends ScreboView implements LoginListener {
 
 			User user;
 			try {
-				user = ScreboServlet.getUserRepository().get(mailAddress);
+				user = ScreboServlet.getUserRepository().getByEmailAddress(mailAddress);
 			} catch (DocumentNotFoundException e) {
 				logger.warn("Did not find user with mailAddress:{}", mailAddress, e);
 				askToCreateNewUser(mailAddress, password);

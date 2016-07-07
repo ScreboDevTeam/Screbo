@@ -12,6 +12,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -112,6 +113,8 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		currentRetrospectiveLayout.setStyleName("currentRetrospectiveLayout");
 		myRetrospectivesLayout.setStyleName("myRetrospectivesLayout");
 
+		currentRetrospectiveTitleTextField.setTextChangeEventMode(TextChangeEventMode.LAZY);
+		currentRetrospectiveDateField.setImmediate(false);
 		currentRetrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant()));
 		currentRetrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
 
