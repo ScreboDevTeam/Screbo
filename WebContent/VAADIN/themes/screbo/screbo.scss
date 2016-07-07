@@ -215,9 +215,9 @@
   }
   
   .RetrospectiveView .catTitleLabel {
-   margin: 40px 0 10px 0;
-   color: $primaryColor;
-   font: 25px cursive,serif;
+    margin: 40px 0 10px 0;
+    color: $primaryColor;
+    font: 25px cursive,serif;
   }
   
   .RetrospectiveView .v-slot-boardArea {
@@ -227,6 +227,10 @@
   .RetrospectiveView .v-slot-activityArea {
     border-left: 5px solid $primaryColor;
     overflow-y: auto;
+  }
+  
+  .RetrospectiveView .activityArea{
+  	padding-right: 4px;
   }
  
   .RetrospectiveView .activityArea .v-textarea {
@@ -271,7 +275,7 @@
   	height: 100%;
   }
   
-  .RetrospectiveView .boardLayout .postsArea{
+  .RetrospectiveView .boardLayout .postsArea {
   	height: 100%;
   	margin-left: auto;
   	margin-right: auto;
@@ -279,11 +283,11 @@
   }
   
   .RetrospectiveView .ActivityOverviewPanel {
-  	padding: 20px 35px 20px 20px;
+  	padding: 20px 20px 20px 20px;
   }
   
   .RetrospectiveView .ActivityEditPanel {
-  	padding: 20px 35px 20px 20px;
+  	padding: 20px 20px 20px 20px;
   }
   
   .RetrospectiveView .BoardBtn {
@@ -434,8 +438,12 @@
   	color: $primaryColor;
   }
   
+  .ActivityEditPanel {
+  	overflow-y: auto !important;
+  }
+  
   .ActivityOverviewPanel {
-  	overflow-y: auto;
+  	overflow-y: auto !important;
   }
   
   .ActivityOverviewPanel .addActivityButton {
