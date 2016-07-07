@@ -18,7 +18,6 @@ import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
@@ -244,7 +243,7 @@ public class RetrospectiveView extends ScreboView implements ScreboEventListener
 						if (databaseObjectChangedEvent.isDeleted()) {
 							screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
 							screboUI.getEventBus().fireEvent(new RequestNavigateToRetrospectivesViewEvent());
-							Notification.show("Sorry, your retrospective was deleted.");
+							screboUI.getEventBus().fireEvent(new RequestDisplayErrorMessageEvent("Sorry, your retrospective was deleted."));
 						} else {
 							screboUI.getEventBus().fireEvent(new RetrospectiveClosedEvent(retrospective));
 							openRetrospective(databaseObjectChangedEvent.getDocumentId(), true);
