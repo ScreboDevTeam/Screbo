@@ -51,6 +51,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 	protected final RetrospectiveRepository retrospectiveRepository = ScreboServlet.getRetrospectiveRepository();
 	protected final TextField currentRetrospectiveTitleTextField = new TextField();
 	protected final DateField currentRetrospectiveDateField = new DateField();
+	protected int ignoreUpdateCount; // TODO: replace with proper update mechanism which not rebuild the whole UI
 	protected final ValueChangeListener currentRetrospectiveDateValueChangedListener = new ValueChangeListener() {
 
 		@Override
@@ -61,6 +62,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 				if (currentRetrospective != null) {
 					Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
 					retrospective.setDateOfRetrospective(zonedDateTime);
+					ignoreUpdateCount++;
 					ScreboServlet.getRetrospectiveRepository().update(retrospective);
 				}
 			}
@@ -74,6 +76,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 			if (!Strings.isNullOrEmpty(text) && currentRetrospective != null) {
 				Retrospective retrospective = ScreboServlet.getRetrospectiveRepository().get(currentRetrospective.getId());
 				retrospective.setTitle(text);
+				ignoreUpdateCount++;
 				ScreboServlet.getRetrospectiveRepository().update(retrospective);
 			}
 
@@ -114,7 +117,7 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		myRetrospectivesLayout.setStyleName("myRetrospectivesLayout");
 
 		currentRetrospectiveTitleTextField.setTextChangeEventMode(TextChangeEventMode.LAZY);
-		currentRetrospectiveDateField.setImmediate(false);
+		currentRetrospectiveDateField.setImmediate(true);
 		currentRetrospectiveDateField.setRangeStart(Date.from(ZonedDateTime.now(user.getTimeZoneId()).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant()));
 		currentRetrospectiveDateField.setLocale(Locale.forLanguageTag(user.getLocale()));
 
@@ -254,15 +257,19 @@ public class TopBarRetrospectivePopupWindow extends ScreboWindow implements Scre
 		if (screboEvent instanceof UserChangedEvent) {
 			close();
 		} else if (screboEvent instanceof RetrospectiveClosedEvent) {
-			if (currentRetrospective != null && currentRetrospective.getId().equals(((RetrospectiveClosedEvent) screboEvent).getRetrospective().getId())) {
+			if (ignoreUpdateCount == 0 && currentRetrospective != null && currentRetrospective.getId().equals(((RetrospectiveClosedEvent) screboEvent).getRetrospective().getId())) {
 				currentRetrospective = null;
 				fillCurrentRetrospectiveLayout();
 			}
-			fillMyRetrospectivesLayout();
+			//			fillMyRetrospectivesLayout();
 		} else if (screboEvent instanceof RetrospectiveOpenedEvent) {
 			currentRetrospective = ((RetrospectiveOpenedEvent) screboEvent).getRetrospective();
-			fillCurrentRetrospectiveLayout();
-			fillMyRetrospectivesLayout();
+			if (ignoreUpdateCount > 0) {
+				ignoreUpdateCount--;
+			} else {
+				fillCurrentRetrospectiveLayout();
+				//				fillMyRetrospectivesLayout();
+			}
 		} else if (screboEvent instanceof DatabaseObjectChangedEvent) {
 			if (((DatabaseObjectChangedEvent) screboEvent).getObjectClass().equals(Retrospective.class)) { // a retrospective object was changed, we update the view
 				if (currentRetrospective != null && currentRetrospective.getId().equals(((DatabaseObjectChangedEvent) screboEvent).getDocumentId())) {
