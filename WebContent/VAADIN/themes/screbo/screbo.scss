@@ -331,8 +331,13 @@
   }
     
   .TopBarRetrospectivePopupWindow {
-  	max-height: calc(100% - 80px);
-  	overflow: auto !important;
+  	max-height: calc(100% - 40px);
+  	overflow-y: auto !important;
+  	overflow-x: hidden;
+  }
+  
+  .TopBarRetrospectivePopupWindow .popupContent {
+  	width: 400px !important;
   }
   
   .TopBarRetrospectivePopupWindow .openRetrospectiveButton {
